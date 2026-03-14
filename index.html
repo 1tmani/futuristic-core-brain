@@ -3,69 +3,85 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V60 | GALACTIC SUPER-ORGANISM</title>
+<title>CORE V62 | NEURAL-NET DEFENDER</title>
 <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
 <style>
-:root{ --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --dim: 1; --f-weight: 100; --bg: #000; --thrust: 0; }
-body,html{ margin:0; padding:0; background:#000; color:#fff; font-family:'Michroma'; overflow:hidden; }
+:root{ --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --bg: #000; }
+body,html{ margin:0; padding:0; background:#000; color:#fff; font-family:'Orbitron'; overflow:hidden; }
 canvas{ position:fixed; inset:0; z-index:1; }
-.interface-hud{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:40px; display:flex; flex-direction:column; justify-content:space-between; }
-.hud-top{ display:flex; justify-content:space-between; }
-.stat-box{ background:rgba(0,0,0,0.8); border-left:2px solid var(--c1); padding:10px 20px; font-family:'Orbitron'; font-size:9px; letter-spacing:3px; backdrop-filter:blur(20px); }
-.motor-box{ position:fixed; bottom:40px; right:40px; z-index:100; border:1px solid var(--c1); padding:20px; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); pointer-events:all; }
-.btn{ background:transparent; border:1px solid var(--c1); color:#fff; padding:12px 25px; cursor:pointer; font-family:'Orbitron'; letter-spacing:3px; transition:0.3s; margin-top:10px; font-size:10px; }
-.btn:hover{ background:var(--c1); color:#000; box-shadow:0 0 30px var(--c1); }
-#voice-status{ font-size:10px; color:var(--c2); letter-spacing:2px; }
-.pixel-fill{ position:fixed; inset:0; z-index:0; background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 4px 4px; pointer-events:none; }
-.car-node{ position:fixed; top:50%; left:50%; width:200px; height:100px; z-index:50; transform-style:preserve-3d; pointer-events:none; transition: 0.1s linear; border:2px solid var(--c1); box-shadow: 0 0 20px var(--c1); background:rgba(0,240,255,0.1); }
+.hud{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:40px; display:flex; flex-direction:column; justify-content:space-between; }
+.stat-box{ background:rgba(0,0,0,0.8); border-left:2px solid var(--c1); padding:15px 25px; font-size:10px; letter-spacing:3px; backdrop-filter:blur(30px); }
+.overlay{ position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.9); display:flex; flex-direction:column; align-items:center; justify-content:center; transition:0.5s; }
+.btn{ background:transparent; border:1px solid var(--c1); color:#fff; padding:20px 50px; cursor:pointer; font-family:'Orbitron'; letter-spacing:5px; transition:0.4s; font-size:12px; text-transform:uppercase; pointer-events:all; }
+.btn:hover{ background:var(--c1); color:#000; box-shadow:0 0 50px var(--c1); }
+#score-val{ color:var(--c3); font-weight:900; }
 </style>
 </head>
 <body>
-<div class='pixel-fill'></div>
-<canvas id='universe'></canvas>
-<div class='interface-hud'>
-    <div class='hud-top'>
-        <div class='stat-box'>ENGINE: GALACTIC_V60</div>
-        <div class='stat-box'>FPS: <span id='fps-val'>144</span></div>
-    </div>
-    <div class='hud-top'>
-        <div class='stat-box'>STATUS: EVOLVED</div>
-        <div class='stat-box'>VOICE: <span id='voice-status-ui'>READY</span></div>
+<canvas id='game-canvas'></canvas>
+<div class='hud'>
+    <div style='display:flex; justify-content:space-between;'>
+        <div class='stat-box'>INTEGRITY: <span id='hp-val'>100</span>%</div>
+        <div class='stat-box'>SCORE: <span id='score-val'>0</span></div>
     </div>
 </div>
-<div class='car-node' id='car'></div>
-<div class='motor-box'>
-    <div style='font-size:9px; margin-bottom:5px;'>GALACTIC_COMMAND</div>
-    <button class='btn' onclick='engine.ignite()'>IGNITE CORE</button><br>
-    <button class='btn' onclick='engine.boost()'>HYPER THRUST</button>
+<div id='start-screen' class='overlay'>
+    <h1 style='letter-spacing:20px; font-size:3rem; margin-bottom:40px;'>NEURAL DEFENDER</h1>
+    <button class='btn' onclick='engine.start()'>Initialize Core</button>
 </div>
 <script>
-const canvas=document.getElementById('universe'), ctx=canvas.getContext('2d');
-let w, h, time=0, velocity=0, thrust=0, isLive=false, dimension=1;
-const speech = window.speechSynthesis;
+const canvas=document.getElementById('game-canvas'), ctx=canvas.getContext('2d');
+let w, h, time=0, isPlaying=false, score=0, hp=100;
+let player={x:0, y:0, r:20}, bullets=[], enemies=[];
 function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } resize(); addEventListener('resize',resize);
+window.addEventListener('mousemove', e => { player.x=e.clientX; player.y=e.clientY; });
+window.addEventListener('mousedown', () => { if(isPlaying) bullets.push({x:player.x, y:player.y, v:15}); });
 const engine = {
-    ignite() {
-        isLive = true; this.speak("Galactic Super-Organism Online. V60 core initialized. 144Hz stabilization active.");
-        document.getElementById('voice-status-ui').innerText = "ACTIVE";
+    start() {
+        document.getElementById('start-screen').style.opacity='0';
+        setTimeout(()=>document.getElementById('start-screen').style.display='none', 500);
+        isPlaying=true; hp=100; score=0; enemies=[]; bullets=[];
     },
-    boost() { thrust += 10; this.speak("Hyper thrust engaged. Crossing causal boundaries."); },
-    speak(txt) { const msg = new SpeechSynthesisUtterance(txt); msg.pitch = 0.4; msg.rate = 0.8; speech.speak(msg); }
+    over() {
+        isPlaying=false;
+        document.getElementById('start-screen').style.display='flex';
+        document.getElementById('start-screen').style.opacity='1';
+        document.querySelector('#start-screen h1').innerText = 'CORE BREACHED';
+    }
 };
+function spawn() {
+    if(!isPlaying) return;
+    const side = Math.floor(Math.random()*4);
+    let x, y;
+    if(side==0){x=Math.random()*w; y=-50} 
+    else if(side==1){x=Math.random()*w; y=h+50}
+    else if(side==2){x=-50; y=Math.random()*h}
+    else {x=w+50; y=Math.random()*h}
+    enemies.push({x, y, s:2+(score/500)}); 
+    setTimeout(spawn, Math.max(200, 1000-(score/10)));
+}
+spawn();
 function draw(){
     time+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
-    const cx=w/2, cy=h/2;
-    if(isLive) {
-        velocity += (thrust - velocity) * 0.05; thrust *= 0.98;
-        const car = document.getElementById('car');
-        car.style.transform = `translate(-50%, -50%) rotateX(${60 + Math.sin(time*2)*10}deg) rotateZ(${time*40}deg) scale(${1 + velocity*0.1})`;
-    }
-    for(let i=0; i<60; i++) {
-        let z = (i*40 + time*200*velocity) % w;
-        let sc = 400/(w-z);
-        ctx.fillStyle = `hsla(${180 + Math.sin(time)*60}, 100%, 50%, ${sc*0.1})`;
-        ctx.fillRect(cx + Math.cos(i+time)*200*sc, cy + Math.sin(i+time)*200*sc, 2, 2);
-    }
+    if(!isPlaying) { requestAnimationFrame(draw); return; }
+    ctx.shadowBlur=20; ctx.shadowColor=player.r > 20 ? 'red' : 'cyan';
+    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(player.x, player.y, 10, 0, Math.PI*2); ctx.fill();
+    bullets.forEach((b,i) => {
+        b.y -= b.v; if(b.y < 0) bullets.splice(i,1);
+        ctx.fillStyle='var(--c1)'; ctx.fillRect(b.x-2, b.y, 4, 15);
+    });
+    enemies.forEach((en,i) => {
+        const dx=player.x-en.x, dy=player.y-en.y, dist=Math.hypot(dx,dy);
+        en.x += (dx/dist)*en.s; en.y += (dy/dist)*en.s;
+        ctx.fillStyle='var(--c3)'; ctx.beginPath(); ctx.arc(en.x, en.y, 8, 0, Math.PI*2); ctx.fill();
+        bullets.forEach((b, bi) => {
+            if(Math.hypot(b.x-en.x, b.y-en.y) < 20) {
+                enemies.splice(i,1); bullets.splice(bi,1); score+=10;
+                document.getElementById('score-val').innerText = score;
+            }
+        });
+        if(dist < 20) { hp-=1; document.getElementById('hp-val').innerText = hp; if(hp<=0) engine.over(); }
+    });
     requestAnimationFrame(draw);
 } draw();
 </script>
