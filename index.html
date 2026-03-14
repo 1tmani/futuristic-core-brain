@@ -3,80 +3,110 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE-BRAIN V12 | SENSORY SUSPENSE</title>
-    <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Syncopate:wght@400;700&display=swap' rel='stylesheet'>
+    <title>CORE-BRAIN V13 | HYPER-REACTIVE</title>
+    <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Syncopate:wght@400;700&family=Michroma&display=swap' rel='stylesheet'>
     <style>
-        :root { --c1: #00f2ff; --c2: #7000ff; --bg: #000; --speed: 1s; --blur: 0px; }
-        body, html { margin: 0; padding: 0; background: #000; color: #fff; overflow-x: hidden; font-family: 'Orbitron', sans-serif; transition: filter 0.3s ease; }
-        
-        body.suspense { filter: blur(var(--blur)) brightness(0.8); }
-        canvas { position: fixed; inset: 0; z-index: -1; }
-        .page { height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid rgba(0,242,255,0.05); }
+        :root { --c1: #00f2ff; --c2: #7000ff; --energy: 0; }
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; overflow: hidden; font-family: 'Syncopate', sans-serif; }
 
-        .motion-grid { position: fixed; inset: 0; display: grid; grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(10, 1fr); pointer-events: none; opacity: 0.1; }
-        .grid-cell { border: 0.5px solid var(--c1); transition: transform 0.2s ease; }
+        /* The Living Canvas */
+        #hyper-canvas { position: fixed; inset: 0; z-index: 1; filter: contrast(1.2) brightness(1.1); }
 
-        .hud-v12 { position: fixed; top: 30px; left: 30px; background: rgba(0,0,0,0.8); border-left: 3px solid var(--c1); padding: 15px; font-size: 10px; z-index: 1000; letter-spacing: 2px; }
-        .status-blink { width: 8px; height: 8px; background: #0f0; border-radius: 50%; display: inline-block; margin-right: 10px; animation: blink 0.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
-        .suspense-label { font-size: 5rem; font-weight: 900; text-transform: uppercase; transition: transform var(--speed) linear; }
+        /* HUD: Neural Analytics */
+        .hud-v13 { position: fixed; top: 40px; left: 40px; z-index: 100; font-family: 'Michroma', sans-serif; text-transform: uppercase; letter-spacing: 4px; pointer-events: none; }
+        .energy-bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 10px; position: relative; }
+        .energy-fill { position: absolute; height: 100%; background: var(--c1); width: var(--energy); box-shadow: 0 0 15px var(--c1); transition: width 0.1s linear; }
+
+        /* Central Singularity */
+        .core-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 50; text-align: center; pointer-events: none; }
+        .living-title { font-size: 6rem; font-weight: 900; margin: 0; letter-spacing: 30px; animation: breathe-text 3s infinite ease-in-out; text-shadow: 0 0 20px var(--c1); }
+
+        @keyframes breathe-text {
+            0%, 100% { transform: scale(1); letter-spacing: 30px; filter: blur(0px); }
+            50% { transform: scale(1.05); letter-spacing: 40px; filter: blur(2px); }
+        }
+
+        /* Scanline Interference */
+        .noise { position: fixed; inset: 0; z-index: 200; pointer-events: none; background: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.05; mix-blend-mode: overlay; }
     </style>
 </head>
 <body>
-    <div class='hud-v12'>
-        <div class='status-blink'></div> ENGINE: SUSPENSE_V12<br>
-        STATUS: MOTION_SENSORS_ACTIVE<br>
-        VELOCITY: <span id='speed-val'>0</span> km/ms<br>
-        THEME: AUTO_UPGRADING
+    <div class='noise'></div>
+    <div class='hud-v13'>
+        <div>System Evolution: V13</div>
+        <div>Core Connectivity: <span id='conn-val'>0</span>%</div>
+        <div class='energy-bar'><div class='energy-fill' id='energy-bar'></div></div>
     </div>
-    <div class='motion-grid' id='grid'></div>
 
-    <section class='page'><h1 class='suspense-label'>SUSPENSE</h1></section>
-    <section class='page'><h1>MOTION SENSOR</h1></section>
-    <section class='page'><h1>AUTO UPGRADE</h1></section>
-    <section class='page'><h1>NEURAL CAMERA</h1></section>
+    <div class='core-container'>
+        <h1 class='living-title' id='title'>CORE</h1>
+    </div>
 
-    <canvas id='v12-canvas'></canvas>
+    <canvas id='hyper-canvas'></canvas>
 
     <script>
-        const grid = document.getElementById('grid');
-        for(let i=0; i<100; i++) {
-            let div = document.createElement('div');
-            div.className = 'grid-cell';
-            grid.appendChild(div);
+        const canvas = document.getElementById('hyper-canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h, particles = [], mouse = {x: null, y: null, v: 0};
+
+        function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+        window.onresize = resize; resize();
+
+        class Neuron {
+            constructor() {
+                this.x = Math.random() * w; this.y = Math.random() * h;
+                this.vx = (Math.random() - 0.5) * 2; this.vy = (Math.random() - 0.5) * 2;
+                this.size = Math.random() * 2 + 1; this.energy = 0;
+            }
+            update() {
+                if (mouse.x) {
+                    let dx = mouse.x - this.x, dy = mouse.y - this.y;
+                    let d = Math.hypot(dx, dy);
+                    if (d < 250) {
+                        this.vx += dx * 0.002; this.vy += dy * 0.002;
+                        this.energy = Math.min(this.energy + 0.1, 1);
+                    } else { this.energy *= 0.95; }
+                }
+                this.x += this.vx; this.y += this.vy;
+                this.vx *= 0.98; this.vy *= 0.98;
+                if(this.x<0||this.x>w) this.vx*=-1; if(this.y<0||this.y>h) this.vy*=-1;
+            }
+            draw() {
+                let glow = this.energy * 20;
+                ctx.shadowBlur = glow; ctx.shadowColor = '#00f2ff';
+                ctx.fillStyle = `rgba(0, 242, 255, ${0.2 + this.energy})`;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size + (this.energy * 2), 0, Math.PI*2); ctx.fill();
+            }
         }
 
-        let lastScroll = 0;
-        window.addEventListener('scroll', () => {
-            let currentScroll = window.scrollY;
-            let diff = Math.abs(currentScroll - lastScroll);
-            document.getElementById('speed-val').innerText = diff;
-            document.documentElement.style.setProperty('--blur', (diff / 10) + 'px');
-            if (diff > 50) document.body.classList.add('suspense');
-            else document.body.classList.remove('suspense');
-            lastScroll = currentScroll;
-        });
+        for(let i=0; i<300; i++) particles.push(new Neuron());
 
-        window.addEventListener('mousemove', (e) => {
-            const cells = document.querySelectorAll('.grid-cell');
-            cells.forEach((cell) => {
-                let dist = Math.hypot(cell.offsetLeft - e.clientX, cell.offsetTop - e.clientY);
-                if(dist < 200) {
-                    cell.style.transform = `scale(1.5) rotate(${dist/10}deg)`;
-                    cell.style.borderColor = 'var(--c2)';
-                } else {
-                    cell.style.transform = 'scale(1)';
-                    cell.style.borderColor = 'var(--c1)';
+        function draw() {
+            ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
+            let totalEnergy = 0;
+            
+            particles.forEach((p, i) => {
+                p.update(); p.draw();
+                totalEnergy += p.energy;
+                for(let j=i+1; j<particles.length; j++) {
+                    let p2 = particles[j], d = Math.hypot(p.x-p2.x, p.y-p2.y);
+                    if(d < 100) {
+                        ctx.strokeStyle = `rgba(112, 0, 255, ${(1 - d/100) * (p.energy + p2.energy)})`;
+                        ctx.lineWidth = 0.5 + (p.energy * 2);
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+                    }
                 }
             });
-        });
 
-        const canvas = document.getElementById('v12-canvas');
-        const ctx = canvas.getContext('2d');
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.onresize = resize; resize();
-        function draw() { ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,canvas.width,canvas.height); requestAnimationFrame(draw); }
+            let avgEnergy = (totalEnergy / particles.length) * 1000;
+            document.documentElement.style.setProperty('--energy', avgEnergy + '%');
+            document.getElementById('energy-bar').style.width = Math.min(avgEnergy, 100) + '%';
+            document.getElementById('conn-val').innerText = Math.min(avgEnergy, 100).toFixed(1);
+            requestAnimationFrame(draw);
+        }
         draw();
+
+        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
     </script>
 </body>
 </html>
