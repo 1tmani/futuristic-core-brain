@@ -3,33 +3,36 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V42 | ABSOLUTE VISUAL FIDELITY</title>
+<title>CORE V43 | GEOMETRIC SINGULARITY</title>
 <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=Syncopate:wght@400;700&display=swap' rel='stylesheet'>
 <style>
 :root{
-     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --c4:#00ff75; --dim: 1; 
-     --font-w: 100; --entry-op: 1; --glow: 0 0 20px var(--c1);
+     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --c4:#00ff75;
+     --font-w: 100; --entry-op: 1;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{ background:#000; color:#fff; font-family:'Michroma',sans-serif; overflow-x:hidden; scroll-behavior:smooth; }
+html,body{ background:#000; color:#fff; font-family:'Michroma',sans-serif; overflow:hidden; }
 
 canvas{ position:fixed; inset:0; z-index:1; mix-blend-mode: screen; }
 
-/* REVOLVING RINGS ARCHITECTURE */
-.core-rings{ 
+/* 3D RECTANGULAR CIRCLE SYSTEM */
+.geometry-core{
     position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-    width:400px; height:400px; z-index:5; pointer-events:none; perspective:1000px;
+    width:100vw; height:100vh; z-index:5; pointer-events:none; perspective:1200px;
 }
-.ring{ 
-    position:absolute; inset:0; border:1px solid var(--c1); border-radius:50%; 
-    box-shadow: var(--glow); transition: 0.5s; animation: spin linear infinite;
+.rect-ring{
+    position:absolute; top:50%; left:50%; transform-style:preserve-3d;
+    border:2px solid var(--c1); box-shadow: 0 0 30px var(--c1);
+    animation: rotateRect linear infinite;
 }
-@keyframes spin { from{ transform:rotateX(70deg) rotateZ(0deg); } to{ transform:rotateX(70deg) rotateZ(360deg); } }
+@keyframes rotateRect { 
+    from{ transform: translate(-50%,-50%) rotateX(0deg) rotateY(0deg); } 
+    to{ transform: translate(-50%,-50%) rotateX(360deg) rotateY(720deg); } 
+}
 
-/* PREMIUM STARTING MENU */
 .starting-menu{ 
     position:fixed; top:0; left:0; width:100%; height:100vh; z-index:1000;
-    background: radial-gradient(circle at center, rgba(0,0,0,0.4), #000);
+    background: radial-gradient(circle at center, rgba(0,0,0,0.6), #000);
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     opacity: var(--entry-op); transition: 2s cubic-bezier(0.19, 1, 0.22, 1);
 }
@@ -41,21 +44,18 @@ canvas{ position:fixed; inset:0; z-index:1; mix-blend-mode: screen; }
 }
 .start-btn:hover{ background:var(--c1); color:#000; box-shadow: 0 0 40px var(--c1); transform: scale(1.1); }
 
-/* PIXEL FILLING & SHADING */
-.pixel-fill{ position:fixed; inset:0; z-index:0; background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 6px 6px; }
-.dimmer{ position:fixed; inset:0; background: radial-gradient(circle, transparent, #000 150%); z-index:2; pointer-events:none; }
+.pixel-fill{ position:fixed; inset:0; z-index:0; background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 8px 8px; }
 
 </style>
 </head>
 <body>
 <div class='pixel-fill'></div>
-<div class='dimmer'></div>
 <canvas id='universe'></canvas>
 
-<div class='core-rings' id='rings-system'>
-    <div class='ring' style='animation-duration:10s; width:100%; height:100%; opacity:0.4;'></div>
-    <div class='ring' style='animation-duration:15s; width:80%; height:80%; top:10%; left:10%; opacity:0.3; border-color:var(--c2);'></div>
-    <div class='ring' style='animation-duration:20s; width:60%; height:60%; top:20%; left:20%; opacity:0.2; border-color:var(--c3);'></div>
+<div class='geometry-core' id='rect-system'>
+    <div class='rect-ring' style='width:300px; height:300px; animation-duration:10s; border-color:var(--c1);'></div>
+    <div class='rect-ring' style='width:250px; height:250px; animation-duration:15s; border-color:var(--c2); opacity:0.6;'></div>
+    <div class='rect-ring' style='width:400px; height:200px; animation-duration:20s; border-color:var(--c3); opacity:0.4;'></div>
 </div>
 
 <main class='starting-menu' id='menu'>
@@ -82,7 +82,7 @@ function enter(){
 
 function draw(){
     time += 0.01;
-    ctx.fillStyle = 'rgba(0,0,0,0.1)';
+    ctx.fillStyle = 'rgba(0,0,0,0.15)';
     ctx.fillRect(0,0,w,h);
     const cx = w/2, cy = h/2;
 
