@@ -3,59 +3,106 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Core-Brain V4 | Projector Matrix</title>
+    <title>CORE-BRAIN V5 | SINGULARITY</title>
     <style>
-        :root { --neon-cyan: #00f2ff; --neon-purple: #7000ff; --deep-bg: #000; }
-        body, html { margin: 0; padding: 0; background: var(--deep-bg); color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+        :root { --c1: #00f2ff; --c2: #7000ff; --bg: #000; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: #fff; font-family: 'Syncopate', sans-serif; overflow: hidden; }
 
-        /* Projector Lens Flare Layer */
-        .projector-beam {
-            position: fixed; top: -10%; left: -10%; width: 120%; height: 120%;
-            background: radial-gradient(circle at 20% 20%, rgba(0, 242, 255, 0.05) 0%, transparent 50%);
-            pointer-events: none; z-index: 5; animation: beam-flicker 4s infinite;
-        }
-        @keyframes beam-flicker { 0%, 100% { opacity: 0.8; } 50% { opacity: 0.4; } }
+        /* Projector Scanline Overlay */
+        .overlay { position: fixed; inset: 0; background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.2) 50%), linear-gradient(90deg, rgba(255,0,0,0.05), rgba(0,255,0,0.02), rgba(0,0,255,0.05)); background-size: 100% 2px, 3px 100%; z-index: 100; pointer-events: none; }
 
-        /* Chromatic Aberration & Scanlines */
-        .screen-fx {
-            position: fixed; inset: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            background-size: 100% 4px, 3px 100%; z-index: 10; pointer-events: none;
-        }
+        /* 3D Scene */
+        .scene { height: 100vh; perspective: 1200px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
+        /* The Crystal Core */
+        .crystal-core { position: relative; width: 200px; height: 200px; transform-style: preserve-3d; animation: rotateCore 20s infinite linear; }
+        @keyframes rotateCore { from { transform: rotateY(0) rotateX(45deg); } to { transform: rotateY(360deg) rotateX(45deg); } }
+        
+        .face { position: absolute; width: 200px; height: 200px; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--c1); box-shadow: 0 0 30px var(--c1); backdrop-filter: blur(5px); }
+        .f1 { transform: translateZ(100px); }
+        .f2 { transform: rotateY(90deg) translateZ(100px); }
+        .f3 { transform: rotateY(180deg) translateZ(100px); }
+        .f4 { transform: rotateY(-90deg) translateZ(100px); }
 
-        .core-v4 { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; perspective: 1000px; }
+        /* HUD Elements */
+        .hud { position: fixed; font-family: monospace; color: var(--c1); font-size: 10px; z-index: 110; pointer-events: none; text-transform: uppercase; }
+        .tl { top: 20px; left: 20px; border-left: 2px solid var(--c1); padding-left: 10px; }
+        .br { bottom: 20px; right: 20px; text-align: right; border-right: 2px solid var(--c2); padding-right: 10px; }
 
-        /* Floating Holo-Grid */
-        .holo-grid {
-            width: 500px; height: 500px; border: 1px solid rgba(0, 242, 255, 0.2);
-            position: absolute; transform: rotateX(60deg);
-            background-image: linear-gradient(var(--neon-cyan) 1px, transparent 1px),
-                              linear-gradient(90deg, var(--neon-cyan) 1px, transparent 1px);
-            background-size: 40px 40px; animation: grid-scroll 10s infinite linear;
-        }
-        @keyframes grid-scroll { from { background-position: 0 0; } to { background-position: 0 400px; } }
-
-        .glitch-v4 {
-            font-size: 5rem; font-weight: 900; color: #fff;
-            text-shadow: 2px 0 var(--neon-purple), -2px 0 var(--neon-cyan);
-            letter-spacing: 20px; z-index: 100; text-align: center;
-        }
+        /* Particle Canvas */
+        #canvas { position: absolute; top: 0; left: 0; z-index: 1; }
     </style>
 </head>
 <body>
-    <div class='projector-beam'></div>
-    <div class='screen-fx'></div>
+    <div class='overlay'></div>
+    <div class='hud tl'>
+        <div>SYSTEM: V5_SINGULARITY</div>
+        <div>ENGINE: QUANTUM_PARTICLE_V3</div>
+        <div id='fps'>60 FPS</div>
+    </div>
+    <div class='hud br'>
+        <div>NEURAL_SYNC: ACTIVE</div>
+        <div>CORE_TEMP: STABLE</div>
+        <div id='coords'>X: 000 Y: 000</div>
+    </div>
 
-    <div class='core-v4'>
-        <div class='holo-grid'></div>
-        <h1 class='glitch-v4'>CORE PROJECTOR</h1>
+    <div class='scene'>
+        <canvas id='canvas'></canvas>
+        <div class='crystal-core'>
+            <div class='face f1'></div>
+            <div class='face f2'></div>
+            <div class='face f3'></div>
+            <div class='face f4'></div>
+        </div>
     </div>
 
     <script>
-        setInterval(() => {
-            document.body.style.opacity = Math.random() > 0.98 ? '0.8' : '1';
-        }, 50);
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h, particles = [];
+
+        function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+        window.onresize = resize; resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * w; this.y = Math.random() * h;
+                this.vx = (Math.random() - 0.5) * 1.5;
+                this.vy = (Math.random() - 0.5) * 1.5;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if(this.x < 0 || this.x > w) this.vx *= -1;
+                if(this.y < 0 || this.y > h) this.vy *= -1;
+            }
+            draw() {
+                ctx.fillStyle = '#00f2ff';
+                ctx.beginPath(); ctx.arc(this.x, this.y, 1, 0, Math.PI*2); ctx.fill();
+            }
+        }
+
+        for(let i=0; i<300; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.fillRect(0,0,w,h);
+            particles.forEach(p => {
+                p.update(); p.draw();
+                particles.forEach(p2 => {
+                    let d = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if(d < 100) {
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${1 - d/100})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        window.addEventListener('mousemove', (e) => {
+            document.getElementById('coords').innerText = `X: ${e.clientX} Y: ${e.clientY}`;
+        });
     </script>
 </body>
 </html>
