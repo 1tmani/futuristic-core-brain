@@ -3,39 +3,109 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Core-Brain Self-Evolving System</title>
+    <title>Core-Brain | Self-Evolving Ecosystem</title>
     <style>
-        body, html { margin: 0; padding: 0; background: #050505; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
-        .core-brain { height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1a1a2e 0%, #000 70%); position: relative; overflow: hidden; }
-        .particle { position: absolute; border-radius: 50%; background: rgba(0, 255, 255, 0.5); filter: blur(2px); animation: drift 20s infinite linear; }
-        @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(100vw, 100vh) scale(2); } }
-        .vibrating-light { width: 300px; height: 300px; background: radial-gradient(circle, #00f2ff 0%, transparent 70%); border-radius: 50%; filter: blur(40px); animation: pulse 2s infinite ease-in-out; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 0.8; } }
-        .section { height: 100vh; padding: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-bottom: 1px solid #222; }
-        h1 { font-size: 4rem; text-transform: uppercase; letter-spacing: 10px; background: linear-gradient(to right, #00f2ff, #7000ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .crystal-shape { width: 100px; height: 100px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); margin: 20px; animation: spin 10s infinite linear; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        :root { --neon-cyan: #00f2ff; --neon-purple: #7000ff; --deep-bg: #050505; }
+        body, html { margin: 0; padding: 0; background: var(--deep-bg); color: #fff; font-family: 'Syncopate', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* Core Brain Container */
+        .container { position: relative; width: 100%; }
+        
+        /* Hero Section with Vibrating Lights */
+        .hero { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, #111 0%, #000 100%); overflow: hidden; }
+        .vibrating-orb { width: 400px; height: 400px; background: radial-gradient(circle, var(--neon-cyan) 0%, transparent 70%); border-radius: 50%; filter: blur(60px); animation: vibrate 0.2s infinite alternate, pulse 4s infinite ease-in-out; position: absolute; opacity: 0.6; }
+        @keyframes vibrate { from { transform: translate(-2px, 2px); } to { transform: translate(2px, -2px); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.3); opacity: 0.8; } }
+
+        .title-glitch { font-size: 5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 15px; z-index: 10; background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: glitch 5s infinite; }
+        
+        /* Section Styles */
+        .section { min-height: 100vh; padding: 10vh 5vw; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border-top: 1px solid #1a1a1a; }
+        .grid-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(#111 1px, transparent 1px), linear-gradient(90deg, #111 1px, transparent 1px); background-size: 50px 50px; opacity: 0.3; z-index: -1; }
+
+        /* Crystallized shapes */
+        .crystal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 50px; }
+        .crystal { width: 150px; height: 150px; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0,242,255,0.3); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); animation: float 6s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } }
+
+        /* Particle Canvas */
+        #particle-canvas { position: fixed; top: 0; left: 0; z-index: -2; pointer-events: none; }
     </style>
 </head>
 <body>
-    <div class='core-brain'>
-        <div class='vibrating-light'></div>
-        <div style='position:absolute;'><h1>EVOLVING CORE</h1></div>
+    <canvas id='particle-canvas'></canvas>
+    
+    <div class='container'>
+        <section class='hero'>
+            <div class='vibrating-orb'></div>
+            <h1 class='title-glitch'>CORE BRAIN</h1>
+            <p style='letter-spacing:5px; opacity:0.7;'>SELF-EVOLVING NEURAL INFRASTRUCTURE</p>
+        </section>
+
+        <section class='section'>
+            <div class='grid-bg'></div>
+            <h1>THEMES & LAYERS</h1>
+            <p>Real-time adaptive engine reshaping infrastructure per millisecond.</p>
+            <div class='crystal-grid'>
+                <div class='crystal' style='animation-delay: 0s;'></div>
+                <div class='crystal' style='animation-delay: 1s;'></div>
+                <div class='crystal' style='animation-delay: 2s;'></div>
+            </div>
+        </section>
+
+        <section class='section' style='background: #080808;'>
+            <h1>8K SATELLITE RENDER</h1>
+            <div style='width: 80%; height: 300px; border: 1px solid var(--neon-purple); background: #000; position: relative; overflow: hidden;'>
+                <div style='position:absolute; width:100%; height:2px; background: var(--neon-cyan); top:50%; box-shadow: 0 0 20px var(--neon-cyan);'></div>
+            </div>
+            <p>Scanning particles inside particles... Core synchronization at 99.9%</p>
+        </section>
     </div>
-    <div class='section'>
-        <h1>Infrastructure</h1>
-        <p>Particle-by-particle motion sensing engaged. 8K Neural Rendering Active.</p>
-        <div style='display:flex;'><div class='crystal-shape'></div><div class='crystal-shape'></div><div class='crystal-shape'></div></div>
-    </div>
+
     <script>
-        for(let i=0; i<50; i++) {
-            let p = document.createElement('div');
-            p.className = 'particle';
-            p.style.left = Math.random() * 100 + 'vw';
-            p.style.top = Math.random() * 100 + 'vh';
-            p.style.width = p.style.height = Math.random() * 5 + 'px';
-            document.body.appendChild(p);
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() { 
+            canvas.width = window.innerWidth; 
+            canvas.height = window.innerHeight; 
         }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 150; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
     </script>
 </body>
 </html>
