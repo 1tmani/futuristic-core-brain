@@ -3,124 +3,105 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE RACER | 4D HYPER-SPACE</title>
+<title>HYPER CORE | DIMENSIONAL TRIGGER</title>
 <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
 <style>
 :root{
-     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --vignette: rgba(0,0,0,0.8);
+     --c1:#00f0ff; --c2:#8a2eff; --bg:#000; --transition: 1.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{
-     background:#000; color:#fff; font-family:'Michroma',sans-serif; overflow:hidden;
+html,body{ background:#000; color:#fff; font-family:'Michroma',sans-serif; overflow:hidden; }
+
+canvas{ position:fixed; inset:0; z-index:0; transition: filter var(--transition); }
+body.hyper canvas{ filter: contrast(1.2) brightness(1.1) hue-rotate(45deg); }
+
+header{ position:fixed; top:0; width:100%; z-index:100; backdrop-filter:blur(30px); background:rgba(0,0,0,.4); border-bottom:1px solid rgba(255,255,255,.05); }
+nav{ display:flex; justify-content:space-between; padding:25px 50px; align-items:center; }
+.logo{ font-family:'Orbitron',sans-serif; letter-spacing:10px; font-weight:900; transition: var(--transition); }
+body.hyper .logo{ letter-spacing:20px; color:var(--c1); text-shadow:0 0 20px var(--c1); }
+
+.trigger-panel{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:10; pointer-events:none; }
+.hyper-btn{ 
+    pointer-events:all; background:transparent; border:1px solid #fff; color:#fff; padding:20px 40px; 
+    font-family:'Orbitron'; letter-spacing:5px; cursor:pointer; transition: 0.4s; overflow:hidden; position:relative;
 }
-canvas{
-     position:fixed; inset:0; z-index:0; filter: contrast(1.2) brightness(1.1);
-}
-.temporal-overlay{
-     position:fixed; inset:0; z-index:1; pointer-events:none;
-     background: repeating-linear-gradient(0deg, rgba(0,240,255,0.03) 0px, transparent 2px);
-     mix-blend-mode: color-dodge;
-}
-header{
-     position:fixed; top:0; width:100%; z-index:100;
-     backdrop-filter:blur(30px); background:rgba(0,0,0,.4);
-     border-bottom:1px solid rgba(255,255,255,.05);
-}
-nav{
-     display:flex; justify-content:space-between; padding:25px 50px; align-items:center;
-}
-.logo{
-     font-family:'Orbitron',sans-serif; letter-spacing:15px; font-weight:900; 
-     background: linear-gradient(90deg, #fff, var(--c1), #fff);
-     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-     filter: drop-shadow(0 0 10px var(--c1));
-}
-.stats-container{
-     position:fixed; bottom:50px; left:50px; z-index:10; border-left:1px solid var(--c1);
-     padding:20px; background:rgba(0,0,0,0.7); backdrop-filter:blur(15px);
-     font-family:'Orbitron'; font-size:10px; letter-spacing:4px; line-height:2.5;
-}
-.dimension-tag{
-     position:fixed; top:120px; right:50px; color:var(--c1); font-size:9px; letter-spacing:10px; text-transform:uppercase; writing-mode: vertical-rl; opacity:0.5;
-}
+.hyper-btn:hover{ background:#fff; color:#000; box-shadow:0 0 30px #fff; }
+body.hyper .hyper-btn{ opacity:0; pointer-events:none; transform: scale(2); }
+
+.stats-box{ position:fixed; bottom:50px; left:50px; z-index:10; border-left:1px solid #fff; padding:20px; font-size:10px; letter-spacing:3px; opacity:0.5; transition: var(--transition); }
+body.hyper .stats-box{ border-color:var(--c1); opacity:1; color:var(--c1); }
 </style>
 </head>
 <body>
-<div class='temporal-overlay'></div>
-<div class='dimension-tag'>Dimension: 4D_Hyper_Space</div>
-<canvas id='render-4d'></canvas>
+<canvas id='render'></canvas>
 <header>
-<nav>
-<div class='logo'>HYPER CORE</div>
-<div style='font-size:10px; opacity:0.5;'>NEURAL_LINK: STABLE</div>
-</nav>
+<nav><div class='logo'>HYPER CORE</div><div style='font-size:10px; opacity:0.5;' id='status'>MODE: STABLE</div></nav>
 </header>
-<section class='stats-container'>
-    TEMPORAL_DRIVE: <span id='drive'>ACTIVE</span><br>
-    DIMENSIONAL_DEPTH: <span id='depth'>4.000</span><br>
-    SYNC_STATUS: CORE_STABILIZED
-</section>
-<script>
-const canvas=document.getElementById('render-4d');
-const ctx=canvas.getContext('2d');
-let w,h, time=0, particles=[];
 
-function resize(){
-     w=canvas.width=innerWidth;
-     h=canvas.height=innerHeight;
-}
+<div class='trigger-panel'>
+    <button class='hyper-btn' onclick='activateHyperDrive()'>ENGAGE HYPER DRIVE</button>
+</div>
+
+<section class='stats-box'>
+    DIMENSION: <span id='dim'>3D_NORMAL</span><br>
+    NEURAL_SYNC: LOCKED
+</section>
+
+<script>
+const canvas=document.getElementById('render');
+const ctx=canvas.getContext('2d');
+let w,h, time=0, isHyper=false, particles=[];
+
+function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
 resize(); addEventListener('resize',resize);
 
-for(let i=0;i<200;i++){
-     particles.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w, r:Math.random()*2+1 });
+for(let i=0;i<150;i++){
+     particles.push({ x:Math.random()*w, y:Math.random()*h, vx:Math.random()-0.5, vy:Math.random()-0.5, z:Math.random()*w });
 }
 
-function draw4D(){
-     time += 0.005;
-     ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
-
-     const cx=w/2, cy=h/2;
-     
-     // 4D Fractal Grid Warp
-     ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--c1')+'22';
-     ctx.lineWidth=1;
-     for(let i=0; i<40; i++){
-          let dist = i * 20;
-          let warp = Math.sin(time + i * 0.1) * 50;
-          ctx.beginPath();
-          ctx.ellipse(cx, cy, dist + warp, dist * 0.5 + warp, Math.sin(time*0.5), 0, Math.PI*2);
-          ctx.stroke();
-     }
-
-     // Hyper-Space Particle Movement
-     particles.forEach(p => {
-          p.z -= 10;
-          if(p.z <= 0) p.z = w;
-          
-          let scale = 400 / p.z;
-          let x2d = (p.x - cx) * scale + cx;
-          let y2d = (p.y - cy) * scale + cy;
-          
-          let alpha = 1 - (p.z / w);
-          ctx.fillStyle=`rgba(255,255,255,${alpha})`;
-          ctx.beginPath(); ctx.arc(x2d, y2d, p.r * scale, 0, Math.PI*2); ctx.fill();
-          
-          // Dynamic trailing for 4D feel
-          if(scale > 2){
-               ctx.strokeStyle=`rgba(0,240,255,${alpha*0.3})`;
-               ctx.beginPath(); ctx.moveTo(x2d, y2d); ctx.lineTo(cx, cy); ctx.stroke();
-          }
-     });
-
-     requestAnimationFrame(draw4D);
+function activateHyperDrive(){
+    isHyper = true;
+    document.body.classList.add('hyper');
+    document.getElementById('status').textContent = 'MODE: 4D_HYPER_SPACE';
+    document.getElementById('dim').textContent = '4D_WARP';
 }
-draw4D();
 
-// Self-Evolution: Change Dimension Depth value
-setInterval(() => {
-     const depth = (4 + Math.random()*0.1).toFixed(3);
-     document.getElementById('depth').textContent = depth;
-}, 1000);
+function draw(){
+    time += 0.005;
+    ctx.fillStyle = isHyper ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.5)';
+    ctx.fillRect(0,0,w,h);
+    const cx=w/2, cy=h/2;
+
+    if(!isHyper){
+        // Normal 3D Particle Field
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        particles.forEach(p => {
+            p.x += p.vx; p.y += p.vy;
+            if(p.x<0||p.x>w) p.vx*=-1; if(p.y<0||p.y>h) p.vy*=-1;
+            ctx.beginPath(); ctx.arc(p.x, p.y, 1, 0, Math.PI*2); ctx.fill();
+        });
+    } else {
+        // 4D Dimensional Warp
+        ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--c1')+'33';
+        for(let i=0; i<30; i++){
+            let dist = i * 25;
+            let warp = Math.sin(time + i * 0.1) * 60;
+            ctx.beginPath();
+            ctx.ellipse(cx, cy, dist + warp, (dist * 0.5) + warp, Math.sin(time*0.5), 0, Math.PI*2);
+            ctx.stroke();
+        }
+        particles.forEach(p => {
+            p.z -= 15; if(p.z <= 0) p.z = w;
+            let scale = 400 / p.z;
+            let x2d = (p.x - cx) * scale + cx;
+            let y2d = (p.y - cy) * scale + cy;
+            ctx.fillStyle = `rgba(255,255,255,${1 - (p.z/w)})`;
+            ctx.beginPath(); ctx.arc(x2d, y2d, scale, 0, Math.PI*2); ctx.fill();
+        });
+    }
+    requestAnimationFrame(draw);
+}
+draw();
 </script>
 </body>
 </html>
