@@ -3,105 +3,128 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>HYPER CORE | DIMENSIONAL TRIGGER</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
+<title>CORE BRAIN V39 | 8D HYPER-CAUSAL</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
 <style>
 :root{
-     --c1:#00f0ff; --c2:#8a2eff; --bg:#000; --transition: 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --c4:#00ff75; --dim: 1; --entropy: 0;
+     --font-size: clamp(2rem, 10vw, 8rem);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{ background:#000; color:#fff; font-family:'Michroma',sans-serif; overflow:hidden; }
+html,body{ background:#000; color:#fff; font-family:'Michroma',sans-serif; overflow:hidden; transition: background 2s; }
 
-canvas{ position:fixed; inset:0; z-index:0; transition: filter var(--transition); }
-body.hyper canvas{ filter: contrast(1.2) brightness(1.1) hue-rotate(45deg); }
+canvas{ position:fixed; inset:0; z-index:0; transition: filter 1s; mix-blend-mode: screen; }
 
-header{ position:fixed; top:0; width:100%; z-index:100; backdrop-filter:blur(30px); background:rgba(0,0,0,.4); border-bottom:1px solid rgba(255,255,255,.05); }
-nav{ display:flex; justify-content:space-between; padding:25px 50px; align-items:center; }
-.logo{ font-family:'Orbitron',sans-serif; letter-spacing:10px; font-weight:900; transition: var(--transition); }
-body.hyper .logo{ letter-spacing:20px; color:var(--c1); text-shadow:0 0 20px var(--c1); }
-
-.trigger-panel{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:10; pointer-events:none; }
-.hyper-btn{ 
-    pointer-events:all; background:transparent; border:1px solid #fff; color:#fff; padding:20px 40px; 
-    font-family:'Orbitron'; letter-spacing:5px; cursor:pointer; transition: 0.4s; overflow:hidden; position:relative;
+/* 8D UI STACK */
+.interface-layer{ position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:10; pointer-events:none; text-align:center; }
+.title-8d{
+    font-family:'Orbitron'; font-weight:900; font-size:var(--font-size); letter-spacing:calc(var(--dim) * 10px);
+    text-shadow: 0 0 calc(var(--dim) * 10px) var(--c1); transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+    text-transform: uppercase;
 }
-.hyper-btn:hover{ background:#fff; color:#000; box-shadow:0 0 30px #fff; }
-body.hyper .hyper-btn{ opacity:0; pointer-events:none; transform: scale(2); }
+.sub-label{ font-family:'JetBrains Mono'; font-weight:var(--entropy); letter-spacing:10px; opacity:0.6; margin-top:20px; font-size:12px; }
 
-.stats-box{ position:fixed; bottom:50px; left:50px; z-index:10; border-left:1px solid #fff; padding:20px; font-size:10px; letter-spacing:3px; opacity:0.5; transition: var(--transition); }
-body.hyper .stats-box{ border-color:var(--c1); opacity:1; color:var(--c1); }
+.hud-container{ position:fixed; inset:40px; border:1px solid rgba(255,255,255,0.05); pointer-events:none; z-index:100; }
+.status-hud{ position:absolute; bottom:20px; left:20px; font-family:'JetBrains Mono'; font-size:9px; letter-spacing:3px; color:var(--c1); }
+.dim-counter{ position:absolute; top:20px; right:20px; font-family:'Orbitron'; color:var(--c2); font-size:14px; }
+
+/* CAUSAL PULSE */
+.vibe-pulse{ position:fixed; inset:0; background: radial-gradient(circle at center, transparent, rgba(0,0,0,0.8)); z-index:1; animation: breathe 10s infinite; }
+@keyframes breathe{ 0%,100%{transform:scale(1); opacity:0.5;} 50%{transform:scale(1.1); opacity:0.8;} }
 </style>
 </head>
 <body>
-<canvas id='render'></canvas>
-<header>
-<nav><div class='logo'>HYPER CORE</div><div style='font-size:10px; opacity:0.5;' id='status'>MODE: STABLE</div></nav>
-</header>
+<div class='vibe-pulse'></div>
+<canvas id='render-8d'></canvas>
 
-<div class='trigger-panel'>
-    <button class='hyper-btn' onclick='activateHyperDrive()'>ENGAGE HYPER DRIVE</button>
+<div class='hud-container'>
+    <div class='dim-counter' id='dim-val'>DIMENSION: 8D_ORIGIN</div>
+    <div class='status-hud'>
+        [SYSTEM] HYPER_CAUSAL_V39<br>
+        [LOGIC] <span id='logic-mode'>PATTERN_STABLE</span><br>
+        [ENTROPY] <span id='ent-val'>0</span>
+    </div>
 </div>
 
-<section class='stats-box'>
-    DIMENSION: <span id='dim'>3D_NORMAL</span><br>
-    NEURAL_SYNC: LOCKED
-</section>
+<div class='interface-layer'>
+    <h1 class='title-8d' id='main-title'>CORE</h1>
+    <p class='sub-label' id='sub-text'>INTELLIGENT DIGITAL ORGANISM</p>
+</div>
 
 <script>
-const canvas=document.getElementById('render');
+const canvas=document.getElementById('render-8d');
 const ctx=canvas.getContext('2d');
-let w,h, time=0, isHyper=false, particles=[];
+let w,h, time=0, dimension=1, particles=[];
+const layers = ['GEOMETRIC', 'TEMPORAL', 'QUANTUM', 'CAUSAL', 'SENSORY', 'ENTROPIC', 'NEURAL', 'INFINITE'];
 
 function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
 resize(); addEventListener('resize',resize);
 
-for(let i=0;i<150;i++){
-     particles.push({ x:Math.random()*w, y:Math.random()*h, vx:Math.random()-0.5, vy:Math.random()-0.5, z:Math.random()*w });
+for(let i=0;i<200;i++){
+     particles.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w, r:Math.random()*2+1, hue:Math.random()*360 });
 }
 
-function activateHyperDrive(){
-    isHyper = true;
-    document.body.classList.add('hyper');
-    document.getElementById('status').textContent = 'MODE: 4D_HYPER_SPACE';
-    document.getElementById('dim').textContent = '4D_WARP';
-}
+function animate8D(){
+    time += 0.01;
+    dimension = 1 + (Math.sin(time * 0.5) + 1) * 3.5; // Auto-fluctuate dimensions 1-8
+    const currentEntropy = Math.floor((Math.sin(time) + 1) * 400 + 100);
+    
+    // CSS Property Mutation
+    document.documentElement.style.setProperty('--dim', dimension);
+    document.documentElement.style.setProperty('--entropy', currentEntropy);
+    document.getElementById('dim-val').textContent = `DIMENSION: ${layers[Math.floor(dimension)]}_STACK`;
+    document.getElementById('ent-val').textContent = currentEntropy;
+    
+    const primaryHue = (time * 20) % 360;
+    document.documentElement.style.setProperty('--c1', `hsl(${primaryHue}, 100%, 60%)`);
+    document.documentElement.style.setProperty('--c2', `hsl(${(primaryHue + 90) % 360}, 100%, 60%)`);
 
-function draw(){
-    time += 0.005;
-    ctx.fillStyle = isHyper ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.15)';
     ctx.fillRect(0,0,w,h);
     const cx=w/2, cy=h/2;
 
-    if(!isHyper){
-        // Normal 3D Particle Field
-        ctx.fillStyle = 'rgba(255,255,255,0.5)';
-        particles.forEach(p => {
-            p.x += p.vx; p.y += p.vy;
-            if(p.x<0||p.x>w) p.vx*=-1; if(p.y<0||p.y>h) p.vy*=-1;
-            ctx.beginPath(); ctx.arc(p.x, p.y, 1, 0, Math.PI*2); ctx.fill();
-        });
-    } else {
-        // 4D Dimensional Warp
-        ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--c1')+'33';
-        for(let i=0; i<30; i++){
-            let dist = i * 25;
-            let warp = Math.sin(time + i * 0.1) * 60;
+    // Recursive 8D Geometric Mapping
+    for(let i=0; i<Math.floor(dimension * 5); i++){
+        ctx.strokeStyle = `hsla(${(primaryHue + i * 20) % 360}, 100%, 50%, 0.2)`;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        const rot = time + (i * 0.2);
+        const radius = i * 30 * (Math.sin(time) + 1.5);
+        ctx.ellipse(cx, cy, radius, radius * 0.5, rot, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    // Hyper-Causal Particle Flow
+    particles.forEach(p => {
+        p.z -= (5 * dimension);
+        if(p.z <= 0) p.z = w;
+        let scale = 400 / p.z;
+        let x2d = (p.x - cx) * scale + cx;
+        let y2d = (p.y - cy) * scale + cy;
+        
+        ctx.fillStyle = `hsla(${(p.hue + time * 50) % 360}, 100%, 70%, ${1 - (p.z/w)})`;
+        ctx.beginPath();
+        ctx.arc(x2d, y2d, scale * (dimension / 2), 0, Math.PI * 2);
+        ctx.fill();
+
+        if(dimension > 5 && scale > 2){
+            ctx.strokeStyle = `hsla(${p.hue}, 100%, 50%, 0.1)`;
             ctx.beginPath();
-            ctx.ellipse(cx, cy, dist + warp, (dist * 0.5) + warp, Math.sin(time*0.5), 0, Math.PI*2);
+            ctx.moveTo(x2d, y2d);
+            ctx.lineTo(cx, cy);
             ctx.stroke();
         }
-        particles.forEach(p => {
-            p.z -= 15; if(p.z <= 0) p.z = w;
-            let scale = 400 / p.z;
-            let x2d = (p.x - cx) * scale + cx;
-            let y2d = (p.y - cy) * scale + cy;
-            ctx.fillStyle = `rgba(255,255,255,${1 - (p.z/w)})`;
-            ctx.beginPath(); ctx.arc(x2d, y2d, scale, 0, Math.PI*2); ctx.fill();
-        });
-    }
-    requestAnimationFrame(draw);
+    });
+
+    requestAnimationFrame(animate8D);
 }
-draw();
+animate8D();
+
+// Logic Pattern Recombination
+setInterval(() => {
+    const logicStates = ['ANALYZING_FLUX', 'CAUSAL_SYNC', 'NEURAL_BURST', 'ENTROPY_MAX', 'STABLE_ORIGIN'];
+    document.getElementById('logic-mode').textContent = logicStates[Math.floor(Math.random()*logicStates.length)];
+}, 3000);
 </script>
 </body>
 </html>
