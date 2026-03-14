@@ -3,112 +3,88 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE-BRAIN V8 | INFINITE SINGULARITY</title>
+    <title>CORE-BRAIN V9 | META-EVOLUTION</title>
     <style>
-        :root { --c1: #00f2ff; --c2: #7000ff; --bg: #000; --accent: #fff; }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: #fff; font-family: 'Syncopate', sans-serif; overflow-x: hidden; }
-
-        /* LAYER 1: NEURAL PROJECTOR BEAM */
-        .projector { position: fixed; inset: 0; background: radial-gradient(circle at 10% 10%, rgba(0, 242, 255, 0.08) 0%, transparent 60%); z-index: 100; pointer-events: none; mix-blend-mode: screen; }
-        .scanlines { position: fixed; inset: 0; background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.2) 50%), linear-gradient(90deg, rgba(255,0,0,0.03), rgba(0,255,0,0.01), rgba(0,0,255,0.03)); background-size: 100% 2px, 2px 100%; z-index: 101; pointer-events: none; }
-
-        /* LAYER 2: BIOMETRIC HUD */
-        .hud { position: fixed; padding: 20px; font-family: monospace; font-size: 9px; color: var(--c1); z-index: 110; text-transform: uppercase; letter-spacing: 2px; }
-        .hud.tl { top: 0; left: 0; border-left: 1px solid var(--c1); } 
-        .hud.br { bottom: 0; right: 0; text-align: right; border-right: 1px solid var(--c2); }
-
-        /* LAYER 3: 3D CRYSTALLIZED CORE */
-        .scene { height: 500vh; position: relative; }
-        .sticky-core { height: 100vh; width: 100%; position: sticky; top: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .crystal { width: 150px; height: 150px; transform-style: preserve-3d; animation: rotate 20s infinite linear; position: absolute; z-index: 50; }
-        .face { position: absolute; width: 150px; height: 150px; border: 1px solid var(--c1); background: rgba(0, 242, 255, 0.03); backdrop-filter: blur(5px); box-shadow: 0 0 20px var(--c1); }
-        .f1 { transform: translateZ(75px); } .f2 { transform: rotateY(90deg) translateZ(75px); } .f3 { transform: rotateY(180deg) translateZ(75px); } .f4 { transform: rotateY(-90deg) translateZ(75px); }
-        @keyframes rotate { from { transform: rotateX(0) rotateY(0); } to { transform: rotateX(360deg) rotateY(360deg); } }
-
-        /* LAYER 4: PARTICLE CANVAS */
-        #v8-canvas { position: fixed; top: 0; left: 0; z-index: 10; }
+        :root { --c1: #00f2ff; --c2: #7000ff; --bg: #000; }
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'monospace'; overflow: hidden; transition: background 2s ease; }
+        #master-container { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+        canvas { position: absolute; inset: 0; z-index: 1; }
+        .hud-v9 { position: fixed; top: 20px; left: 20px; z-index: 100; color: var(--c1); text-transform: uppercase; letter-spacing: 3px; font-size: 10px; background: rgba(0,0,0,0.8); padding: 10px; border: 1px solid var(--c1); }
+        .universe-label { position: absolute; font-size: 8rem; opacity: 0.1; font-weight: 900; pointer-events: none; width: 100%; text-align: center; top: 40%; z-index: 0; }
+        .dynamic-shape { position: absolute; border: 1px solid var(--c1); opacity: 0.5; transition: all 5s ease-in-out; }
     </style>
 </head>
 <body>
-    <div class='projector'></div>
-    <div class='scanlines'></div>
-
-    <div class='hud tl'>
-        <div>INFRASTRUCTURE: V8_INFINITE</div>
-        <div>SYNC_RATIO: 1,000,000:1</div>
-        <div id='fps'>FPS: 60</div>
+    <div class='hud-v9'>
+        <div>ENGINE: META_EVOLUTION_V9</div>
+        <div id='evo-count'>EVOLUTION: 1</div>
+        <div id='status'>STATUS: GENERATING_NEW_UNIVERSE...</div>
     </div>
-
-    <div class='hud br'>
-        <div>GRAVITY_ENGINE: ACTIVE</div>
-        <div>SATELLITE_LINK: ESTABLISHED</div>
-        <div id='coords'>X: 000 Y: 000</div>
-    </div>
-
-    <div class='scene'>
-        <canvas id='v8-canvas'></canvas>
-        <div class='sticky-core'>
-            <div class='crystal'>
-                <div class='face f1'></div>
-                <div class='face f2'></div>
-                <div class='face f3'></div>
-                <div class='face f4'></div>
-            </div>
-            <h1 style='z-index:60; font-size:4rem; letter-spacing:30px; text-shadow:0 0 20px #00f2ff; pointer-events:none;'>CORE</h1>
-        </div>
+    <div id='master-container'>
+        <div id='universe-name' class='universe-label'>ORIGIN</div>
+        <canvas id='neural-net'></canvas>
     </div>
 
     <script>
-        const canvas = document.getElementById('v8-canvas');
+        const canvas = document.getElementById('neural-net');
         const ctx = canvas.getContext('2d');
-        let w, h, particles = [], mouse = {x: null, y: null};
+        let w, h, particles = [], evo = 1;
 
         function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
         window.onresize = resize; resize();
 
         class Particle {
-            constructor() {
+            constructor() { this.reset(); }
+            reset() {
                 this.x = Math.random() * w; this.y = Math.random() * h;
-                this.vx = (Math.random() - 0.5) * 2; this.vy = (Math.random() - 0.5) * 2;
-                this.life = Math.random() * 100 + 100;
+                this.vx = (Math.random() - 0.5) * 4; this.vy = (Math.random() - 0.5) * 4;
             }
             update() {
-                if (mouse.x) {
-                    let dx = mouse.x - this.x, dy = mouse.y - this.y;
-                    let dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < 300) { this.vx += dx * 0.04 / dist; this.vy += dy * 0.04 / dist; }
-                }
-                this.x += this.vx; this.y += this.vy; this.vx *= 0.98; this.vy *= 0.98;
-                if(this.x < 0 || this.x > w) this.vx *= -1; if(this.y < 0 || this.y > h) this.vy *= -1;
-            }
-            draw() {
-                ctx.fillStyle = `rgba(0, 242, 255, ${0.2 + (Math.random()*0.5)})`;
-                ctx.beginPath(); ctx.arc(this.x, this.y, 1.2, 0, Math.PI*2); ctx.fill();
+                this.x += this.vx; this.y += this.vy;
+                if(this.x<0||this.x>w) this.vx*=-1; if(this.y<0||this.y>h) this.vy*=-1;
             }
         }
 
-        for(let i=0; i<500; i++) particles.push(new Particle());
+        for(let i=0; i<200; i++) particles.push(new Particle());
 
-        function animate() {
-            ctx.fillStyle = 'rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
+        function draw() {
+            ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.fillRect(0,0,w,h);
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--c1');
             particles.forEach((p, i) => {
-                p.update(); p.draw();
+                p.update();
+                ctx.beginPath(); ctx.arc(p.x, p.y, 1, 0, Math.PI*2); ctx.fill();
                 for(let j=i+1; j<particles.length; j++) {
                     let p2 = particles[j], d = Math.hypot(p.x-p2.x, p.y-p2.y);
-                    if(d < 70) {
-                        ctx.strokeStyle = `rgba(0, 242, 255, ${0.3 - d/70})`;
-                        ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
-                    }
+                    if(d < 100) { ctx.globalAlpha = 1 - d/100; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke(); }
                 }
             });
-            requestAnimationFrame(animate);
+            requestAnimationFrame(draw);
         }
-        animate();
+        draw();
 
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX; mouse.y = e.clientY;
-            document.getElementById('coords').innerText = `X: ${e.clientX} Y: ${e.clientY}`;
-        });
+        function evolve() {
+            evo++;
+            document.getElementById('evo-count').innerText = 'EVOLUTION: ' + evo;
+            const hue = Math.floor(Math.random() * 360);
+            document.documentElement.style.setProperty('--c1', 'hsl(' + hue + ', 100%, 50%)');
+            const container = document.getElementById('master-container');
+            const oldShapes = document.querySelectorAll('.dynamic-shape');
+            oldShapes.forEach(s => s.remove());
+            for(let i=0; i<5; i++) {
+                let s = document.createElement('div');
+                s.className = 'dynamic-shape';
+                let size = Math.random() * 300 + 50;
+                s.style.width = size + 'px';
+                s.style.height = size + 'px';
+                s.style.left = Math.random() * 80 + '%';
+                s.style.top = Math.random() * 80 + '%';
+                s.style.borderRadius = Math.random() > 0.5 ? '50%' : '0%';
+                s.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+                container.appendChild(s);
+            }
+            document.getElementById('universe-name').innerText = 'UNIVERSE_' + Math.random().toString(36).substring(7).toUpperCase();
+        }
+        setInterval(evolve, 5000);
     </script>
 </body>
 </html>
