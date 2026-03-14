@@ -3,112 +3,131 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE BRAIN V39 | 8D HYPER-CAUSAL</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
+<title>CORE V40 | NIGHTINGALE SINGULARITY</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&family=Syncopate:wght@400;700&display=swap' rel='stylesheet'>
 <style>
 :root{
-     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --c4:#00ff75; --dim: 1; --entropy: 0;
-     --font-size: clamp(2rem, 10vw, 8rem);
+     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --c4:#00ff75; --dim: 1; --f-weight: 100; --f-width: 100%;
+     --bg: #000; --entry-op: 1;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{ background:#000; color:#fff; font-family:'Michroma',sans-serif; overflow:hidden; transition: background 2s; }
+html,body{ background:var(--bg); color:#fff; font-family:'Michroma',sans-serif; overflow-x:hidden; scroll-behavior:smooth; }
 
-canvas{ position:fixed; inset:0; z-index:0; transition: filter 1s; mix-blend-mode: screen; }
+canvas{ position:fixed; inset:0; z-index:1; mix-blend-mode: screen; }
 
-/* 8D UI STACK */
-.interface-layer{ position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:10; pointer-events:none; text-align:center; }
-.title-8d{
-    font-family:'Orbitron'; font-weight:900; font-size:var(--font-size); letter-spacing:calc(var(--dim) * 10px);
-    text-shadow: 0 0 calc(var(--dim) * 10px) var(--c1); transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
-    text-transform: uppercase;
+/* ENTRY CINEMATIC LAYER */
+.entry-site{ 
+    position:relative; z-index:1000; min-height:200vh; background:#050505; 
+    opacity: var(--entry-op); transition: opacity 2s cubic-bezier(0.19, 1, 0.22, 1);
+    display: flex; flex-direction: column; align-items: center;
 }
-.sub-label{ font-family:'JetBrains Mono'; font-weight:var(--entropy); letter-spacing:10px; opacity:0.6; margin-top:20px; font-size:12px; }
+.entry-hero{ height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+.premium-label{ font-family:'Syncopate'; font-weight:700; letter-spacing:20px; font-size:4rem; text-transform:uppercase; }
 
-.hud-container{ position:fixed; inset:40px; border:1px solid rgba(255,255,255,0.05); pointer-events:none; z-index:100; }
-.status-hud{ position:absolute; bottom:20px; left:20px; font-family:'JetBrains Mono'; font-size:9px; letter-spacing:3px; color:var(--c1); }
-.dim-counter{ position:absolute; top:20px; right:20px; font-family:'Orbitron'; color:var(--c2); font-size:14px; }
+/* 8D GAMING HUD */
+.game-hud{ 
+    position:fixed; top:30px; right:30px; z-index:2000; display:flex; gap:10px; 
+    opacity: calc(1 - var(--entry-op)); pointer-events: auto;
+}
+.hud-btn{ 
+    background:rgba(255,255,255,0.05); border:1px solid var(--c1); color:#fff; 
+    padding:10px 20px; font-family:'Orbitron'; font-size:10px; cursor:pointer; transition:0.3s;
+}
+.hud-btn:hover{ background:var(--c1); color:#000; box-shadow:0 0 20px var(--c1); }
 
-/* CAUSAL PULSE */
-.vibe-pulse{ position:fixed; inset:0; background: radial-gradient(circle at center, transparent, rgba(0,0,0,0.8)); z-index:1; animation: breathe 10s infinite; }
-@keyframes breathe{ 0%,100%{transform:scale(1); opacity:0.5;} 50%{transform:scale(1.1); opacity:0.8;} }
+/* NIGHTINGALE ELEMENTS */
+.nightingale-node{ 
+    position:fixed; width:2px; height:2px; background:#fff; border-radius:50%; 
+    box-shadow:0 0 10px var(--c3); z-index:5; pointer-events:none;
+}
+
+.pixel-fill{ 
+    position:fixed; inset:0; z-index:0; 
+    background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px); 
+    background-size: 4px 4px; pointer-events:none; 
+}
+
+#main-title{ 
+    font-family:'Orbitron'; font-weight:var(--f-weight); font-stretch: var(--f-width); 
+    font-size:clamp(3rem, 15vw, 10rem); letter-spacing:calc(var(--dim)*15px); 
+    text-shadow: 0 0 30px var(--c1);
+}
 </style>
 </head>
 <body>
-<div class='vibe-pulse'></div>
-<canvas id='render-8d'></canvas>
+<div class='pixel-fill'></div>
+<canvas id='universe-8d'></canvas>
 
-<div class='hud-container'>
-    <div class='dim-counter' id='dim-val'>DIMENSION: 8D_ORIGIN</div>
-    <div class='status-hud'>
-        [SYSTEM] HYPER_CAUSAL_V39<br>
-        [LOGIC] <span id='logic-mode'>PATTERN_STABLE</span><br>
-        [ENTROPY] <span id='ent-val'>0</span>
-    </div>
+<div class='game-hud'>
+    <button class='hud-btn' onclick='gameEngine.play()'>PLAY</button>
+    <button class='hud-btn' onclick='gameEngine.pause()'>PAUSE</button>
+    <button class='hud-btn' onclick='gameEngine.stop()'>STOP</button>
 </div>
 
-<div class='interface-layer'>
-    <h1 class='title-8d' id='main-title'>CORE</h1>
-    <p class='sub-label' id='sub-text'>INTELLIGENT DIGITAL ORGANISM</p>
+<main class='entry-site' id='entry'>
+    <section class='entry-hero'>
+        <h1 class='premium-label'>UNIVERSAL<br>ARCHITECTURE</h1>
+        <p style='margin-top:20px; letter-spacing:10px; opacity:0.5;'>SCROLL TO ENTER VOID</p>
+    </section>
+    <section style='height:100vh;'></section>
+</main>
+
+<div style='position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:10; pointer-events:none;'>
+    <h1 id='main-title'>CORE</h1>
 </div>
 
 <script>
-const canvas=document.getElementById('render-8d');
-const ctx=canvas.getContext('2d');
-let w,h, time=0, dimension=1, particles=[];
-const layers = ['GEOMETRIC', 'TEMPORAL', 'QUANTUM', 'CAUSAL', 'SENSORY', 'ENTROPIC', 'NEURAL', 'INFINITE'];
+const canvas = document.getElementById('universe-8d');
+const ctx = canvas.getContext('2d');
+let w, h, time=0, particles=[], isRunning=true;
 
 function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
 resize(); addEventListener('resize',resize);
 
-for(let i=0;i<200;i++){
-     particles.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w, r:Math.random()*2+1, hue:Math.random()*360 });
+for(let i=0;i<300;i++){
+    particles.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w, r:Math.random()*2+1, color:Math.random()*360 });
 }
 
-function animate8D(){
+const gameEngine = {
+    play: () => isRunning = true,
+    pause: () => isRunning = false,
+    stop: () => { isRunning = false; time = 0; }
+};
+
+window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const opacity = Math.max(0, 1 - scrollY / 800);
+    document.documentElement.style.setProperty('--entry-op', opacity);
+    if(opacity <= 0) document.getElementById('entry').style.display = 'none';
+});
+
+function draw8D(){
+    if(!isRunning) { requestAnimationFrame(draw8D); return; }
     time += 0.01;
-    dimension = 1 + (Math.sin(time * 0.5) + 1) * 3.5; // Auto-fluctuate dimensions 1-8
-    const currentEntropy = Math.floor((Math.sin(time) + 1) * 400 + 100);
     
-    // CSS Property Mutation
-    document.documentElement.style.setProperty('--dim', dimension);
-    document.documentElement.style.setProperty('--entropy', currentEntropy);
-    document.getElementById('dim-val').textContent = `DIMENSION: ${layers[Math.floor(dimension)]}_STACK`;
-    document.getElementById('ent-val').textContent = currentEntropy;
-    
-    const primaryHue = (time * 20) % 360;
-    document.documentElement.style.setProperty('--c1', `hsl(${primaryHue}, 100%, 60%)`);
-    document.documentElement.style.setProperty('--c2', `hsl(${(primaryHue + 90) % 360}, 100%, 60%)`);
-
-    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+    ctx.fillStyle = 'rgba(0,0,0,0.1)';
     ctx.fillRect(0,0,w,h);
-    const cx=w/2, cy=h/2;
+    
+    const cx = w/2, cy = h/2;
+    const dimension = 1 + (Math.sin(time*0.5)+1)*3.5;
+    document.documentElement.style.setProperty('--f-weight', Math.floor(100 + (Math.sin(time)+1)*400));
+    document.documentElement.style.setProperty('--f-width', Math.floor(50 + (Math.cos(time)+1)*50) + '%');
 
-    // Recursive 8D Geometric Mapping
-    for(let i=0; i<Math.floor(dimension * 5); i++){
-        ctx.strokeStyle = `hsla(${(primaryHue + i * 20) % 360}, 100%, 50%, 0.2)`;
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        const rot = time + (i * 0.2);
-        const radius = i * 30 * (Math.sin(time) + 1.5);
-        ctx.ellipse(cx, cy, radius, radius * 0.5, rot, 0, Math.PI * 2);
-        ctx.stroke();
-    }
-
-    // Hyper-Causal Particle Flow
     particles.forEach(p => {
-        p.z -= (5 * dimension);
+        p.z -= 5;
         if(p.z <= 0) p.z = w;
-        let scale = 400 / p.z;
+        let scale = 400/p.z;
         let x2d = (p.x - cx) * scale + cx;
         let y2d = (p.y - cy) * scale + cy;
         
-        ctx.fillStyle = `hsla(${(p.hue + time * 50) % 360}, 100%, 70%, ${1 - (p.z/w)})`;
+        ctx.fillStyle = `hsla(${p.color}, 100%, 70%, ${1 - p.z/w})`;
         ctx.beginPath();
-        ctx.arc(x2d, y2d, scale * (dimension / 2), 0, Math.PI * 2);
+        ctx.arc(x2d, y2d, scale * dimension, 0, Math.PI*2);
         ctx.fill();
 
-        if(dimension > 5 && scale > 2){
-            ctx.strokeStyle = `hsla(${p.hue}, 100%, 50%, 0.1)`;
+        // Glowing Neural Lines
+        if(scale > 3) {
+            ctx.strokeStyle = `hsla(${p.color}, 100%, 50%, 0.1)`;
             ctx.beginPath();
             ctx.moveTo(x2d, y2d);
             ctx.lineTo(cx, cy);
@@ -116,15 +135,20 @@ function animate8D(){
         }
     });
 
-    requestAnimationFrame(animate8D);
+    requestAnimationFrame(draw8D);
 }
-animate8D();
+draw8D();
 
-// Logic Pattern Recombination
+// Nightingale Procedural Beats
 setInterval(() => {
-    const logicStates = ['ANALYZING_FLUX', 'CAUSAL_SYNC', 'NEURAL_BURST', 'ENTROPY_MAX', 'STABLE_ORIGIN'];
-    document.getElementById('logic-mode').textContent = logicStates[Math.floor(Math.random()*logicStates.length)];
-}, 3000);
+    if(!isRunning) return;
+    const node = document.createElement('div');
+    node.className = 'nightingale-node';
+    node.style.left = Math.random()*100 + 'vw';
+    node.style.top = Math.random()*100 + 'vh';
+    document.body.appendChild(node);
+    setTimeout(() => node.remove(), 2000);
+}, 500);
 </script>
 </body>
 </html>
