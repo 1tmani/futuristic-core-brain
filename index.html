@@ -3,59 +3,97 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE-BRAIN V20 | GENERATIVE ARCHITECTURE</title>
+    <title>CORE-BRAIN V21 | AUTONOMOUS SINGULARITY</title>
     <link href='https://fonts.googleapis.com/css2?family=Michroma&display=swap' rel='stylesheet'>
     <style>
-        :root { --c1: #00f2ff; --c2: #7000ff; }
-        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Michroma', sans-serif; overflow-x: hidden; }
+        :root { --c1: #00f2ff; --c2: #7000ff; --rot: 0deg; --gap: 20px; }
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Michroma', sans-serif; overflow: hidden; height: 100vh; }
 
-        /* LIQUID FILTER */
-        .liquid-container {
-            filter: url('#gooey');
-            height: 100vh; width: 100vw; display: flex; align-items: center; justify-content: center; position: fixed; inset: 0;
+        /* KINETIC LAYOUT GRID */
+        #kinetic-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: var(--gap);
+            height: 100vh; width: 100vw;
+            padding: 20px; box-sizing: border-box;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: rotate(var(--rot));
         }
 
-        .morph-orb {
-            width: 150px; height: 150px; background: var(--c1);
-            border-radius: 50%; position: absolute;
-            box-shadow: 0 0 50px var(--c1);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .cell { border: 1px solid var(--c1); position: relative; overflow: hidden; background: rgba(0, 242, 255, 0.02); backdrop-filter: blur(5px); }
+        .cell::after { content: ''; position: absolute; inset: 0; background: linear-gradient(45deg, transparent, var(--c1)); opacity: 0.1; }
+
+        /* AUTONOMOUS MANIFESTATION HUD */
+        .hud-v21 {
+            position: fixed; top: 30px; left: 30px; font-size: 10px; z-index: 1000;
+            background: rgba(0,0,0,0.8); border-left: 3px solid var(--c1); padding: 15px; letter-spacing: 2px;
         }
 
-        .hud-v20 { position: fixed; top: 20px; left: 20px; font-size: 10px; z-index: 100; color: var(--c1); }
+        /* LIQUID SINGULARITY CORE */
+        #core-node {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 200px; height: 200px; background: var(--c2); border-radius: 50%;
+            filter: blur(40px); mix-blend-mode: screen; pointer-events: none; z-index: 500;
+        }
     </style>
 </head>
 <body>
-    <div class='hud-v20'>● LEVEL_5: GENERATIVE_ARCHITECTURE<br>● STATUS: MORPHING_GEOMETRY_ACTIVE</div>
-
-    <div class='liquid-container' id='morph-field'>
-        <div class='morph-orb' style='left: 45%; top: 40%;'></div>
-        <div class='morph-orb' id='follower' style='left: 50%; top: 50%; width: 100px; height: 100px; background: var(--c2);'></div>
+    <div class='hud-v21'>
+        ● SYSTEM: AUTONOMOUS_GOVERNOR_V21<br>
+        ● STATUS: SELF_UPGRADING_ACTIVE<br>
+        ● AUDIO: NEURAL_SOUNDSCAPE_V1<br>
+        ● EVOLUTION_MS: <span id='ms-clock'>0</span>
     </div>
 
-    <!-- GOOEY SVG FILTER -->
-    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="display:none;">
-      <defs>
-        <filter id="gooey">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="gooey" />
-          <feComposite in="SourceGraphic" in2="gooey" operator="atop"/>
-        </filter>
-      </defs>
-    </svg>
+    <div id='core-node'></div>
+    <div id='kinetic-container'>
+        <div class='cell'></div><div class='cell'></div><div class='cell'></div>
+        <div class='cell'></div><div class='cell'></div><div class='cell'></div>
+        <div class='cell'></div><div class='cell'></div><div class='cell'></div>
+    </div>
 
     <script>
-        const follower = document.getElementById('follower');
-        window.addEventListener('mousemove', (e) => {
-            // Smoothly move the follower orb to create 'merging' liquid effect
-            follower.style.transform = `translate(${e.clientX - window.innerWidth/2}px, ${e.clientY - window.innerHeight/2}px)`;
-        });
+        let audioCtx, oscillator;
+        
+        // NEURAL SOUNDSCAPE (Prompt 52)
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(50, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+            }
+        }
 
-        // Simulate auto-theme generation (Prompt 55)
-        setInterval(() => {
-            const hue = Math.floor(Math.random() * 360);
+        document.body.addEventListener('click', initAudio, {once: true});
+
+        // AUTONOMOUS GOVERNOR (Millisecond Upgrades)
+        let lastEvolve = 0;
+        function autonomousUpgrade(time) {
+            document.getElementById('ms-clock').innerText = Math.floor(time);
+            
+            // Continuous Theme & Layout Manifestation
+            const hue = (time / 50) % 360;
+            const rotation = (time / 100) % 360;
+            const gap = 10 + Math.sin(time / 500) * 20;
+
             document.documentElement.style.setProperty('--c1', `hsl(${hue}, 100%, 50%)`);
-        }, 10000);
+            document.documentElement.style.setProperty('--rot', `${rotation}deg`);
+            document.documentElement.style.setProperty('--gap', `${gap}px`);
+
+            if (oscillator) {
+                oscillator.frequency.setTargetAtTime(50 + (Math.sin(time/1000) * 20), audioCtx.currentTime, 0.1);
+            }
+
+            requestAnimationFrame(autonomousUpgrade);
+        }
+        requestAnimationFrame(autonomousUpgrade);
     </script>
 </body>
 </html>
