@@ -3,88 +3,94 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE-BRAIN V17 | SATELLITE MINI-GAME</title>
+    <title>CORE-BRAIN V18 | ARCADE SINGULARITY</title>
     <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
     <style>
         :root { --c1: #00f2ff; --c2: #7000ff; --accent: #fff; }
-        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Michroma', sans-serif; height: 100%; width: 100%; }
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Michroma', sans-serif; height: 100%; overflow: hidden; }
         
-        /* Fix: Force Scrollability */
-        .master-container { height: 500vh; width: 100%; position: relative; overflow-y: scroll; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
-
-        .layer { height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid rgba(0, 242, 255, 0.1); }
-
-        .hero-title { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; letter-spacing: 10px; text-align: center; text-shadow: 0 0 10px var(--c1); }
+        /* Arcade Interface */
+        .arcade-container { height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .game-screen { width: 80%; height: 60%; border: 4px solid var(--c1); background: rgba(0, 242, 255, 0.05); position: relative; overflow: hidden; box-shadow: 0 0 50px rgba(0, 242, 255, 0.2); }
         
-        /* Mini-Game UI */
-        #game-box { width: 300px; height: 300px; border: 2px solid var(--c1); position: relative; background: rgba(0, 242, 255, 0.05); cursor: crosshair; overflow: hidden; }
-        #satellite-target { width: 40px; height: 40px; border: 2px dashed #fff; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        #signal-orb { width: 20px; height: 20px; background: var(--c2); border-radius: 50%; position: absolute; box-shadow: 0 0 20px var(--c2); transition: 0.1s; }
-        .win-msg { color: #0f0; display: none; font-size: 10px; margin-top: 10px; }
+        .hud-v18 { position: fixed; top: 20px; left: 20px; font-size: 10px; color: var(--c1); text-transform: uppercase; z-index: 100; }
+        .menu { margin-bottom: 20px; display: flex; gap: 20px; }
+        .btn { padding: 10px 20px; border: 1px solid var(--c1); cursor: pointer; transition: 0.3s; font-size: 12px; }
+        .btn:hover { background: var(--c1); color: #000; box-shadow: 0 0 20px var(--c1); }
+        
+        /* Game 1: Satellite */
+        #satellite-game { display: block; width: 100%; height: 100%; position: relative; }
+        #target { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; border: 2px dashed #fff; }
+        #orb { position: absolute; width: 30px; height: 30px; background: var(--c2); border-radius: 50%; cursor: grab; box-shadow: 0 0 20px var(--c2); }
 
-        .hud-v17 { position: fixed; top: 20px; left: 20px; font-size: 8px; z-index: 1000; color: var(--c1); background: rgba(0,0,0,0.5); padding: 5px; }
+        /* Game 2: Neural Defense */
+        #defense-game { display: none; width: 100%; height: 100%; position: relative; }
+        .glitch-enemy { position: absolute; width: 20px; height: 20px; background: red; box-shadow: 0 0 15px red; cursor: pointer; }
+
+        .win-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; color: #0f0; font-size: 20px; z-index: 10; }
     </style>
 </head>
 <body>
-    <div class='hud-v17'>● PROTOCOL: V17_GAME_UPLINK<br>● SCROLL_ENGINE: STABILIZED_500VH</div>
+    <div class='hud-v18'>● SYSTEM: ARCADE_PROTOCOL_V18<br>● STATUS: GAMES_INITIALIZED</div>
 
-    <div class='master-container'>
-        <div class='layer'>
-            <h1 class='hero-title'>PLANET_ALPHA</h1>
-            <p style='font-size:10px; opacity:0.6;'>SWIPE DOWN TO FIND THE UPLINK</p>
+    <div class='arcade-container'>
+        <div class='menu'>
+            <div class='btn' onclick='showGame("satellite")'>SATELLITE UPLINK</div>
+            <div class='btn' onclick='showGame("defense")'>NEURAL DEFENSE</div>
         </div>
 
-        <div class='layer'>
-            <h1>LAYER_DATA</h1>
-            <div style='width:100%; height:2px; background:linear-gradient(to right, transparent, var(--c1), transparent); opacity:0.3;'></div>
-        </div>
-
-        <div class='layer' id='game-layer'>
-            <h2 style='font-size:12px; margin-bottom:20px;'>PROMPT 17: SATELLITE UPLINK</h2>
-            <div id='game-box'>
-                <div id='satellite-target'></div>
-                <div id='signal-orb'></div>
+        <div class='game-screen'>
+            <div id='win-screen' class='win-overlay'>CORE STABILIZED</div>
+            
+            <div id='satellite-game'>
+                <div id='target'></div>
+                <div id='orb'></div>
+                <p style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:8px;'>DRAG ORB TO TARGET</p>
             </div>
-            <div id='win-text' class='win-msg'>SYSTEM STABILIZED: UPLINK SUCCESSFUL</div>
-            <p style='font-size:8px; margin-top:10px;'>DRAG THE ORB TO THE CENTER TARGET</p>
-        </div>
 
-        <div class='layer'>
-            <h1>DEEP_VOID</h1>
-        </div>
-
-        <div class='layer'>
-            <h1>SINGULARITY</h1>
+            <div id='defense-game' onclick='spawnEnemy()'>
+                <p style='position:absolute; bottom:10px; width:100%; text-align:center; font-size:8px;'>CLICK THE RED GLITCHES TO DEFEND CORE</p>
+            </div>
         </div>
     </div>
 
     <script>
-        const orb = document.getElementById('signal-orb');
-        const box = document.getElementById('game-box');
-        const winText = document.getElementById('win-text');
-
-        // Randomize initial position
-        let ox = Math.random() * 260, oy = Math.random() * 260;
-        orb.style.left = ox + 'px'; orb.style.top = oy + 'px';
-
-        function updatePos(e) {
-            let rect = box.getBoundingClientRect();
-            let x = (e.clientX || e.touches[0].clientX) - rect.left - 10;
-            let y = (e.clientY || e.touches[0].clientY) - rect.top - 10;
-            
-            if(x > 0 && x < 280) orb.style.left = x + 'px';
-            if(y > 0 && y < 280) orb.style.top = y + 'px';
-
-            // Check Win (proximity to center 150, 150)
-            if(Math.abs(x - 140) < 20 && Math.abs(y - 140) < 20) {
-                winText.style.display = 'block';
-                orb.style.background = '#0f0';
-                orb.style.boxShadow = '0 0 30px #0f0';
-            }
+        function showGame(type) {
+            document.getElementById('satellite-game').style.display = type === 'satellite' ? 'block' : 'none';
+            document.getElementById('defense-game').style.display = type === 'defense' ? 'block' : 'none';
+            document.getElementById('win-screen').style.display = 'none';
         }
 
-        box.addEventListener('mousemove', (e) => { if(e.buttons == 1) updatePos(e); });
-        box.addEventListener('touchmove', (e) => { e.preventDefault(); updatePos(e); }, {passive: false});
+        // Game 1 Logic
+        const orb = document.getElementById('orb');
+        orb.style.left = '20px'; orb.style.top = '20px';
+        orb.onmousedown = function(e) {
+            document.onmousemove = function(e) {
+                orb.style.left = e.clientX - 15 + 'px';
+                orb.style.top = e.clientY - 15 + 'px';
+                let rect = document.getElementById('target').getBoundingClientRect();
+                if(Math.abs(e.clientX - (rect.left + 30)) < 30 && Math.abs(e.clientY - (rect.top + 30)) < 30) {
+                    document.getElementById('win-screen').style.display = 'flex';
+                }
+            };
+            document.onmouseup = function() { document.onmousemove = null; };
+        };
+
+        // Game 2 Logic
+        function spawnEnemy() {
+            const game = document.getElementById('defense-game');
+            const enemy = document.createElement('div');
+            enemy.className = 'glitch-enemy';
+            enemy.style.left = Math.random() * 90 + '%';
+            enemy.style.top = Math.random() * 90 + '%';
+            enemy.onclick = (e) => {
+                e.stopPropagation();
+                enemy.remove();
+            };
+            game.appendChild(enemy);
+            setTimeout(() => { if(enemy.parentNode) enemy.remove(); }, 2000);
+        }
+        setInterval(() => { if(document.getElementById('defense-game').style.display === 'block') spawnEnemy(); }, 1000);
     </script>
 </body>
 </html>
