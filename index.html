@@ -3,7 +3,7 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V40 | NIGHTINGALE SINGULARITY</title>
+<title>CORE V41 | LAYER 2 NEXUS</title>
 <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&family=Syncopate:wght@400;700&display=swap' rel='stylesheet'>
 <style>
 :root{
@@ -16,8 +16,8 @@ html,body{ background:var(--bg); color:#fff; font-family:'Michroma',sans-serif; 
 canvas{ position:fixed; inset:0; z-index:1; mix-blend-mode: screen; }
 
 /* ENTRY CINEMATIC LAYER */
-.entry-site{
-    position:relative; z-index:1000; min-height:200vh; background:#050505;
+.entry-site{ 
+    position:relative; z-index:1000; min-height:200vh; background:#050505; 
     opacity: var(--entry-op); transition: opacity 2s cubic-bezier(0.19, 1, 0.22, 1);
     display: flex; flex-direction: column; align-items: center;
 }
@@ -25,31 +25,31 @@ canvas{ position:fixed; inset:0; z-index:1; mix-blend-mode: screen; }
 .premium-label{ font-family:'Syncopate'; font-weight:700; letter-spacing:20px; font-size:4rem; text-transform:uppercase; }
 
 /* 8D GAMING HUD */
-.game-hud{
-    position:fixed; top:30px; right:30px; z-index:2000; display:flex; gap:10px;
+.game-hud{ 
+    position:fixed; top:30px; right:30px; z-index:2000; display:flex; gap:10px; 
     opacity: calc(1 - var(--entry-op)); pointer-events: auto;
 }
-.hud-btn{
-    background:rgba(255,255,255,0.05); border:1px solid var(--c1); color:#fff;
+.hud-btn{ 
+    background:rgba(255,255,255,0.05); border:1px solid var(--c1); color:#fff; 
     padding:10px 20px; font-family:'Orbitron'; font-size:10px; cursor:pointer; transition:0.3s;
 }
 .hud-btn:hover{ background:var(--c1); color:#000; box-shadow:0 0 20px var(--c1); }
 
 /* NIGHTINGALE ELEMENTS */
-.nightingale-node{
-    position:fixed; width:2px; height:2px; background:#fff; border-radius:50%;
+.nightingale-node{ 
+    position:fixed; width:2px; height:2px; background:#fff; border-radius:50%; 
     box-shadow:0 0 10px var(--c3); z-index:5; pointer-events:none;
 }
 
-.pixel-fill{
-    position:fixed; inset:0; z-index:0;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 4px 4px; pointer-events:none;
+.pixel-fill{ 
+    position:fixed; inset:0; z-index:0; 
+    background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px); 
+    background-size: 4px 4px; pointer-events:none; 
 }
 
-#main-title{
-    font-family:'Orbitron'; font-weight:var(--f-weight); font-stretch: var(--f-width);
-    font-size:clamp(3rem, 15vw, 10rem); letter-spacing:calc(var(--dim)*15px);
+#main-title{ 
+    font-family:'Orbitron'; font-weight:var(--f-weight); font-stretch: var(--f-width); 
+    font-size:clamp(3rem, 15vw, 10rem); letter-spacing:calc(var(--dim)*15px); 
     text-shadow: 0 0 30px var(--c1);
 }
 </style>
@@ -104,10 +104,10 @@ window.addEventListener('scroll', () => {
 function draw8D(){
     if(!isRunning) { requestAnimationFrame(draw8D); return; }
     time += 0.01;
-
+    
     ctx.fillStyle = 'rgba(0,0,0,0.1)';
     ctx.fillRect(0,0,w,h);
-
+    
     const cx = w/2, cy = h/2;
     const dimension = 1 + (Math.sin(time*0.5)+1)*3.5;
     document.documentElement.style.setProperty('--f-weight', Math.floor(100 + (Math.sin(time)+1)*400));
@@ -119,7 +119,7 @@ function draw8D(){
         let scale = 400/p.z;
         let x2d = (p.x - cx) * scale + cx;
         let y2d = (p.y - cy) * scale + cy;
-
+        
         ctx.fillStyle = `hsla(${p.color}, 100%, 70%, ${1 - p.z/w})`;
         ctx.beginPath();
         ctx.arc(x2d, y2d, scale * dimension, 0, Math.PI*2);
