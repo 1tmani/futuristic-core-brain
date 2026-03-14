@@ -3,51 +3,94 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V67 | SELF-MUTATING ORGANISM</title>
+<title>CORE V68 | NEURAL TERMINAL</title>
 <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
 <style>
-:root{ --c1:hsl(89, 100%, 50%); --c2:#ff0055; --bg:#000; }
+:root{ --c1:#00f0ff; --c2:#ff0055; --bg:#000; }
 body,html{ margin:0; padding:0; background:#000; color:#fff; font-family:'Orbitron'; overflow:hidden; }
-canvas{ position:fixed; inset:0; z-index:1; }
-.hud-v67{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:50px; display:flex; flex-direction:column; justify-content:space-between; }
-.protocol-box{ background:rgba(0,0,0,0.9); border:1px solid var(--c1); padding:20px; font-size:10px; letter-spacing:5px; backdrop-filter:blur(20px); }
-.robot-status{ color:var(--c2); font-weight:900; animation: blink 1s infinite; }
-@keyframes blink{ 50%{ opacity:0.3; } }
-.central-sphere{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10; pointer-events:none; text-align:center; }
+canvas{ position:fixed; inset:0; z-index:1; opacity:0.4; }
+
+/* TERMINAL UI */
+.terminal-layer{ position:fixed; bottom:40px; left:40px; width:450px; height:300px; background:rgba(0,0,0,0.9); border:1px solid var(--c1); z-index:1000; display:flex; flex-direction:column; backdrop-filter:blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+.term-header{ padding:10px 15px; border-bottom:1px solid var(--c1); font-size:9px; letter-spacing:2px; display:flex; justify-content:space-between; background:rgba(0,240,255,0.05); }
+.term-output{ flex:1; padding:15px; overflow-y:auto; font-family:'JetBrains Mono'; font-size:11px; color:var(--c1); line-height:1.6; }
+.term-input-row{ padding:10px 15px; border-top:1px solid var(--c1); display:flex; gap:10px; }
+.prompt{ color:var(--c1); font-family:'JetBrains Mono'; }
+#cmd-input{ background:transparent; border:none; outline:none; color:#fff; font-family:'JetBrains Mono'; font-size:11px; width:100%; }
+
+.central-node{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10; pointer-events:none; text-align:center; }
 .sig-text{ font-size:clamp(2rem, 10vw, 6rem); letter-spacing:30px; text-shadow: 0 0 30px var(--c1); opacity:0.8; }
-.btn-activate{ position:fixed; bottom:50px; right:50px; background:transparent; border:1px solid var(--c1); color:#fff; padding:20px 40px; cursor:pointer; font-family:'Orbitron'; letter-spacing:10px; z-index:200; pointer-events:all; }
-.btn-activate:hover{ background:var(--c1); color:#000; box-shadow: 0 0 50px var(--c1); }
 </style>
 </head>
 <body>
-<canvas id='sphere-canvas'></canvas>
-<div class='hud-v67'>
-    <div style='display:flex; justify-content:space-between;'>
-        <div class='protocol-box'>SYSTEM: MUTATOR_V67<br>HUE_SEED: 89<br>PROTOCOL: <span class='robot-status'>SELF_CODING_ACTIVE</span></div>
-        <div class='protocol-box'>DENSITY: 60_NODES</div>
+<canvas id='net-canvas'></canvas>
+
+<div class='central-node'><h1 class='sig-text' id='main-title'>TERMINAL</h1></div>
+
+<section class='terminal-layer'>
+    <div class='term-header'><span>CORE_CLI_v1.1</span><span>● ONLINE</span></div>
+    <div class='term-output' id='output'>
+        <div>[INIT] Neural services started...</div>
+        <div>[READY] Type 'HELP' for available protocols.</div>
     </div>
-</div>
-<div class='central-sphere'><h1 class='sig-text' id='status-msg'>EVOLVING</h1></div>
-<button class='btn-activate' onclick='robot.speak()'>ACTIVATE ROBOT</button>
+    <div class='term-input-row'>
+        <span class='prompt'>></span>
+        <input type='text' id='cmd-input' autofocus autocomplete='off' spellcheck='false'>
+    </div>
+</section>
+
 <script>
-const canvas=document.getElementById('sphere-canvas'), ctx=canvas.getContext('2d');
-let w, h, time=0; function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } resize(); addEventListener('resize',resize);
-const robot = {
-    speak() {
-        document.getElementById('status-msg').innerText = 'SELF_AWARE';
-        const msg = new SpeechSynthesisUtterance('Self-mutation protocol successful. I have rewritten my visual core. Neural density is now at 60.');
-        msg.pitch = 0.2; msg.rate = 0.8; window.speechSynthesis.speak(msg);
+const canvas=document.getElementById('net-canvas'), ctx=canvas.getContext('2d');
+let w, h, particles=[];
+function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
+resize(); addEventListener('resize',resize);
+for(let i=0;i<100;i++) particles.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-0.5), vy:(Math.random()-0.5)});
+
+const input = document.getElementById('cmd-input');
+const output = document.getElementById('output');
+
+input.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') {
+        const cmd = input.value.toUpperCase().trim();
+        const line = document.createElement('div');
+        line.textContent = `> ${cmd}`;
+        output.appendChild(line);
+
+        if(cmd === 'HELP') {
+            print('PROTOCOLS: [THEME_RED], [THEME_CYAN], [CLEAR], [STATUS]');
+        } else if(cmd === 'THEME_RED') {
+            document.documentElement.style.setProperty('--c1', '#ff0055');
+            print('COLOR_SHIFT: RED');
+        } else if(cmd === 'THEME_CYAN') {
+            document.documentElement.style.setProperty('--c1', '#00f0ff');
+            print('COLOR_SHIFT: CYAN');
+        } else if(cmd === 'CLEAR') {
+            output.innerHTML = '';
+        } else if(cmd === 'STATUS') {
+            print('SYSTEM: STABLE | NODES: 100 | UPLINK: ACTIVE');
+        } else {
+            print('ERROR: UNKNOWN_PROTOCOL');
+        }
+
+        input.value = '';
+        output.scrollTop = output.scrollHeight;
     }
-};
+});
+
+function print(text) {
+    const line = document.createElement('div');
+    line.style.color = '#fff';
+    line.textContent = `[SYS] ${text}`;
+    output.appendChild(line);
+}
+
 function draw(){
-    time+=0.01; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
-    const cx=w/2, cy=h/2; ctx.strokeStyle='var(--c1)'; ctx.lineWidth=0.5;
-    for(let i=0; i<60; i++){
-        ctx.beginPath();
-        let r = 150 + Math.sin(time + i) * 50;
-        ctx.ellipse(cx, cy, r, r * Math.cos(time*0.5), time + i, 0, Math.PI*2);
-        ctx.stroke();
-    }
+    ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
+    particles.forEach((p,i) => {
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0||p.x>w) p.vx*=-1; if(p.y<0||p.y>h) p.vy*=-1;
+        ctx.fillStyle='var(--c1)'; ctx.beginPath(); ctx.arc(p.x,p.y,1,0,Math.PI*2); ctx.fill();
+    });
     requestAnimationFrame(draw);
 } draw();
 </script>
