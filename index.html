@@ -3,63 +3,68 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE-BRAIN V5 | SINGULARITY</title>
+    <title>CORE-BRAIN V7 | UNIFIED SINGULARITY</title>
     <style>
-        :root { --c1: #00f2ff; --c2: #7000ff; --bg: #000; }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: #fff; font-family: 'Syncopate', sans-serif; overflow: hidden; }
+        :root { --c1: #00f2ff; --c2: #7000ff; --bg: #000; --glass: rgba(0, 242, 255, 0.05); }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: #fff; font-family: 'Syncopate', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* Projector Scanline Overlay */
-        .overlay { position: fixed; inset: 0; background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.2) 50%), linear-gradient(90deg, rgba(255,0,0,0.05), rgba(0,255,0,0.02), rgba(0,0,255,0.05)); background-size: 100% 2px, 3px 100%; z-index: 100; pointer-events: none; }
+        /* LAYER 1: Projector & Scanlines */
+        .projector-fx { position: fixed; inset: 0; z-index: 100; pointer-events: none; background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.1) 50%), linear-gradient(90deg, rgba(255,0,0,0.02), rgba(0,255,0,0.01), rgba(0,0,255,0.02)); background-size: 100% 3px, 3px 100%; opacity: 0.6; }
+        .lens-flare { position: fixed; top: -10%; left: -10%; width: 120%; height: 120%; background: radial-gradient(circle at 10% 10%, rgba(0, 242, 255, 0.1) 0%, transparent 60%); z-index: 101; pointer-events: none; animation: flare-move 10s infinite alternate ease-in-out; }
+        @keyframes flare-move { from { transform: translate(0,0); } to { transform: translate(50px, 50px); } }
 
-        /* 3D Scene */
-        .scene { height: 100vh; perspective: 1200px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        
-        /* The Crystal Core */
-        .crystal-core { position: relative; width: 200px; height: 200px; transform-style: preserve-3d; animation: rotateCore 20s infinite linear; }
+        /* LAYER 2: Biometric HUD */
+        .hud { position: fixed; padding: 20px; font-family: monospace; font-size: 10px; color: var(--c1); z-index: 110; pointer-events: none; text-transform: uppercase; border: 1px solid var(--glass); backdrop-filter: blur(5px); }
+        .hud.tl { top: 20px; left: 20px; } .hud.br { bottom: 20px; right: 20px; text-align: right; }
+        .scan-line { height: 1px; width: 100%; background: var(--c1); position: absolute; top: 0; left: 0; animation: hud-scan 4s infinite linear; }
+        @keyframes hud-scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        /* LAYER 3: 3D Scene & Crystals */
+        .scene { height: 300vh; position: relative; overflow: hidden; }
+        .core-section { height: 100vh; display: flex; align-items: center; justify-content: center; position: sticky; top: 0; }
+        .crystal-core { width: 180px; height: 180px; transform-style: preserve-3d; animation: rotateCore 15s infinite linear; z-index: 50; }
         @keyframes rotateCore { from { transform: rotateY(0) rotateX(45deg); } to { transform: rotateY(360deg) rotateX(45deg); } }
-        
-        .face { position: absolute; width: 200px; height: 200px; background: rgba(0, 242, 255, 0.1); border: 1px solid var(--c1); box-shadow: 0 0 30px var(--c1); backdrop-filter: blur(5px); }
-        .f1 { transform: translateZ(100px); }
-        .f2 { transform: rotateY(90deg) translateZ(100px); }
-        .f3 { transform: rotateY(180deg) translateZ(100px); }
-        .f4 { transform: rotateY(-90deg) translateZ(100px); }
+        .face { position: absolute; width: 180px; height: 180px; background: rgba(0, 242, 255, 0.05); border: 1px solid var(--c1); box-shadow: 0 0 20px var(--c1); }
+        .f1 { transform: translateZ(90px); } .f2 { transform: rotateY(90deg) translateZ(90px); } .f3 { transform: rotateY(180deg) translateZ(90px); } .f4 { transform: rotateY(-90deg) translateZ(90px); }
 
-        /* HUD Elements */
-        .hud { position: fixed; font-family: monospace; color: var(--c1); font-size: 10px; z-index: 110; pointer-events: none; text-transform: uppercase; }
-        .tl { top: 20px; left: 20px; border-left: 2px solid var(--c1); padding-left: 10px; }
-        .br { bottom: 20px; right: 20px; text-align: right; border-right: 2px solid var(--c2); padding-right: 10px; }
-
-        /* Particle Canvas */
-        #canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+        /* LAYER 4: Gravity Particle Canvas */
+        #v7-canvas { position: fixed; top: 0; left: 0; z-index: 10; }
     </style>
 </head>
 <body>
-    <div class='overlay'></div>
+    <div class='projector-fx'></div>
+    <div class='lens-flare'></div>
+
     <div class='hud tl'>
-        <div>SYSTEM: V5_SINGULARITY</div>
-        <div>ENGINE: QUANTUM_PARTICLE_V3</div>
-        <div id='fps'>60 FPS</div>
+        <div class='scan-line'></div>
+        <div>INFRASTRUCTURE: V7_MASTER</div>
+        <div>NEURAL_SYNC: 100%</div>
+        <div id='fps'>FPS: 60</div>
     </div>
+
     <div class='hud br'>
-        <div>NEURAL_SYNC: ACTIVE</div>
-        <div>CORE_TEMP: STABLE</div>
+        <div>GRAVITY_FIELD: ACTIVE</div>
+        <div>SATELLITE_UPLINK: STABLE</div>
         <div id='coords'>X: 000 Y: 000</div>
     </div>
 
     <div class='scene'>
-        <canvas id='canvas'></canvas>
-        <div class='crystal-core'>
-            <div class='face f1'></div>
-            <div class='face f2'></div>
-            <div class='face f3'></div>
-            <div class='face f4'></div>
+        <canvas id='v7-canvas'></canvas>
+        <div class='core-section'>
+            <div class='crystal-core'>
+                <div class='face f1'></div>
+                <div class='face f2'></div>
+                <div class='face f3'></div>
+                <div class='face f4'></div>
+            </div>
+            <h1 style='position:absolute; z-index:60; letter-spacing:20px; font-size:3rem; text-shadow: 0 0 10px #00f2ff;'>CORE BRAIN</h1>
         </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('canvas');
+        const canvas = document.getElementById('v7-canvas');
         const ctx = canvas.getContext('2d');
-        let w, h, particles = [];
+        let w, h, particles = [], mouse = {x: null, y: null};
 
         function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
         window.onresize = resize; resize();
@@ -67,42 +72,51 @@
         class Particle {
             constructor() {
                 this.x = Math.random() * w; this.y = Math.random() * h;
-                this.vx = (Math.random() - 0.5) * 1.5;
-                this.vy = (Math.random() - 0.5) * 1.5;
+                this.vx = (Math.random() - 0.5) * 2; this.vy = (Math.random() - 0.5) * 2;
             }
             update() {
+                if (mouse.x) {
+                    let dx = mouse.x - this.x; let dy = mouse.y - this.y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 350) {
+                        this.vx += dx * 0.05 / dist; this.vy += dy * 0.05 / dist;
+                    }
+                }
                 this.x += this.vx; this.y += this.vy;
-                if(this.x < 0 || this.x > w) this.vx *= -1;
-                if(this.y < 0 || this.y > h) this.vy *= -1;
+                this.vx *= 0.98; this.vy *= 0.98;
+                if(this.x < 0 || this.x > w) this.vx *= -1; if(this.y < 0 || this.y > h) this.vy *= -1;
             }
             draw() {
-                ctx.fillStyle = '#00f2ff';
-                ctx.beginPath(); ctx.arc(this.x, this.y, 1, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.6)';
+                ctx.beginPath(); ctx.arc(this.x, this.y, 1.2, 0, Math.PI*2); ctx.fill();
             }
         }
 
-        for(let i=0; i<300; i++) particles.push(new Particle());
+        for(let i=0; i<450; i++) particles.push(new Particle());
 
         function animate() {
             ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.fillRect(0,0,w,h);
-            particles.forEach(p => {
+            particles.forEach((p, i) => {
                 p.update(); p.draw();
-                particles.forEach(p2 => {
-                    let d = Math.hypot(p.x - p2.x, p.y - p2.y);
-                    if(d < 100) {
-                        ctx.strokeStyle = `rgba(0, 242, 255, ${1 - d/100})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+                for(let j=i+1; j<particles.length; j++) {
+                    let p2 = particles[j];
+                    let d = Math.hypot(p.x-p2.x, p.y-p2.y);
+                    if(d < 80) {
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${0.4 - d/80})`;
+                        ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
                     }
-                });
+                }
             });
             requestAnimationFrame(animate);
         }
         animate();
 
-        window.addEventListener('mousemove', (e) => {
+        window.addEventListener('mousemove', (e) => { 
+            mouse.x = e.clientX; mouse.y = e.clientY; 
             document.getElementById('coords').innerText = `X: ${e.clientX} Y: ${e.clientY}`;
         });
+
+        setInterval(() => { document.body.style.opacity = Math.random() > 0.99 ? '0.7' : '1'; }, 100);
     </script>
 </body>
 </html>
