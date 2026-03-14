@@ -3,116 +3,59 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE-BRAIN V19 | PERSISTENT SINGULARITY</title>
-    <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
+    <title>CORE-BRAIN V20 | GENERATIVE ARCHITECTURE</title>
+    <link href='https://fonts.googleapis.com/css2?family=Michroma&display=swap' rel='stylesheet'>
     <style>
-        :root { --c1: #00f2ff; --c2: #7000ff; --accent: #fff; }
-        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Michroma', sans-serif; height: 100%; overflow: hidden; }
+        :root { --c1: #00f2ff; --c2: #7000ff; }
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Michroma', sans-serif; overflow-x: hidden; }
 
-        /* PERSISTENT BACKGROUND ANIMATIONS */
-        canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
-        .bg-glow { position: fixed; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.05), transparent 70%); z-index: 0; animation: pulse 4s infinite ease-in-out; }
-        @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.2); } }
+        /* LIQUID FILTER */
+        .liquid-container {
+            filter: url('#gooey');
+            height: 100vh; width: 100vw; display: flex; align-items: center; justify-content: center; position: fixed; inset: 0;
+        }
 
-        /* ARCADE HUD */
-        .arcade-container { height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 10; }
-        .game-screen { width: 85%; height: 65%; border: 2px solid var(--c1); background: rgba(0, 242, 255, 0.02); backdrop-filter: blur(10px); position: relative; overflow: hidden; box-shadow: 0 0 30px rgba(0, 242, 255, 0.1); }
-        
-        .menu { margin-bottom: 20px; display: flex; gap: 15px; }
-        .btn { padding: 10px 20px; border: 1px solid var(--c1); cursor: pointer; transition: 0.3s; font-size: 10px; background: rgba(0,0,0,0.5); }
-        .btn:hover { background: var(--c1); color: #000; box-shadow: 0 0 15px var(--c1); }
+        .morph-orb {
+            width: 150px; height: 150px; background: var(--c1);
+            border-radius: 50%; position: absolute;
+            box-shadow: 0 0 50px var(--c1);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
-        /* GAMES */
-        #satellite-game, #defense-game { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
-        #target { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; border: 2px dashed #fff; }
-        #orb { position: absolute; width: 30px; height: 30px; background: var(--c2); border-radius: 50%; cursor: grab; box-shadow: 0 0 20px var(--c2); }
-        .glitch-enemy { position: absolute; width: 20px; height: 20px; background: red; box-shadow: 0 0 15px red; cursor: pointer; }
-        .win-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; color: #0f0; font-size: 20px; z-index: 100; }
+        .hud-v20 { position: fixed; top: 20px; left: 20px; font-size: 10px; z-index: 100; color: var(--c1); }
     </style>
 </head>
 <body>
-    <div class='bg-glow'></div>
-    <canvas id='neural-canvas'></canvas>
+    <div class='hud-v20'>● LEVEL_5: GENERATIVE_ARCHITECTURE<br>● STATUS: MORPHING_GEOMETRY_ACTIVE</div>
 
-    <div class='arcade-container'>
-        <div class='menu'>
-            <div class='btn' onclick='showGame("satellite")'>SATELLITE UPLINK</div>
-            <div class='btn' onclick='showGame("defense")'>NEURAL DEFENSE</div>
-        </div>
-
-        <div class='game-screen'>
-            <div id='win-screen' class='win-overlay'>CORE STABILIZED</div>
-            <div id='satellite-game'>
-                <div id='target'></div>
-                <div id='orb'></div>
-            </div>
-            <div id='defense-game' style='display:none;' onclick='spawnEnemy()'></div>
-        </div>
+    <div class='liquid-container' id='morph-field'>
+        <div class='morph-orb' style='left: 45%; top: 40%;'></div>
+        <div class='morph-orb' id='follower' style='left: 50%; top: 50%; width: 100px; height: 100px; background: var(--c2);'></div>
     </div>
 
+    <!-- GOOEY SVG FILTER -->
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="display:none;">
+      <defs>
+        <filter id="gooey">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="gooey" />
+          <feComposite in="SourceGraphic" in2="gooey" operator="atop"/>
+        </filter>
+      </defs>
+    </svg>
+
     <script>
-        function showGame(type) {
-            document.getElementById('satellite-game').style.display = type === 'satellite' ? 'block' : 'none';
-            document.getElementById('defense-game').style.display = type === 'defense' ? 'block' : 'none';
-            document.getElementById('win-screen').style.display = 'none';
-        }
+        const follower = document.getElementById('follower');
+        window.addEventListener('mousemove', (e) => {
+            // Smoothly move the follower orb to create 'merging' liquid effect
+            follower.style.transform = `translate(${e.clientX - window.innerWidth/2}px, ${e.clientY - window.innerHeight/2}px)`;
+        });
 
-        // BACKGROUND ENGINE
-        const canvas = document.getElementById('neural-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.onresize = resize; resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 1; this.vy = (Math.random() - 0.5) * 1;
-            }
-            draw() {
-                this.x += this.vx; this.y += this.vy;
-                if(this.x<0||this.x>canvas.width) this.vx*=-1;
-                if(this.y<0||this.y>canvas.height) this.vy*=-1;
-                ctx.fillStyle = 'rgba(0, 242, 255, 0.5)';
-                ctx.beginPath(); ctx.arc(this.x, this.y, 1, 0, Math.PI*2); ctx.fill();
-            }
-        }
-        for(let i=0; i<100; i++) particles.push(new Particle());
-        function animate() {
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            particles.forEach(p => p.draw());
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // GAME 1 LOGIC
-        const orb = document.getElementById('orb');
-        orb.style.left = '20px'; orb.style.top = '20px';
-        orb.onmousedown = function(e) {
-            document.onmousemove = function(e) {
-                orb.style.left = e.clientX - (window.innerWidth*0.075) + 'px';
-                orb.style.top = e.clientY - (window.innerHeight*0.175) + 'px';
-                let rect = document.getElementById('target').getBoundingClientRect();
-                if(Math.abs(e.clientX - (rect.left + 30)) < 30 && Math.abs(e.clientY - (rect.top + 30)) < 30) {
-                    document.getElementById('win-screen').style.display = 'flex';
-                }
-            };
-            document.onmouseup = function() { document.onmousemove = null; };
-        };
-
-        // GAME 2 LOGIC
-        function spawnEnemy() {
-            const game = document.getElementById('defense-game');
-            const enemy = document.createElement('div');
-            enemy.className = 'glitch-enemy';
-            enemy.style.left = Math.random() * 90 + '%';
-            enemy.style.top = Math.random() * 90 + '%';
-            enemy.onclick = (e) => { e.stopPropagation(); enemy.remove(); };
-            game.appendChild(enemy);
-            setTimeout(() => { if(enemy.parentNode) enemy.remove(); }, 1500);
-        }
-        setInterval(() => { if(document.getElementById('defense-game').style.display === 'block') spawnEnemy(); }, 800);
+        // Simulate auto-theme generation (Prompt 55)
+        setInterval(() => {
+            const hue = Math.floor(Math.random() * 360);
+            document.documentElement.style.setProperty('--c1', `hsl(${hue}, 100%, 50%)`);
+        }, 10000);
     </script>
 </body>
 </html>
