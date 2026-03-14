@@ -1,47 +1,119 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE-BRAIN V26 | CINEMATIC NEURAL FIELD</title>
-<link href='https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@700&display=swap' rel='stylesheet'>
-<style>
-:root{ --cyan:#00f2ff; --bg:#000; }
-*{ margin:0; padding:0; box-sizing:border-box; }
-html,body{ width:100%; height:100%; overflow:hidden; background:radial-gradient(circle at center,#02060a 0%,#000 70%); font-family:'Michroma',sans-serif; color:white; }
-canvas{ position:fixed; inset:0; z-index:0; }
-.overlay{ position:fixed; inset:0; background:radial-gradient(circle at center, rgba(0,242,255,0.05), transparent 50%); z-index:1; pointer-events:none; }
-.hud{ position:fixed; top:30px; left:30px; z-index:20; border-left:2px solid var(--cyan); padding-left:15px; font-size:10px; line-height:1.9; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.85); }
-.main{ position:relative; z-index:10; width:100%; height:100vh; display:flex; align-items:center; justify-content:center; }
-.title{ font-family:'Orbitron',sans-serif; font-size:5rem; letter-spacing:24px; color:white; text-shadow: 0 0 12px rgba(0,242,255,0.5), 0 0 30px rgba(0,242,255,0.25); animation:pulse 4s ease-in-out infinite; }
-@keyframes pulse{ 0%,100%{ opacity:0.82; transform:scale(1); } 50%{ opacity:1; transform:scale(1.03); } }
-@media(max-width:768px){ .title{ font-size:2.5rem; letter-spacing:10px; } .hud{ font-size:8px; top:20px; left:20px; } }
-</style>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>CORE-BRAIN V28 | NEURAL TERMINAL</title>
+    <link href='https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;500&display=swap' rel='stylesheet'>
+    <style>
+        :root {
+            --primary: #00f2ff; --secondary: #7000ff; --bg: #010101;
+            --terminal-bg: rgba(0, 0, 0, 0.85); --border: rgba(0, 242, 255, 0.2);
+        }
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: #fff; font-family: 'Michroma', sans-serif; height: 100dvh; overflow: hidden; }
+
+        #topography-canvas { position: fixed; inset: 0; z-index: 1; opacity: 0.3; }
+        .vignette { position: fixed; inset: 0; background: radial-gradient(circle at center, transparent 30%, #000 120%); z-index: 2; pointer-events: none; }
+
+        /* TERMINAL INTERFACE */
+        .terminal-container { position: fixed; bottom: 40px; right: 40px; width: 450px; height: 300px; background: var(--terminal-bg); border: 1px solid var(--border); backdrop-filter: blur(20px); z-index: 1000; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.8); transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
+        .terminal-header { padding: 10px 15px; border-bottom: 1px solid var(--border); font-family: 'Orbitron'; font-size: 9px; letter-spacing: 2px; display: flex; justify-content: space-between; align-items: center; background: rgba(0, 242, 255, 0.05); }
+        .terminal-output { flex: 1; padding: 15px; overflow-y: auto; font-family: 'JetBrains Mono'; font-size: 11px; color: var(--primary); line-height: 1.6; }
+        .terminal-input-row { padding: 10px 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
+        .terminal-prompt { color: var(--primary); font-family: 'JetBrains Mono'; }
+        #cmd-input { background: transparent; border: none; outline: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 11px; width: 100%; }
+
+        .header-interface { position: fixed; top: 0; left: 0; width: 100%; height: 80px; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; z-index: 100; border-bottom: 1px solid var(--border); backdrop-filter: blur(15px); }
+        .sys-tag { font-family: 'Orbitron'; font-size: 10px; color: var(--primary); letter-spacing: 4px; font-weight: 900; }
+
+        main { position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; z-index: 10; }
+        .title { font-family: 'Orbitron'; font-size: 5rem; letter-spacing: 30px; text-shadow: 0 0 30px var(--primary); opacity: 0.9; }
+
+        .blink { animation: blinker 1s step-start infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+    </style>
 </head>
 <body>
-<div class='overlay'></div>
-<div class='hud'>● CORE STATUS: V26 ACTIVE<br>● NEURAL STRESS: <span id='stress'>0.0</span><br>● FIELD MODE: CINEMATIC</div>
-<canvas id='scene'></canvas>
-<main class='main'><h1 class='title'>CORE</h1></main>
-<script>
-const canvas = document.getElementById('scene');
-const ctx = canvas.getContext('2d');
-let w, h, mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2, v: 0 };
-const rows = 55, cols = 55;
-function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-window.addEventListener('resize', resize); resize();
-window.addEventListener('mousemove', (e)=>{ mouse.v = Math.abs(e.clientX - mouse.x) + Math.abs(e.clientY - mouse.y); mouse.x = e.clientX; mouse.y = e.clientY; });
-function drawGrid(time){ ctx.fillStyle = 'rgba(0,0,0,0.16)'; ctx.fillRect(0,0,w,h);
-const cellW = w / cols; const cellH = h / rows; const stress = Math.min(mouse.v / 40, 8);
-document.getElementById('stress').textContent = stress.toFixed(1);
-for(let y=0; y<rows; y++){ ctx.beginPath();
-for(let x=0; x<cols; x++){ const px = x * cellW; const dx = mouse.x - px; const dy = mouse.y - (y * cellH); const dist = Math.sqrt(dx*dx + dy*dy);
-const wave = Math.sin(time*0.001 + (x*y)*0.08) * 6; const influence = Math.max(0,120-dist)/10; const py = y * cellH + wave + (influence * stress);
-if(x===0) ctx.moveTo(px, py); else ctx.lineTo(px, py); }
-ctx.strokeStyle = `rgba(0,242,255,${0.12 + (y/rows)*0.25})`; ctx.lineWidth = 1; ctx.stroke(); } mouse.v *= 0.92; }
-function drawParticles(time){ for(let i=0; i<80; i++){ const x = (Math.sin(i*12.4 + time*0.0003)*0.5 + 0.5) * w; const y = (Math.cos(i*8.7 + time*0.0004)*0.5 + 0.5) * h;
-const r = Math.sin(time*0.002 + i)*1.5 + 1.8; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fillStyle = 'rgba(0,242,255,0.08)'; ctx.fill(); } }
-function animate(time){ drawGrid(time); drawParticles(time); requestAnimationFrame(animate); } animate();
-</script>
+    <canvas id='topography-canvas'></canvas>
+    <div class='vignette'></div>
+
+    <header class='header-interface'>
+        <div class='sys-tag'>V28_NEURAL_TERMINAL</div>
+        <div class='sys-tag'>UPLINK: SECURE</div>
+    </header>
+
+    <main><h1 class='title'>CORE</h1></main>
+
+    <section class='terminal-container' id='terminal'>
+        <div class='terminal-header'><span>SYSTEM_CLI_V1.0</span><span class='blink'>●</span></div>
+        <div class='terminal-output' id='output'>
+            <div>[INIT] Terminal services started...</div>
+            <div>[READY] Type 'HELP' for available protocols.</div>
+        </div>
+        <div class='terminal-input-row'>
+            <span class='terminal-prompt'>></span>
+            <input type='text' id='cmd-input' autofocus spellcheck='false' autocomplete='off'>
+        </div>
+    </section>
+
+    <script>
+        const canvas = document.getElementById('topography-canvas');
+        const ctx = canvas.getContext('2d');
+        const input = document.getElementById('cmd-input');
+        const output = document.getElementById('output');
+        let w, h, mouse = { x: 0, y: 0, v: 0 };
+
+        const init = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
+        window.onresize = init; init();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.v = Math.abs(e.clientX - (mouse.x || e.clientX)) + Math.abs(e.clientY - (mouse.y || e.clientY));
+            mouse.x = e.clientX; mouse.y = e.clientY;
+        });
+
+        const draw = () => {
+            ctx.fillStyle = '#010101'; ctx.fillRect(0,0,w,h);
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary') + '33';
+            const stress = Math.min(mouse.v / 40, 6); const spacing = 45;
+            for(let i = 0; i < h/spacing; i++) {
+                ctx.beginPath();
+                for(let j = 0; j < w/spacing; j++) {
+                    const x = j * spacing; const y = i * spacing;
+                    const dist = Math.hypot(x - mouse.x, y - mouse.y);
+                    const influence = Math.max(0, 1 - dist / 300);
+                    const offset = Math.sin(dist * 0.01 - Date.now() * 0.003) * (10 + stress * 20 * influence);
+                    if(j === 0) ctx.moveTo(x, y + offset); else ctx.lineTo(x, y + offset);
+                }
+                ctx.stroke();
+            } mouse.v *= 0.95; requestAnimationFrame(draw);
+        }; draw();
+
+        input.addEventListener('keydown', (e) => {
+            if(e.key === 'Enter') {
+                const cmd = input.value.toUpperCase().trim();
+                const line = document.createElement('div');
+                line.textContent = `> ${cmd}`; output.appendChild(line);
+                
+                if(cmd === 'HELP') {
+                    const msg = document.createElement('div');
+                    msg.style.color = '#fff';
+                    msg.innerHTML = 'PROTOCOLS: [THEME_RED], [THEME_CYAN], [THEME_PURPLE], [CLEAR]';
+                    output.appendChild(msg);
+                } else if(cmd === 'THEME_RED') {
+                    document.documentElement.style.setProperty('--primary', '#ff0044');
+                } else if(cmd === 'THEME_CYAN') {
+                    document.documentElement.style.setProperty('--primary', '#00f2ff');
+                } else if(cmd === 'THEME_PURPLE') {
+                    document.documentElement.style.setProperty('--primary', '#7000ff');
+                } else if(cmd === 'CLEAR') {
+                    output.innerHTML = '';
+                }
+
+                input.value = '';
+                output.scrollTop = output.scrollHeight;
+            }
+        });
+    </script>
 </body>
 </html>
