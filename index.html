@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Core-Brain Self-Evolving System</title>
+    <style>
+        body, html { margin: 0; padding: 0; background: #050505; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+        .core-brain { height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1a1a2e 0%, #000 70%); position: relative; overflow: hidden; }
+        .particle { position: absolute; border-radius: 50%; background: rgba(0, 255, 255, 0.5); filter: blur(2px); animation: drift 20s infinite linear; }
+        @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(100vw, 100vh) scale(2); } }
+        .vibrating-light { width: 300px; height: 300px; background: radial-gradient(circle, #00f2ff 0%, transparent 70%); border-radius: 50%; filter: blur(40px); animation: pulse 2s infinite ease-in-out; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 0.8; } }
+        .section { height: 100vh; padding: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-bottom: 1px solid #222; }
+        h1 { font-size: 4rem; text-transform: uppercase; letter-spacing: 10px; background: linear-gradient(to right, #00f2ff, #7000ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .crystal-shape { width: 100px; height: 100px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); margin: 20px; animation: spin 10s infinite linear; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class='core-brain'>
+        <div class='vibrating-light'></div>
+        <div style='position:absolute;'><h1>EVOLVING CORE</h1></div>
+    </div>
+    <div class='section'>
+        <h1>Infrastructure</h1>
+        <p>Particle-by-particle motion sensing engaged. 8K Neural Rendering Active.</p>
+        <div style='display:flex;'><div class='crystal-shape'></div><div class='crystal-shape'></div><div class='crystal-shape'></div></div>
+    </div>
+    <script>
+        for(let i=0; i<50; i++) {
+            let p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.top = Math.random() * 100 + 'vh';
+            p.style.width = p.style.height = Math.random() * 5 + 'px';
+            document.body.appendChild(p);
+        }
+    </script>
+</body>
+</html>
