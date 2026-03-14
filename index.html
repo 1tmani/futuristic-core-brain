@@ -222,68 +222,38 @@ section {
 <script>
 const canvas=document.getElementById('bg');
 const ctx=canvas.getContext('2d');
-let w,h;
-let hue=180;
-let particles=[];
-function resize() {
-     w=canvas.width=innerWidth;
-      h=canvas.height=innerHeight;
-}
-resize();
-addEventListener('resize',resize);
-for(let i=0;i<320;i++) {
-     particles.push({
-          x:Math.random()*w,
-            y:Math.random()*h,
-              vx:(Math.random()-.5)*0.8,
-                vy:(Math.random()-.5)*0.8,
-                  r:Math.random()*2+0.5
-     });
-}
+let w,h,hue=180,particles=[];
+function resize() { w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
+resize(); addEventListener('resize',resize);
+for(let i=0;i<320;i++) { particles.push({ x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-.5)*0.8, vy:(Math.random()-.5)*0.8, r:Math.random()*2+0.5 }); }
 function draw() {
      const g=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,w);
       g.addColorStop(0,`hsla(${hue},100%,12%,0.18)`);
        g.addColorStop(1,"rgba(0,0,0,.25)");
-        ctx.fillStyle=g;
-         ctx.fillRect(0,0,w,h);
+        ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
           for(let i=0;i<particles.length;i++) {
-              const p=particles[i];
-                p.x+=p.vx;
-                  p.y+=p.vy;
-                    if(p.x<0||p.x>w)p.vx*=-1;
-                      if(p.y<0||p.y>h)p.vy*=-1;
-                        ctx.beginPath();
-                          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-                            ctx.fillStyle=`hsla(${(hue+p.x*.05)%360},100%,70%,0.18)`;
-                              ctx.fill();
-          }
-           requestAnimationFrame(draw);
+              const p=particles[i]; p.x+=p.vx; p.y+=p.vy;
+                if(p.x<0||p.x>w)p.vx*=-1; if(p.y<0||p.y>h)p.vy*=-1;
+                  ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+                    ctx.fillStyle=`hsla(${(hue+p.x*.05)%360},100%,70%,0.18)`; ctx.fill();
+          } requestAnimationFrame(draw);
 }
 draw();
 function randomText() {
-     const arr=[
-          "Living textures evolving",
-            "Crystal light adapting",
-              "Theme field rotating",
-                "Surface reflections mutating"
-     ];
+     const arr=["Living textures evolving", "Crystal light adapting", "Theme field rotating", "Surface reflections mutating"];
       return arr[Math.floor(Math.random()*arr.length)];
 }
 function rebuild() {
-     const grid=document.getElementById('grid');
-      grid.innerHTML="";
+     const grid=document.getElementById('grid'); grid.innerHTML="";
        for(let i=0;i<6;i++) {
-          const d=document.createElement('div');
-            d.className='panel';
-              d.innerHTML=`<div class='metric'>${randomText()}</div>`;
-                grid.appendChild(d);
+          const d=document.createElement('div'); d.className='panel';
+            d.innerHTML=`<div class='metric'>${randomText()}</div>`;
+              grid.appendChild(d);
        }
-        document.getElementById('feed').innerHTML=
-         randomText()+"<br>"+randomText()+"<br>"+randomText();
+        document.getElementById('feed').innerHTML=randomText()+"<br>"+randomText()+"<br>"+randomText();
           hue=(hue+40)%360;
 }
-rebuild();
-setInterval(rebuild,3500);
+rebuild(); setInterval(rebuild,3500);
 </script>
 </body>
 </html>
