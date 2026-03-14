@@ -55,7 +55,7 @@
         window.onresize = init; init();
 
         window.addEventListener('mousemove', (e) => {
-            mouse.v = Math.abs(e.clientX - mouse.x) + Math.abs(e.clientY - mouse.y);
+            mouse.v = Math.abs(e.clientX - (mouse.x || e.clientX)) + Math.abs(e.clientY - (mouse.y || e.clientY));
             mouse.x = e.clientX; mouse.y = e.clientY;
             document.getElementById('coords').innerText = `${mouse.x}, ${mouse.y}`;
         });
@@ -77,7 +77,8 @@
                     const x = j * spacing;
                     const y = i * spacing;
                     const dist = Math.hypot(x - mouse.x, y - mouse.y);
-                    const offset = Math.sin(dist * 0.01 - Date.now() * 0.003) * (10 + stress * 10);
+                    const influence = Math.max(0, 1 - dist / 300);
+                    const offset = Math.sin(dist * 0.01 - Date.now() * 0.003) * (10 + stress * 20 * influence);
                     
                     if(j === 0) ctx.moveTo(x, y + offset); else ctx.lineTo(x, y + offset);
                 }
