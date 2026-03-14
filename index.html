@@ -2,86 +2,143 @@
 <html lang='en'>
 <head>
     <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE-BRAIN V22 | GAMING SINGULARITY</title>
-    <link href='https://fonts.googleapis.com/css2?family=Michroma&display=swap' rel='stylesheet'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <title>CORE-BRAIN | QUANTUM-SYNC INFRASTRUCTURE</title>
+    <link href='https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@400;700;900&display=swap' rel='stylesheet'>
     <style>
-        :root { --c1: #00f2ff; --c2: #7000ff; }
-        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Michroma', sans-serif; overflow: hidden; height: 100vh; }
+        :root { --c1: #00f2ff; --c2: #7000ff; --accent: #ffffff; --bg: #000000; --glass: rgba(255, 255, 255, 0.02); --border: rgba(0, 242, 255, 0.15); --shadow: 0 20px 50px rgba(0, 0, 0, 0.8); }
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: #fff; font-family: 'Michroma', sans-serif; height: 100dvh; width: 100vw; overflow: hidden; }
 
-        /* HIGH-TECH BACKGROUND */
-        #bg-canvas { position: fixed; inset: 0; z-index: -1; opacity: 0.6; }
-        .light-bulb { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, var(--c1) 0%, transparent 70%); border-radius: 50%; filter: blur(60px); animation: pulse 4s infinite ease-in-out; opacity: 0.3; pointer-events: none; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.2; } 50% { transform: scale(1.3); opacity: 0.4; } }
+        /* ATMOSPHERIC ENGINE */
+        #master-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.7; }
+        .vignette { position: fixed; inset: 0; background: radial-gradient(circle at center, transparent 30%, #000 100%); z-index: 1; pointer-events: none; }
+        .grain { position: fixed; inset: 0; z-index: 2; opacity: 0.03; pointer-events: none; background: url('https://grainy-gradients.vercel.app/noise.svg'); }
+        
+        /* PRODUCTION HUD */
+        .hud-header { position: absolute; top: 0; left: 0; width: 100%; height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); border-bottom: 1px solid var(--border); backdrop-filter: blur(15px); z-index: 100; }
+        .system-status { display: flex; align-items: center; gap: 15px; font-size: 10px; letter-spacing: 3px; color: var(--c1); }
+        .status-pulse { width: 6px; height: 6px; background: var(--c1); border-radius: 50%; box-shadow: 0 0 12px var(--c1); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } }
 
-        /* DEDICATED GAME UI */
-        .game-viewport {
-            height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: radial-gradient(circle at center, rgba(0, 242, 255, 0.05) 0%, transparent 80%);
-        }
+        .action-btn { background: transparent; border: 1px solid var(--c1); color: var(--c1); padding: 10px 25px; font-family: 'Orbitron'; font-size: 11px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .action-btn:hover { background: var(--c1); color: #000; box-shadow: 0 0 30px var(--c1); transform: translateY(-2px); }
 
-        .arcade-screen {
-            width: 85%; height: 70%; border: 2px solid var(--c1); position: relative; overflow: hidden;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); box-shadow: 0 0 50px rgba(0, 242, 255, 0.2);
-        }
+        /* MAIN VIEWPORT */
+        main { position: relative; height: 100dvh; width: 100%; display: flex; align-items: center; justify-content: center; padding: 100px 40px 40px; z-index: 10; }
+        .arcade-terminal { position: relative; width: 100%; height: 100%; max-width: 1400px; background: var(--glass); border: 1px solid var(--border); border-radius: 4px; box-shadow: var(--shadow); overflow: hidden; display: flex; align-items: center; justify-content: center; }
 
-        .hud-v22 {
-            position: absolute; top: 20px; left: 20px; font-size: 10px; color: var(--c1); 
-            text-transform: uppercase; letter-spacing: 2px; border-left: 3px solid var(--c1); padding-left: 10px;
-        }
+        /* INTERACTIVE SINGULARITY */
+        #core-node { position: absolute; width: 80px; height: 80px; background: var(--c2); border-radius: 50%; box-shadow: 0 0 60px var(--c2), inset 0 0 20px #fff; cursor: grab; z-index: 50; touch-action: none; transition: transform 0.2s cubic-bezier(0.33, 1, 0.68, 1); }
+        #target-portal { position: absolute; width: 140px; height: 140px; border: 1px solid var(--c1); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0.2; transform: translate(-50%, -50%); top: 50%; left: 50%; transition: 0.6s; }
+        #target-portal::after { content: ''; width: 80%; height: 80%; border: 1px dashed var(--c1); border-radius: 50%; animation: rotate 10s infinite linear; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        #target-zone { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; border: 2px dashed #fff; opacity: 0.5; }
-        #game-orb { position: absolute; width: 40px; height: 40px; background: var(--c2); border-radius: 50%; cursor: grab; box-shadow: 0 0 30px var(--c2); transition: 0.1s; }
+        .overlay-msg { position: absolute; inset: 0; background: rgba(0,0,0,0.95); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 500; backdrop-filter: blur(20px); }
+        .msg-text { font-family: 'Orbitron'; font-size: 3rem; font-weight: 900; letter-spacing: 15px; color: var(--c1); text-shadow: 0 0 20px var(--c1); margin-bottom: 20px; }
 
-        .win-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; color: #0f0; font-size: 24px; z-index: 100; }
+        /* COMMAND OVERLAY */
+        #sidebar { position: fixed; top: 0; left: -100%; width: 450px; height: 100%; background: rgba(5,5,5,0.98); border-right: 1px solid var(--c1); z-index: 1000; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); padding: 80px 50px; }
+        #sidebar.open { left: 0; }
+        .nav-link { font-family: 'Orbitron'; font-size: 18px; color: #fff; text-decoration: none; display: block; margin: 30px 0; opacity: 0.5; transition: 0.3s; letter-spacing: 4px; }
+        .nav-link:hover { opacity: 1; color: var(--c1); transform: translateX(15px); }
     </style>
 </head>
 <body>
-    <div class='light-bulb' style='top: -100px; left: -100px;'></div>
-    <div class='light-bulb' style='bottom: -100px; right: -100px; background: radial-gradient(circle, var(--c2) 0%, transparent 70%);'></div>
-    <canvas id='bg-canvas'></canvas>
+    <canvas id='master-canvas'></canvas>
+    <div class='vignette'></div>
+    <div class='grain'></div>
 
-    <div class='game-viewport'>
-        <div class='arcade-screen'>
-            <div class='win-overlay' id='win'>CORE STABILIZED</div>
-            <div class='hud-v22'>● PROTOCOL: GAMING_V22<br>● STATUS: SINGLE_LAYER_ACTIVE</div>
-            <div id='target-zone'></div>
-            <div id='game-orb'></div>
+    <aside id='sidebar'>
+        <div class='action-btn' onclick='toggleMenu()' style='margin-bottom:60px;'>RETURN [X]</div>
+        <a href='#' class='nav-link'>● NEURAL_FLOW</a>
+        <a href='#' class='nav-link'>● QUANTUM_DATA</a>
+        <a href='#' class='nav-link'>● BIOMETRIC_SYNC</a>
+        <a href='#' class='nav-link'>● INFRA_UPGRADE</a>
+    </aside>
+
+    <header class='hud-header'>
+        <div class='system-status'>
+            <div class='status-pulse'></div>
+            <span>INFRA_PRIME_V24 // STABLE</span>
         </div>
-        <p style='margin-top: 20px; font-size: 10px; opacity: 0.5;'>DRAG THE ORB TO THE TARGET TO STABILIZE</p>
-    </div>
+        <button class='action-btn' onclick='toggleMenu()'>COMMAND_CENTER</button>
+    </header>
+
+    <main>
+        <section class='arcade-terminal'>
+            <div id='target-portal'></div>
+            <div id='core-node'></div>
+            <div id='win-overlay' class='overlay-msg'>
+                <div class='msg-text'>SYNCED</div>
+                <button class='action-btn' onclick='location.reload()'>REBOOT_SYSTEM</button>
+            </div>
+            <div style='position:absolute; bottom:30px; font-size:10px; opacity:0.3; letter-spacing:5px;'>MANUAL CORE ALIGNMENT REQUIRED</div>
+        </section>
+    </main>
 
     <script>
-        const orb = document.getElementById('game-orb');
-        const win = document.getElementById('win');
-        orb.style.left = '50px'; orb.style.top = '50px';
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
 
-        orb.onmousedown = function(e) {
-            document.onmousemove = function(e) {
-                orb.style.left = e.clientX - (window.innerWidth * 0.075) + 'px';
-                orb.style.top = e.clientY - (window.innerHeight * 0.15) + 'px';
-                
-                let rect = document.getElementById('target-zone').getBoundingClientRect();
-                if(Math.abs(e.clientX - (rect.left + 40)) < 40 && Math.abs(e.clientY - (rect.top + 40)) < 40) {
-                    win.style.display = 'flex';
-                }
-            };
-            document.onmouseup = function() { document.onmousemove = null; };
+        const node = document.getElementById('core-node');
+        const portal = document.getElementById('target-portal');
+        const win = document.getElementById('win-overlay');
+        const term = document.querySelector('.arcade-terminal');
+
+        let dragging = false;
+        const startDrag = () => dragging = true;
+        const endDrag = () => dragging = false;
+
+        const moveNode = (e) => {
+            if(!dragging) return;
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            const rect = term.getBoundingClientRect();
+
+            node.style.left = (cx - rect.left - 40) + 'px';
+            node.style.top = (cy - rect.top - 40) + 'px';
+
+            const pRect = portal.getBoundingClientRect();
+            if(Math.abs(cx - (pRect.left + 70)) < 50 && Math.abs(cy - (pRect.top + 70)) < 50) {
+                win.style.display = 'flex';
+                portal.style.opacity = '1';
+                portal.style.transform = 'translate(-50%, -50%) scale(1.2)';
+            }
         };
 
-        // BG Particles
-        const canvas = document.getElementById('bg-canvas');
+        node.addEventListener('mousedown', startDrag);
+        node.addEventListener('touchstart', startDrag);
+        window.addEventListener('mouseup', endDrag);
+        window.addEventListener('touchend', endDrag);
+        window.addEventListener('mousemove', moveNode);
+        window.addEventListener('touchmove', (e) => { e.preventDefault(); moveNode(e); }, {passive: false});
+
+        /* HIGH-PERFORMANCE BG ENGINE */
+        const canvas = document.getElementById('master-canvas');
         const ctx = canvas.getContext('2d');
-        let w, h; function res() { w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; } res();
-        function draw() {
-            ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
-            for(let i=0; i<20; i++) {
-                ctx.fillStyle = '#00f2ff';
-                ctx.fillRect(Math.random()*w, Math.random()*h, 1, 1);
-            }
-            requestAnimationFrame(draw);
-        }
-        draw();
+        let w, h, dots = [];
+
+        const init = () => {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+            dots = Array.from({length: 40}, () => ({ 
+                x: Math.random()*w, y: Math.random()*h, 
+                vx: (Math.random()-0.5)*1.5, vy: (Math.random()-0.5)*1.5 
+            }));
+        };
+        window.onresize = init; init();
+
+        const render = () => {
+            ctx.clearRect(0,0,w,h);
+            ctx.fillStyle = 'rgba(0, 242, 255, 0.4)';
+            dots.forEach(d => {
+                d.x += d.vx; d.y += d.vy;
+                if(d.x<0||d.x>w) d.vx*=-1; if(d.y<0||d.y>h) d.vy*=-1;
+                ctx.beginPath(); ctx.arc(d.x, d.y, 2, 0, Math.PI*2); ctx.fill();
+            });
+            requestAnimationFrame(render);
+        };
+        render();
     </script>
 </body>
 </html>
