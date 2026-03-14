@@ -1,110 +1,154 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
-    <title>CORE-BRAIN V30 | ULTIMATE DIGITAL ORGANISM</title>
-    <link rel='stylesheet' href='style.css'>
-    <link href='https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;500&display=swap' rel='stylesheet'>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>CORE BRAIN | PHASE 10 ORGANISM</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Michroma&family=JetBrains+Mono:wght@300;500&display=swap' rel='stylesheet'>
+<style>
+:root {
+    --c1: #00f0ff; --c2: #8a2eff; --c3: #ff2e88; --bg: #02040a; --glass: rgba(255,255,255,.06);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+    width: 100%; min-height: 100%; background: #000; color: #fff;
+    font-family: 'Michroma', sans-serif; overflow-x: hidden; scroll-behavior: smooth;
+}
+canvas#universe { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.vibration-layer {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(circle at center, transparent 30%, #000 150%);
+    animation: vibe 10s infinite alternate ease-in-out;
+}
+@keyframes vibe { 0% { opacity: 0.4; } 100% { opacity: 0.7; } }
+header {
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 50;
+    backdrop-filter: blur(18px); background: rgba(0,0,0,.18);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 40px; }
+.logo { font-family: 'Orbitron'; letter-spacing: 8px; font-size: 1rem; text-shadow: 0 0 12px var(--c1); }
+.hero {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    position: relative; z-index: 5; padding: 100px 40px;
+}
+.hero-inner {
+    width: min(1200px, 100%); display: grid;
+    grid-template-columns: 1fr 1fr; gap: 40px;
+}
+.panel {
+    background: var(--glass); border: 1px solid rgba(255,255,255,.08);
+    backdrop-filter: blur(20px); border-radius: 24px; padding: 40px;
+}
+.hero-title {
+    font-family: 'Orbitron'; font-size: clamp(2rem, 5vw, 4.5rem);
+    line-height: 1.1; letter-spacing: 10px; font-weight: 900;
+    text-shadow: 0 0 20px var(--c1);
+}
+.live-core {
+    height: 400px; border-radius: 22px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+}
+.core-orb {
+    width: 150px; height: 150px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.2);
+    box-shadow: 0 0 50px var(--c1), inset 0 0 30px var(--c1);
+    animation: pulse 4s infinite ease-in-out;
+}
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+section { min-height: 100vh; position: relative; z-index: 5; display: flex; align-items: center; justify-content: center; padding: 80px 40px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.grid {
+    width: min(1200px, 100%); display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
+}
+.card {
+    min-height: 280px; border-radius: 24px; background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.08); backdrop-filter: blur(15px);
+    padding: 30px; transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.06); border-color: var(--c1); }
+.card h3 { font-family: 'Orbitron'; letter-spacing: 3px; color: var(--c1); margin-bottom: 15px; }
+.card p { font-family: 'JetBrains Mono'; font-size: 0.85rem; opacity: 0.7; line-height: 1.7; }
+@media(max-width:900px) { .hero-inner { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
-    <!-- PROCEDURAL VISUAL UNIVERSE -->
-    <canvas id='universe-canvas'></canvas>
-    <div class='vibration-layer'></div>
-    <div class='noise-overlay'></div>
+<canvas id='universe'></canvas>
+<div class='vibration-layer'></div>
+<header><nav><div class='logo'>CORE-BRAIN</div></nav></header>
 
-    <!-- ELITE HUD SYSTEM -->
-    <nav class='nav-hud'>
-        <a href='#s1' class='nav-link' data-id='01'>CORE</a>
-        <a href='#s2' class='nav-link' data-id='02'>NEURAL</a>
-        <a href='#s3' class='nav-link' data-id='03'>PARTICLE</a>
-        <a href='#s4' class='nav-link' data-id='04'>CRYSTAL</a>
-        <a href='#s5' class='nav-link' data-id='05'>ADAPTIVE</a>
-        <a href='#s6' class='nav-link' data-id='06'>MOTION</a>
-        <a href='#s7' class='nav-link' data-id='07'>SYSTEMS</a>
-        <a href='#s8' class='nav-link' data-id='08'>LEARNING</a>
-        <a href='#s9' class='nav-link' data-id='09'>EVOLVE</a>
-        <a href='#s10' class='nav-link' data-id='10'>FUTURE</a>
-    </nav>
-
-    <div class='system-status-hud'>
-        <div class='status-item'>[NODE] 0xPRIME_V30</div>
-        <div class='status-item'>[EVO] <span id='evo-status'>STABLE</span></div>
-        <div class='status-item'>[LINK] UPLINK_SECURE</div>
+<section class='hero' id='s1'>
+<div class='hero-inner'>
+    <div class='panel'>
+        <h1 class='hero-title'>PHASE 10<br>DIGITAL ORGANISM</h1>
+        <p style='margin-top:20px; font-family:"JetBrains Mono"; opacity:0.6; letter-spacing:2px;'>PROCEDURAL MEGA-ENGINE V31 ONLINE</p>
     </div>
+    <div class='panel live-core'><div class='core-orb'></div></div>
+</div>
+</section>
 
-    <main class='organism-container'>
-        <section id='s1' class='active'>
-            <div class='content-box'>
-                <h1 class='glitch-title' data-text='CORE'>CORE</h1>
-                <p class='sub-label'>CINEMATIC INTELLIGENT CENTER ENGINE</p>
-            </div>
-        </section>
+<section id='s2'><div class='grid'>
+    <div class='card'><h3>NEURAL INTELLIGENCE</h3><p>Real-time light field Intelligence mapping across procedural geometry layers.</p></div>
+    <div class='card'><h3>PARTICLE FIELD</h3><p>High-fidelity spring motion interaction with multi-layered kinetic buffers.</p></div>
+    <div class='card'><h3>CRYSTAL ENERGY</h3><p>Floating geometric nodes powered by dynamic visual recombination logic.</p></div>
+</div></section>
 
-        <section id='s2'>
-            <div class='content-box'>
-                <h1>NEURAL</h1>
-                <p class='sub-label'>LIGHT FIELD INTELLIGENCE MAPPING</p>
-            </div>
-        </section>
+<section id='s3'><div class='grid'>
+    <div class='card'><h3>ADAPTIVE AI</h3><p>Autonomous theme mutation engine evolving visual depth every 4000ms.</p></div>
+    <div class='card'><h3>MOTION ENGINE</h3><p>Inertia-based field response with soft-swipe interpolation.</p></div>
+    <div class='card'><h3>AUTOMATED SYSTEMS</h3><p>Zero-latency production protocol for distributed future deployment.</p></div>
+</div></section>
 
-        <section id='s3'>
-            <div class='content-box'>
-                <h1>PARTICLE</h1>
-                <p class='sub-label'>MULTI-LAYERED KINETIC INTERACTION</p>
-            </div>
-        </section>
+<script>
+const canvas = document.getElementById('universe');
+const ctx = canvas.getContext('2d');
+let w, h, particles = [], time = 0;
 
-        <section id='s4'>
-            <div class='content-box'>
-                <h1>CRYSTAL</h1>
-                <p class='sub-label'>FLOATING GEOMETRIC ENERGY NODES</p>
-            </div>
-        </section>
+const init = () => {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    particles = Array.from({length: 120}, () => ({
+        x: Math.random() * w, y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.5) * 0.8,
+        r: Math.random() * 2 + 1
+    }));
+};
+window.addEventListener('resize', init); init();
 
-        <section id='s5'>
-            <div class='content-box'>
-                <h1>ADAPTIVE</h1>
-                <p class='sub-label'>AI-DRIVEN THEME MUTATION ENGINE</p>
-            </div>
-        </section>
+const render = () => {
+    time += 0.01;
+    ctx.fillStyle = '#010205'; ctx.fillRect(0, 0, w, h);
+    
+    const grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, w);
+    const hue = (time * 10) % 360;
+    grad.addColorStop(0, `hsla(${hue}, 100%, 10%, 0.2)`);
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
 
-        <section id='s6'>
-            <div class='content-box'>
-                <h1>MOTION</h1>
-                <p class='sub-label'>INERTIA-BASED FIELD RESPONSE</p>
-            </div>
-        </section>
+    ctx.lineWidth = 0.5;
+    particles.forEach((p, i) => {
+        p.x += p.vx; p.y += p.vy;
+        if(p.x < 0 || p.x > w) p.vx *= -1; if(p.y < 0 || p.y > h) p.vy *= -1;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hue}, 100%, 70%, 0.3)`; ctx.fill();
+        
+        for(let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const d = Math.hypot(p.x - p2.x, p.y - p2.y);
+            if(d < 120) {
+                ctx.strokeStyle = `rgba(0, 242, 255, ${0.1 * (1 - d/120)})`;
+                ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+            }
+        }
+    });
+    requestAnimationFrame(render);
+};
+render();
 
-        <section id='s7'>
-            <div class='content-box'>
-                <h1>SYSTEMS</h1>
-                <p class='sub-label'>AUTOMATED INFRASTRUCTURE SCANNING</p>
-            </div>
-        </section>
-
-        <section id='s8'>
-            <div class='content-box'>
-                <h1>LEARNING</h1>
-                <p class='sub-label'>DYNAMIC PATTERN RECOMBINATION</p>
-            </div>
-        </section>
-
-        <section id='s9'>
-            <div class='content-box'>
-                <h1>EVOLVE</h1>
-                <p class='sub-label'>SYNTHETIC IMAGE EVOLUTION FIELD</p>
-            </div>
-        </section>
-
-        <section id='s10'>
-            <div class='content-box'>
-                <h1>FUTURE</h1>
-                <p class='sub-label'>ZERO-LATENCY PRODUCTION PROTOCOL</p>
-            </div>
-        </section>
-    </main>
-
-    <script src='engine.js'></script>
+setInterval(() => {
+    const hue = Math.floor(Math.random() * 360);
+    document.documentElement.style.setProperty('--c1', `hsl(${hue}, 100%, 60%)`);
+}, 4000);
+</script>
 </body>
 </html>
