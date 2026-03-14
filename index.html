@@ -3,84 +3,65 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V62 | NEURAL-NET DEFENDER</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
+<title>CORE V63 | GOD-MODE SINGULARITY</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
 <style>
-:root{ --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --bg: #000; }
+:root{ --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --bg: #000; --blur: 15px; }
 body,html{ margin:0; padding:0; background:#000; color:#fff; font-family:'Orbitron'; overflow:hidden; }
-canvas{ position:fixed; inset:0; z-index:1; }
-.hud{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:40px; display:flex; flex-direction:column; justify-content:space-between; }
-.stat-box{ background:rgba(0,0,0,0.8); border-left:2px solid var(--c1); padding:15px 25px; font-size:10px; letter-spacing:3px; backdrop-filter:blur(30px); }
-.overlay{ position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.9); display:flex; flex-direction:column; align-items:center; justify-content:center; transition:0.5s; }
-.btn{ background:transparent; border:1px solid var(--c1); color:#fff; padding:20px 50px; cursor:pointer; font-family:'Orbitron'; letter-spacing:5px; transition:0.4s; font-size:12px; text-transform:uppercase; pointer-events:all; }
-.btn:hover{ background:var(--c1); color:#000; box-shadow:0 0 50px var(--c1); }
-#score-val{ color:var(--c3); font-weight:900; }
+canvas{ position:fixed; inset:0; z-index:1; filter: contrast(1.2) brightness(1.1); }
+.interface-hud{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:50px; display:flex; flex-direction:column; justify-content:space-between; }
+.stat-row{ display:flex; justify-content:space-between; width:100%; }
+.stat-box{ background:rgba(0,0,0,0.9); border:1px solid var(--c1); padding:15px 30px; font-size:10px; letter-spacing:5px; backdrop-filter:blur(var(--blur)); box-shadow: 0 0 20px rgba(0,240,255,0.2); }
+.center-sig{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10; pointer-events:none; }
+.god-title{ font-size:clamp(3rem, 15vw, 12rem); font-weight:900; letter-spacing:40px; opacity:0.1; text-shadow: 0 0 50px var(--c1); }
+.action-panel{ position:fixed; bottom:50px; right:50px; z-index:200; pointer-events:all; }
+.btn-god{ background:transparent; border:1px solid var(--c3); color:#fff; padding:20px 60px; cursor:pointer; font-family:'Orbitron'; letter-spacing:8px; transition:0.5s; font-size:14px; text-transform:uppercase; box-shadow: inset 0 0 10px var(--c3); }
+.btn-god:hover{ background:var(--c3); color:#000; box-shadow:0 0 80px var(--c3); transform:scale(1.1); }
 </style>
 </head>
 <body>
-<canvas id='game-canvas'></canvas>
-<div class='hud'>
-    <div style='display:flex; justify-content:space-between;'>
-        <div class='stat-box'>INTEGRITY: <span id='hp-val'>100</span>%</div>
-        <div class='stat-box'>SCORE: <span id='score-val'>0</span></div>
+<canvas id='god-canvas'></canvas>
+<div class='center-sig'><h1 class='god-title'>SINGULARITY</h1></div>
+<div class='interface-hud'>
+    <div class='stat-row'>
+        <div class='stat-box'>INFRA: GOD_MODE_V63</div>
+        <div class='stat-box'>UPLINK: <span id='ping'>0.001</span>MS</div>
+    </div>
+    <div class='stat-row'>
+        <div class='stat-box'>NEURAL_LOAD: <span id='load'>99.9</span>%</div>
+        <div class='stat-box'>STABILITY: <span id='fps'>144Hz</span></div>
     </div>
 </div>
-<div id='start-screen' class='overlay'>
-    <h1 style='letter-spacing:20px; font-size:3rem; margin-bottom:40px;'>NEURAL DEFENDER</h1>
-    <button class='btn' onclick='engine.start()'>Initialize Core</button>
+<div class='action-panel'>
+    <button class='btn-god' onclick='engine.ascend()'>ENGAGE GOD-PROTOCOL</button>
 </div>
 <script>
-const canvas=document.getElementById('game-canvas'), ctx=canvas.getContext('2d');
-let w, h, time=0, isPlaying=false, score=0, hp=100;
-let player={x:0, y:0, r:20}, bullets=[], enemies=[];
+const canvas=document.getElementById('god-canvas'), ctx=canvas.getContext('2d');
+let w, h, time=0, isGod=false, particles=[];
+const speech = window.speechSynthesis;
 function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } resize(); addEventListener('resize',resize);
-window.addEventListener('mousemove', e => { player.x=e.clientX; player.y=e.clientY; });
-window.addEventListener('mousedown', () => { if(isPlaying) bullets.push({x:player.x, y:player.y, v:15}); });
+for(let i=0;i<600;i++) particles.push({x:Math.random()*w, y:Math.random()*h, z:Math.random()*w, r:Math.random()*1.5});
 const engine = {
-    start() {
-        document.getElementById('start-screen').style.opacity='0';
-        setTimeout(()=>document.getElementById('start-screen').style.display='none', 500);
-        isPlaying=true; hp=100; score=0; enemies=[]; bullets=[];
-    },
-    over() {
-        isPlaying=false;
-        document.getElementById('start-screen').style.display='flex';
-        document.getElementById('start-screen').style.opacity='1';
-        document.querySelector('#start-screen h1').innerText = 'CORE BREACHED';
+    ascend() {
+        isGod = true; 
+        const msg = new SpeechSynthesisUtterance('God Protocol active. Neural singularity stabilized at absolute peak.');
+        msg.pitch = 0.1; msg.rate = 0.8; speech.speak(msg);
+        document.querySelector('.god-title').style.opacity = '0.8';
+        document.body.style.filter = 'hue-rotate(90deg) contrast(1.5)';
     }
 };
-function spawn() {
-    if(!isPlaying) return;
-    const side = Math.floor(Math.random()*4);
-    let x, y;
-    if(side==0){x=Math.random()*w; y=-50} 
-    else if(side==1){x=Math.random()*w; y=h+50}
-    else if(side==2){x=-50; y=Math.random()*h}
-    else {x=w+50; y=Math.random()*h}
-    enemies.push({x, y, s:2+(score/500)}); 
-    setTimeout(spawn, Math.max(200, 1000-(score/10)));
-}
-spawn();
 function draw(){
     time+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
-    if(!isPlaying) { requestAnimationFrame(draw); return; }
-    ctx.shadowBlur=20; ctx.shadowColor=player.r > 20 ? 'red' : 'cyan';
-    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(player.x, player.y, 10, 0, Math.PI*2); ctx.fill();
-    bullets.forEach((b,i) => {
-        b.y -= b.v; if(b.y < 0) bullets.splice(i,1);
-        ctx.fillStyle='var(--c1)'; ctx.fillRect(b.x-2, b.y, 4, 15);
-    });
-    enemies.forEach((en,i) => {
-        const dx=player.x-en.x, dy=player.y-en.y, dist=Math.hypot(dx,dy);
-        en.x += (dx/dist)*en.s; en.y += (dy/dist)*en.s;
-        ctx.fillStyle='var(--c3)'; ctx.beginPath(); ctx.arc(en.x, en.y, 8, 0, Math.PI*2); ctx.fill();
-        bullets.forEach((b, bi) => {
-            if(Math.hypot(b.x-en.x, b.y-en.y) < 20) {
-                enemies.splice(i,1); bullets.splice(bi,1); score+=10;
-                document.getElementById('score-val').innerText = score;
-            }
-        });
-        if(dist < 20) { hp-=1; document.getElementById('hp-val').innerText = hp; if(hp<=0) engine.over(); }
+    const cx=w/2, cy=h/2;
+    particles.forEach(p => {
+        p.z -= isGod ? 15 : 2; if(p.z <= 0) p.z = w;
+        let sc = 400/p.z; let x = (p.x - cx) * sc + cx; let y = (p.y - cy) * sc + cy;
+        ctx.fillStyle = isGod ? 'var(--c3)' : 'var(--c1)';
+        ctx.beginPath(); ctx.arc(x, y, sc * p.r, 0, Math.PI*2); ctx.fill();
+        if(isGod && sc > 2) {
+            ctx.strokeStyle = 'rgba(255,46,136,0.1)'; ctx.beginPath();
+            ctx.moveTo(x, y); ctx.lineTo(cx, cy); ctx.stroke();
+        }
     });
     requestAnimationFrame(draw);
 } draw();
