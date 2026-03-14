@@ -3,96 +3,80 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V50 | NEURAL ODYSSEY</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
+<title>CORE V51 | X-16 QUANTUM MOTOR</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
 <style>
-:root{ --c1:#00f0ff; --c2:#ff2e88; --bg: #000; }
+:root{ --c1:#00f0ff; --c2:#ff2e88; --bg: #000; --thrust: 0; }
 body,html{ margin:0; padding:0; background:#000; color:#fff; font-family:'Michroma'; overflow:hidden; }
 canvas{ position:fixed; inset:0; z-index:1; }
-.hud-v50{ position:fixed; top:40px; left:40px; z-index:100; border-left:2px solid var(--c1); padding-left:20px; pointer-events:none; text-transform:uppercase; }
-.game-overlay{ position:fixed; inset:0; z-index:200; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(0,0,0,0.9); transition:0.5s; text-align:center; }
-.btn{ background:transparent; border:1px solid var(--c1); color:#fff; padding:15px 40px; cursor:pointer; font-family:'Orbitron'; letter-spacing:5px; transition:0.3s; margin-top:20px; }
+.hud-v51{ position:fixed; top:40px; left:40px; z-index:100; border-left:2px solid var(--c1); padding-left:20px; pointer-events:none; text-transform:uppercase; }
+.motor-box{ position:fixed; bottom:40px; right:40px; z-index:100; border:1px solid var(--c1); padding:20px; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); }
+.btn{ background:transparent; border:1px solid var(--c1); color:#fff; padding:15px 30px; cursor:pointer; font-family:'Orbitron'; letter-spacing:3px; transition:0.3s; margin-top:10px; }
 .btn:hover{ background:var(--c1); color:#000; box-shadow:0 0 30px var(--c1); }
-#score-ui{ font-family:'Orbitron'; color:var(--c1); font-size:20px; }
-.pixel-fill{ position:fixed; inset:0; z-index:0; background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 4px 4px; pointer-events:none; }
+#voice-status{ font-size:10px; color:var(--c2); letter-spacing:2px; }
+.car-16d{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:200px; height:100px; z-index:50; transform-style:preserve-3d; pointer-events:none; transition: 0.1s linear; }
+.car-body{ position:absolute; inset:0; border:2px solid var(--c1); box-shadow: 0 0 20px var(--c1); background:rgba(0,240,255,0.1); }
 </style>
 </head>
 <body>
-<div class='pixel-fill'></div>
-<canvas id='render-canvas'></canvas>
-<div class='hud-v50'>
-    <div style='font-size:10px; opacity:0.6;'>SYSTEM: ODYSSEY_V50</div>
-    <div style='font-size:14px; letter-spacing:5px;'>CORE_INTEGRITY: <span id='integrity'>100</span>%</div>
-    <div id='score-ui'>SCORE: 0</div>
+<canvas id='universe'></canvas>
+<div class='hud-v51'>
+    <div style='font-size:10px; opacity:0.6;'>ENGINE: X-16_QUANTUM</div>
+    <div style='font-size:14px;'>VELOCITY: <span id='v-val'>0</span> km/s</div>
+    <div id='voice-status'>VOICE_UPLINK: STANDBY</div>
 </div>
-<div id='overlay' class='game-overlay'>
-    <h1 style='font-family:Orbitron; font-size:3rem; letter-spacing:15px;'>NEURAL ODYSSEY</h1>
-    <p style='opacity:0.5; max-width:400px;'>DEFEND THE QUANTUM CORE. CLICK THE GLITCH VECTORS BEFORE THEY BREACH THE CENTER.</p>
-    <button class='btn' onclick='game.start()'>INITIALIZE ENGINE</button>
+<div class='car-16d' id='car-node'>
+    <div class='car-body' id='car-fx'></div>
+</div>
+<div class='motor-box'>
+    <div style='font-size:9px; margin-bottom:5px;'>MOTOR_CONTROL_INTERFACE</div>
+    <button class='btn' onclick='engine.ignite()'>IGNITE MOTORS</button><br>
+    <button class='btn' onclick='engine.boost()'>THRUST BOOST</button>
 </div>
 <script>
-const canvas=document.getElementById('render-canvas'), ctx=canvas.getContext('2d');
-let w, h, time=0, score=0, integrity=100, isPlaying=false, enemies=[];
+const canvas=document.getElementById('universe'), ctx=canvas.getContext('2d');
+let w, h, time=0, velocity=0, thrust=0, isLive=false;
+const speech = window.speechSynthesis;
+
 function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } resize(); addEventListener('resize',resize);
 
-const game = {
-    start() {
-        document.getElementById('overlay').style.display='none';
-        isPlaying=true; score=0; integrity=100; enemies=[];
+const engine = {
+    ignite() {
+        isLive = true;
+        this.speak("System Ignite. X-16 Quantum motors engaged. Neural running machine online.");
+        document.getElementById('voice-status').innerText = "VOICE_UPLINK: ACTIVE";
     },
-    over() {
-        isPlaying=false;
-        document.getElementById('overlay').style.display='flex';
-        document.querySelector('#overlay h1').innerText = 'CORE COLLAPSED';
+    boost() {
+        thrust += 5;
+        this.speak("Thrust maximized. Entering 16-D hyper-space.");
+    },
+    speak(txt) {
+        const msg = new SpeechSynthesisUtterance(txt);
+        msg.pitch = 0.5; msg.rate = 0.9; speech.speak(msg);
     }
 };
-
-function spawnEnemy() {
-    if(!isPlaying) return;
-    const angle = Math.random() * Math.PI * 2;
-    const dist = Math.max(w, h);
-    enemies.push({ x: w/2 + Math.cos(angle)*dist, y: h/2 + Math.sin(angle)*dist, speed: 2 + (score/100) });
-}
-setInterval(spawnEnemy, 1000);
-
-window.addEventListener('mousedown', e => {
-    if(!isPlaying) return;
-    enemies.forEach((en, i) => {
-        if(Math.hypot(e.clientX - en.x, e.clientY - en.y) < 40) {
-            enemies.splice(i, 1);
-            score += 10;
-            document.getElementById('score-ui').innerText = `SCORE: ${score}`;
-        }
-    });
-});
 
 function draw(){
     time+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
     const cx=w/2, cy=h/2;
     
-    // Living Core visuals
-    ctx.strokeStyle = `hsla(${time*50}, 100%, 50%, 0.2)`;
-    ctx.beginPath(); ctx.arc(cx, cy, 50 + Math.sin(time*2)*10, 0, Math.PI*2); ctx.stroke();
+    if(isLive) {
+        velocity += (thrust - velocity) * 0.05;
+        thrust *= 0.98;
+        document.getElementById('v-val').innerText = (velocity * 100).toFixed(0);
+        
+        const car = document.getElementById('car-node');
+        const fx = document.getElementById('car-fx');
+        car.style.transform = `translate(-50%, -50%) rotateX(${60 + Math.sin(time*2)*10}deg) rotateZ(${time*20}deg) scale(${1 + velocity*0.1})`;
+        fx.style.boxShadow = `0 0 ${20 + velocity*50}px var(--c1)`;
+    }
 
-    if(!isPlaying) { requestAnimationFrame(draw); return; }
-
-    enemies.forEach((en, i) => {
-        const dx = cx - en.x, dy = cy - en.y;
-        const dist = Math.hypot(dx, dy);
-        en.x += (dx/dist) * en.speed; en.y += (dy/dist) * en.speed;
-
-        ctx.fillStyle = '#ff2e88';
-        ctx.shadowBlur = 15; ctx.shadowColor = '#ff2e88';
-        ctx.fillRect(en.x-5, en.y-5, 10, 10);
-        ctx.shadowBlur = 0;
-
-        if(dist < 50) {
-            integrity -= 5;
-            enemies.splice(i, 1);
-            document.getElementById('integrity').innerText = integrity;
-            if(integrity <= 0) game.over();
-        }
-    });
+    for(let i=0; i<50; i++) {
+        let z = (i*40 + time*100*velocity) % w;
+        let sc = 400/(w-z);
+        ctx.fillStyle = `hsla(180, 100%, 50%, ${sc*0.1})`;
+        ctx.fillRect(cx + (i-25)*50*sc, cy + 100*sc, 2, 2);
+    }
     requestAnimationFrame(draw);
 }
 draw();
