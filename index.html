@@ -3,50 +3,66 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V64 | NEURAL-MORPH</title>
+<title>CORE V63 | GOD-MODE SINGULARITY</title>
 <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
 <style>
-:root{ --c1:#00f0ff; --c2:#8a2eff; --bg:#000; }
-body,html{ margin:0; padding:0; background:#000; color:#fff; font-family:'Michroma'; overflow:hidden; }
-canvas{ position:fixed; inset:0; z-index:1; }
-.interface-layer{ position:fixed; inset:0; z-index:100; pointer-events:none; display:flex; flex-direction:column; justify-content:center; align-items:center; }
-.morph-title{ font-family:'Orbitron'; font-size:clamp(2rem, 10vw, 8rem); letter-spacing:20px; text-transform:uppercase; text-shadow: 0 0 30px var(--c1); opacity:0.9; }
-.hud-tag{ position:fixed; top:40px; left:40px; border-left:2px solid var(--c1); padding-left:20px; font-size:10px; letter-spacing:4px; text-transform:uppercase; }
+:root{ --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --bg: #000; --blur: 15px; }
+body,html{ margin:0; padding:0; background:#000; color:#fff; font-family:'Orbitron'; overflow:hidden; }
+canvas{ position:fixed; inset:0; z-index:1; filter: contrast(1.2) brightness(1.1); }
+.interface-hud{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:50px; display:flex; flex-direction:column; justify-content:space-between; }
+.stat-row{ display:flex; justify-content:space-between; width:100%; }
+.stat-box{ background:rgba(0,0,0,0.9); border:1px solid var(--c1); padding:15px 30px; font-size:10px; letter-spacing:5px; backdrop-filter:blur(var(--blur)); box-shadow: 0 0 20px rgba(0,240,255,0.2); }
+.center-sig{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10; pointer-events:none; }
+.god-title{ font-size:clamp(3rem, 15vw, 12rem); font-weight:900; letter-spacing:40px; opacity:0.1; text-shadow: 0 0 50px var(--c1); }
+.action-panel{ position:fixed; bottom:50px; right:50px; z-index:200; pointer-events:all; }
+.btn-god{ background:transparent; border:1px solid var(--c3); color:#fff; padding:20px 60px; cursor:pointer; font-family:'Orbitron'; letter-spacing:8px; transition:0.5s; font-size:14px; text-transform:uppercase; box-shadow: inset 0 0 10px var(--c3); }
+.btn-god:hover{ background:var(--c3); color:#000; box-shadow:0 0 80px var(--c3); transform:scale(1.1); }
 </style>
 </head>
 <body>
-<canvas id='morph-canvas'></canvas>
-<div class='hud-tag'>INFRA: NEURAL_MORPH_V64<br>GEOMETRY: LIQUID_MESH<br>STATUS: EVOLVING</div>
-<div class='interface-layer'>
-    <h1 class='morph-title'>ORGANISM</h1>
+<canvas id='god-canvas'></canvas>
+<div class='center-sig'><h1 class='god-title'>SINGULARITY</h1></div>
+<div class='interface-hud'>
+    <div class='stat-row'>
+        <div class='stat-box'>INFRA: GOD_MODE_V63</div>
+        <div class='stat-box'>UPLINK: <span id='ping'>0.001</span>MS</div>
+    </div>
+    <div class='stat-row'>
+        <div class='stat-box'>NEURAL_LOAD: <span id='load'>99.9</span>%</div>
+        <div class='stat-box'>STABILITY: <span id='fps'>144Hz</span></div>
+    </div>
+</div>
+<div class='action-panel'>
+    <button class='btn-god' onclick='engine.ascend()'>ENGAGE GOD-PROTOCOL</button>
 </div>
 <script>
-const canvas=document.getElementById('morph-canvas'), ctx=canvas.getContext('2d');
-let w, h, points=[], mouse={x:0, y:0};
-function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; initMesh(); }
-function initMesh(){
-    points=[]; const spacing=50;
-    for(let x=0; x<w+spacing; x+=spacing)
-        for(let y=0; y<h+spacing; y+=spacing)
-            points.push({x, y, ox:x, oy:y});
-}
-window.addEventListener('resize',resize);
-window.addEventListener('mousemove',e=>{ mouse.x=e.clientX; mouse.y=e.clientY; });
-resize();
-function draw(){
-    ctx.fillStyle='rgba(0,0,0,0.2)'; ctx.fillRect(0,0,w,h);
-    ctx.strokeStyle='rgba(0,240,255,0.15)'; ctx.lineWidth=0.5;
-    points.forEach(p=>{
-        const dx=mouse.x-p.ox, dy=mouse.y-p.oy, dist=Math.hypot(dx,dy);
-        const f=Math.max(0, 150-dist)/150;
-        p.x = p.ox + dx*f; p.y = p.oy + dy*f;
-    });
-    for(let i=0; i<points.length; i++){
-        const p=points[i];
-        if(points[i+1] && Math.abs(points[i+1].ox - p.ox) < 60){
-            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(points[i+1].x, points[i+1].y); ctx.stroke();
-        }
+const canvas=document.getElementById('god-canvas'), ctx=canvas.getContext('2d');
+let w, h, time=0, isGod=false, particles=[];
+const speech = window.speechSynthesis;
+function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } resize(); addEventListener('resize',resize);
+for(let i=0;i<600;i++) particles.push({x:Math.random()*w, y:Math.random()*h, z:Math.random()*w, r:Math.random()*1.5});
+const engine = {
+    ascend() {
+        isGod = true; 
+        const msg = new SpeechSynthesisUtterance('God Protocol active. Neural singularity stabilized at absolute peak.');
+        msg.pitch = 0.1; msg.rate = 0.8; speech.speak(msg);
+        document.querySelector('.god-title').style.opacity = '0.8';
+        document.body.style.filter = 'hue-rotate(90deg) contrast(1.5)';
     }
+};
+function draw(){
+    time+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
+    const cx=w/2, cy=h/2;
+    particles.forEach(p => {
+        p.z -= isGod ? 15 : 2; if(p.z <= 0) p.z = w;
+        let sc = 400/p.z; let x = (p.x - cx) * sc + cx; let y = (p.y - cy) * sc + cy;
+        ctx.fillStyle = isGod ? 'var(--c3)' : 'var(--c1)';
+        ctx.beginPath(); ctx.arc(x, y, sc * p.r, 0, Math.PI*2); ctx.fill();
+        if(isGod && sc > 2) {
+            ctx.strokeStyle = 'rgba(255,46,136,0.1)'; ctx.beginPath();
+            ctx.moveTo(x, y); ctx.lineTo(cx, cy); ctx.stroke();
+        }
+    });
     requestAnimationFrame(draw);
 } draw();
 </script>
