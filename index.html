@@ -3,114 +3,86 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V46 | 256HZ SINGULARITY</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
+<title>CORE V47 | SONIC SINGULARITY</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
 <style>
-:root{
-     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --c4:#00ff75; --dim: 1; --f-weight: 100; --bg: #000; --nexus-op: 1;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{ background:#000; color:#fff; font-family:'Michroma',sans-serif; overflow:hidden; }
+:root{ --c1:#00f0ff; --bg: #000; }
+body,html{ margin:0; padding:0; background:#000; color:#fff; font-family:'Michroma'; overflow:hidden; }
 canvas{ position:fixed; inset:0; z-index:1; }
-
-/* ELITE HUD STACK */
-.interface-hud{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:40px; display:flex; flex-direction:column; justify-content:space-between; }
-.hud-top{ display:flex; justify-content:space-between; }
-.stat-box{ background:rgba(0,0,0,0.8); border-left:2px solid var(--c1); padding:10px 20px; font-family:'Orbitron'; font-size:9px; letter-spacing:3px; backdrop-filter:blur(20px); }
-
-.nightingale-particle{ position:fixed; width:2px; height:2px; background:#fff; border-radius:50%; box-shadow:0 0 10px var(--c1); z-index:5; pointer-events:none; }
-
-.game-controls{ position:fixed; bottom:40px; right:40px; z-index:200; display:flex; gap:10px; pointer-events:all; }
-.ctrl-btn{ background:rgba(255,255,255,0.05); border:1px solid var(--c1); color:#fff; padding:12px 25px; font-family:'Orbitron'; cursor:pointer; transition:0.3s; font-size:10px; letter-spacing:2px; }
-.ctrl-btn:hover{ background:var(--primary); color:#000; box-shadow:0 0 20px var(--c1); }
-
-/* MAGICKA SIGNAL OVERLAY */
-.magicka-layer{ position:fixed; inset:0; z-index:2; border: 1px solid rgba(0,240,255,0.05); pointer-events:none; animation: pulseBorder 4s infinite alternate; }
-@keyframes pulseBorder { from { opacity: 0.2; } to { opacity: 0.6; } }
+.hud{ position:fixed; top:40px; left:40px; z-index:100; pointer-events:none; border-left:2px solid var(--c1); padding-left:20px; }
+.btn-layer{ position:fixed; bottom:40px; right:40px; z-index:200; display:flex; gap:10px; }
+.btn{ background:rgba(255,255,255,0.05); border:1px solid var(--c1); color:#fff; padding:15px 30px; cursor:pointer; font-family:'Orbitron'; letter-spacing:2px; }
+.btn:hover{ background:var(--c1); color:#000; }
 </style>
 </head>
 <body>
-<canvas id='v46-canvas'></canvas>
-<div class='magicka-layer'></div>
-<div class='interface-hud'>
-    <div class='hud-top'>
-        <div class='stat-box'>ENGINE: 256HZ_ADAPTIVE</div>
-        <div class='stat-box'>STATUS: CORE_STABILIZED</div>
-    </div>
-    <div class='hud-top'>
-        <div class='stat-box'>FPS: <span id='fps'>120</span></div>
-        <div class='stat-box'>SYNC: NEURAL_MAPPING</div>
-    </div>
+<canvas id='v47-canvas'></canvas>
+<div class='hud'>
+    <div style='font-size:10px; letter-spacing:5px;'>SONIC_FIDELITY: MAX</div>
+    <div style='font-size:10px; letter-spacing:5px;'>EQ_CHAIN: BASS_PRO_TREBLE</div>
 </div>
-<div class='game-controls'>
-    <button class='ctrl-btn' onclick='engine.accelerate()'>THRUST</button>
-    <button class='ctrl-btn' onclick='engine.decelerate()'>BRAKE</button>
-    <button class='ctrl-btn' onclick='engine.rotate()'>REVOLVE 360</button>
+<div class='btn-layer'>
+    <button class='btn' onclick='sonicEngine.ignite()'>ENGAGE CORE AUDIO</button>
 </div>
 <script>
-const canvas = document.getElementById('v46-canvas');
-const ctx = canvas.getContext('2d');
-let w, h, time=0, particles=[], speed=5, carRot=0, isRevolving=false, audioCtx, masterGain;
-
+const canvas=document.getElementById('v47-canvas'), ctx=canvas.getContext('2d');
+let w, h, time=0, particles=[];
 function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
 resize(); addEventListener('resize',resize);
+for(let i=0; i<300; i++) particles.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w });
 
-for(let i=0; i<400; i++) particles.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w, c:Math.random()*360 });
+const sonicEngine = {
+    ctx: null, bass: null, treble: null, master: null,
+    ignite: function() {
+        if(this.ctx) return;
+        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        this.master = this.ctx.createGain();
+        this.master.gain.setValueAtTime(0.8, this.ctx.currentTime);
 
-const engine = {
-    accelerate: () => speed = Math.min(speed + 2, 25),
-    decelerate: () => speed = Math.max(speed - 2, 2),
-    rotate: () => isRevolving = !isRevolving
+        this.bass = this.ctx.createBiquadFilter();
+        this.bass.type = 'lowshelf';
+        this.bass.frequency.value = 200;
+        this.bass.gain.value = 15;
+
+        this.treble = this.ctx.createBiquadFilter();
+        this.treble.type = 'highshelf';
+        this.treble.frequency.value = 3000;
+        this.treble.gain.value = 10;
+
+        const comp = this.ctx.createDynamicsCompressor();
+        this.master.connect(this.bass).connect(this.treble).connect(comp).connect(this.ctx.destination);
+        this.playUniverseTune();
+    },
+    playUniverseTune: function() {
+        const notes = [261.63, 329.63, 392.00, 523.25];
+        let now = this.ctx.currentTime;
+        notes.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const g = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i*0.5);
+            g.gain.setValueAtTime(0, now + i*0.5);
+            g.gain.linearRampToValueAtTime(0.1, now + i*0.5 + 0.1);
+            g.gain.exponentialRampToValueAtTime(0.0001, now + i*0.5 + 0.4);
+            osc.connect(g).connect(this.master);
+            osc.start(now + i*0.5); osc.stop(now + i*0.5 + 0.5);
+        });
+        setTimeout(() => this.playUniverseTune(), 4000);
+    }
 };
 
 function draw(){
-    time += 0.01; 
-    ctx.fillStyle = 'rgba(0,0,0,0.1)';
-    ctx.fillRect(0,0,w,h);
-    const cx = w/2, cy = h/2;
-
-    // 360 Circular Emotional Field
-    ctx.strokeStyle = `hsla(${time*50}, 100%, 50%, 0.1)`;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(cx, cy, 200 + Math.sin(time)*50, 0, Math.PI*2);
-    ctx.stroke();
-
-    // 120-256Hz Particle Interpolation
+    time+=0.01; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
     particles.forEach(p => {
-        p.z -= speed; if(p.z <= 0) p.z = w;
-        let sc = 400/p.z;
-        let x2d = (p.x - cx) * sc + cx;
-        let y2d = (p.y - cy) * sc + cy;
-
-        if(isRevolving) {
-            let dist = Math.hypot(x2d-cx, y2d-cy);
-            let ang = Math.atan2(y2d-cy, x2d-cx) + 0.02;
-            x2d = cx + Math.cos(ang) * dist;
-            y2d = cy + Math.sin(ang) * dist;
-        }
-
-        ctx.fillStyle = `hsla(${p.c + time*20}, 80%, 70%, ${1 - p.z/w})`;
-        ctx.fillRect(x2d, y2d, sc*1.5, sc*1.5);
+        p.z-=5; if(p.z<=0) p.z=w;
+        let sc=400/p.z, x=(p.x-w/2)*sc+w/2, y=(p.y-h/2)*sc+h/2;
+        ctx.fillStyle=`hsla(${time*50},80%,70%,${1-p.z/w})`;
+        ctx.fillRect(x,y,sc,sc);
     });
-
-    // Rotating Rectangular Magicka Core
-    ctx.save();
-    ctx.translate(cx, cy); 
-    ctx.rotate(time);
-    ctx.strokeStyle = '#fff';
-    ctx.strokeRect(-50, -50, 100, 100);
-    ctx.restore();
-
+    ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.strokeRect(w/2-50,h/2-50,100,100);
     requestAnimationFrame(draw);
 }
 draw();
-
-// Automated Theme Mutation
-setInterval(() => {
-    const hue = Math.floor(Math.random()*360);
-    document.documentElement.style.setProperty('--c1', `hsl(${hue}, 100%, 50%)`);
-}, 5000);
 </script>
 </body>
 </html>
