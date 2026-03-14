@@ -3,83 +3,99 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V47 | SONIC SINGULARITY</title>
+<title>CORE V48 | NEURAL LABYRINTH</title>
 <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
 <style>
-:root{ --c1:#00f0ff; --bg: #000; }
+:root{ --c1:#00f0ff; --c2:#ff2e88; --bg: #000; }
 body,html{ margin:0; padding:0; background:#000; color:#fff; font-family:'Michroma'; overflow:hidden; }
 canvas{ position:fixed; inset:0; z-index:1; }
-.hud{ position:fixed; top:40px; left:40px; z-index:100; pointer-events:none; border-left:2px solid var(--c1); padding-left:20px; }
-.btn-layer{ position:fixed; bottom:40px; right:40px; z-index:200; display:flex; gap:10px; }
-.btn{ background:rgba(255,255,255,0.05); border:1px solid var(--c1); color:#fff; padding:15px 30px; cursor:pointer; font-family:'Orbitron'; letter-spacing:2px; }
-.btn:hover{ background:var(--c1); color:#000; }
+.hud{ position:fixed; top:40px; left:40px; z-index:100; border-left:2px solid var(--c1); padding-left:20px; pointer-events:none; }
+.game-overlay{ position:fixed; inset:0; z-index:200; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(0,0,0,0.85); transition:0.5s; }
+.btn{ background:transparent; border:1px solid var(--c1); color:#fff; padding:15px 40px; cursor:pointer; font-family:'Orbitron'; letter-spacing:5px; transition:0.3s; }
+.btn:hover{ background:var(--c1); color:#000; box-shadow:0 0 30px var(--c1); }
+#score-val{ color:var(--c1); font-family:'Orbitron'; }
 </style>
 </head>
 <body>
-<canvas id='v47-canvas'></canvas>
+<canvas id='game-canvas'></canvas>
 <div class='hud'>
-    <div style='font-size:10px; letter-spacing:5px;'>SONIC_FIDELITY: MAX</div>
-    <div style='font-size:10px; letter-spacing:5px;'>EQ_CHAIN: BASS_PRO_TREBLE</div>
+    <div style='font-size:10px; letter-spacing:5px;'>MISSION: KINETIC_ESCAPE</div>
+    <div style='font-size:10px; letter-spacing:5px;'>SCORE: <span id='score-val'>0</span></div>
 </div>
-<div class='btn-layer'>
-    <button class='btn' onclick='sonicEngine.ignite()'>ENGAGE CORE AUDIO</button>
+<div id='overlay' class='game-overlay'>
+    <h1 style='font-family:Orbitron; letter-spacing:15px;'>NEURAL LABYRINTH</h1>
+    <button class='btn' onclick='game.start()'>INITIALIZE CORE</button>
 </div>
 <script>
-const canvas=document.getElementById('v47-canvas'), ctx=canvas.getContext('2d');
-let w, h, time=0, particles=[];
+const canvas=document.getElementById('game-canvas'), ctx=canvas.getContext('2d');
+let w, h, time=0, score=0, isPlaying=false;
+let walls = [];
+let player = { x:0, y:0, r:15 };
+
 function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
 resize(); addEventListener('resize',resize);
-for(let i=0; i<300; i++) particles.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w });
 
-const sonicEngine = {
-    ctx: null, bass: null, treble: null, master: null,
-    ignite: function() {
-        if(this.ctx) return;
+const audio = {
+    ctx: null, master: null,
+    init() {
         this.ctx = new (window.AudioContext || window.webkitAudioContext)();
         this.master = this.ctx.createGain();
-        this.master.gain.setValueAtTime(0.8, this.ctx.currentTime);
-
-        this.bass = this.ctx.createBiquadFilter();
-        this.bass.type = 'lowshelf';
-        this.bass.frequency.value = 200;
-        this.bass.gain.value = 15;
-
-        this.treble = this.ctx.createBiquadFilter();
-        this.treble.type = 'highshelf';
-        this.treble.frequency.value = 3000;
-        this.treble.gain.value = 10;
-
-        const comp = this.ctx.createDynamicsCompressor();
-        this.master.connect(this.bass).connect(this.treble).connect(comp).connect(this.ctx.destination);
-        this.playUniverseTune();
+        this.master.connect(this.ctx.destination);
     },
-    playUniverseTune: function() {
-        const notes = [261.63, 329.63, 392.00, 523.25];
-        let now = this.ctx.currentTime;
-        notes.forEach((freq, i) => {
-            const osc = this.ctx.createOscillator();
-            const g = this.ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, now + i*0.5);
-            g.gain.setValueAtTime(0, now + i*0.5);
-            g.gain.linearRampToValueAtTime(0.1, now + i*0.5 + 0.1);
-            g.gain.exponentialRampToValueAtTime(0.0001, now + i*0.5 + 0.4);
-            osc.connect(g).connect(this.master);
-            osc.start(now + i*0.5); osc.stop(now + i*0.5 + 0.5);
-        });
-        setTimeout(() => this.playUniverseTune(), 4000);
+    pulse() {
+        if(!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime+0.2);
+        osc.connect(g).connect(this.master);
+        osc.start(); osc.stop(this.ctx.currentTime+0.2);
     }
 };
 
+const game = {
+    start() {
+        document.getElementById('overlay').style.opacity = '0';
+        setTimeout(()=>document.getElementById('overlay').style.display='none', 500);
+        audio.init();
+        isPlaying = true;
+        score = 0;
+        walls = [];
+    },
+    over() {
+        isPlaying = false;
+        document.getElementById('overlay').style.display='flex';
+        document.getElementById('overlay').style.opacity = '1';
+        document.querySelector('#overlay h1').innerText = 'CORE BREACHED';
+    }
+};
+
+window.addEventListener('mousemove', e => { player.x = e.clientX; player.y = e.clientY; });
+
 function draw(){
-    time+=0.01; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
-    particles.forEach(p => {
-        p.z-=5; if(p.z<=0) p.z=w;
-        let sc=400/p.z, x=(p.x-w/2)*sc+w/2, y=(p.y-h/2)*sc+h/2;
-        ctx.fillStyle=`hsla(${time*50},80%,70%,${1-p.z/w})`;
-        ctx.fillRect(x,y,sc,sc);
+    time+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
+    if(!isPlaying) { requestAnimationFrame(draw); return; }
+
+    if(Math.random() < 0.05) {
+        walls.push({ x: w, y: Math.random()*h, w: 20, h: h*0.3, speed: 5 + (score/100) });
+    }
+
+    walls.forEach((wall, i) => {
+        wall.x -= wall.speed;
+        ctx.fillStyle = 'rgba(0, 240, 255, 0.3)';
+        ctx.fillRect(wall.x, wall.y, wall.w, wall.h);
+        
+        if(player.x > wall.x && player.x < wall.x + wall.w && player.y > wall.y && player.y < wall.y + wall.h) {
+            game.over();
+        }
+        if(wall.x < -20) { walls.splice(i, 1); score += 10; document.getElementById('score-val').innerText = score; audio.pulse(); }
     });
-    ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.strokeRect(w/2-50,h/2-50,100,100);
+
+    ctx.shadowBlur = 20; ctx.shadowColor = '#00f0ff';
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(player.x, player.y, player.r, 0, Math.PI*2); ctx.fill();
+    ctx.shadowBlur = 0;
+
     requestAnimationFrame(draw);
 }
 draw();
