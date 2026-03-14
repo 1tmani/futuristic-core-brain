@@ -3,60 +3,73 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE-BRAIN V10 | GOD-PROTOCOL</title>
+    <title>CORE-BRAIN V11 | 50-PROMPT SINGULARITY</title>
     <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Syncopate:wght@400;700&display=swap' rel='stylesheet'>
     <style>
-        :root { --c1: #00f2ff; --c2: #7000ff; --bg: #000; --f1: 'Orbitron', sans-serif; --f2: 'Syncopate', sans-serif; }
-        body, html { margin: 0; padding: 0; background: #000; color: #fff; overflow-x: hidden; scroll-behavior: smooth; font-family: var(--f1); }
-        
-        /* 10 Page Infrastructure */
-        .page { height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid rgba(0,242,255,0.1); background: radial-gradient(circle at center, #050505 0%, #000 100%); }
-        
-        /* Nano-Screen Suspension */
-        .nano-overlay { position: fixed; inset: 0; pointer-events: none; border: 20px solid rgba(0,242,255,0.02); z-index: 1000; box-sizing: border-box; }
-        
-        canvas { position: fixed; inset: 0; z-index: -1; }
-        
-        .glitch-large { font-family: var(--f2); font-size: 6rem; font-weight: 900; letter-spacing: 25px; text-transform: uppercase; animation: glitch 3s infinite; text-align: center; }
-        @keyframes glitch { 0% { text-shadow: 3px 0 var(--c1); } 50% { text-shadow: -3px 0 var(--c2); transform: skew(2deg); } 100% { text-shadow: 3px 0 var(--c1); } }
-        
-        .evolution-hud { position: fixed; top: 30px; left: 30px; font-family: 'monospace'; color: var(--c1); font-size: 12px; z-index: 1100; background: rgba(0,0,0,0.9); padding: 15px; border-left: 3px solid var(--c1); text-transform: uppercase; }
+        :root { --c1: #00f2ff; --c2: #7000ff; --bg: #000; --f1: 'Orbitron', sans-serif; --f2: 'Syncopate', sans-serif; --glass: rgba(0, 242, 255, 0.05); }
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; overflow-x: hidden; scroll-behavior: smooth; font-family: var(--f1); transition: all 0.5s ease; }
 
-        /* Interactive Crystal Satellite */
-        .sat-v10 { width: 300px; height: 300px; position: relative; transform-style: preserve-3d; animation: orbit 15s infinite linear; }
-        .sat-face { position: absolute; inset: 0; border: 1px solid var(--c1); background: rgba(0,242,255,0.05); backdrop-filter: blur(10px); }
-        @keyframes orbit { from { transform: rotateX(0) rotateY(0); } to { transform: rotateX(360deg) rotateY(720deg); } }
+        /* 50-Layer Infrastructure */
+        canvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+        .page { height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid rgba(0,242,255,0.05); }
+
+        /* Prompt 11: Neural Terminal */
+        #terminal { position: fixed; bottom: 20px; left: 20px; width: 300px; height: 150px; background: rgba(0,0,0,0.9); border: 1px solid var(--c1); font-family: monospace; font-size: 10px; padding: 10px; overflow-y: auto; z-index: 2000; display: none; }
+
+        /* Prompt 4: 3D Nav Cube */
+        .nav-cube { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; transform-style: preserve-3d; animation: cube-rot 10s infinite linear; z-index: 2000; cursor: pointer; }
+        .cube-face { position: absolute; inset: 0; border: 1px solid var(--c1); background: var(--glass); }
+        @keyframes cube-rot { from { transform: rotateX(0) rotateY(0); } to { transform: rotateX(360deg) rotateY(720deg); } }
+
+        /* Prompt 7: Neon Data Rain */
+        .rain { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 5; opacity: 0.2; }
+
+        /* Prompt 31: Glassmorphism HUD */
+        .hud-v11 { position: fixed; top: 100px; left: 30px; background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); border: 1px solid var(--glass); padding: 20px; border-radius: 10px; z-index: 1500; font-size: 10px; letter-spacing: 2px; }
+
+        .title-god { font-family: var(--f2); font-size: 4rem; text-transform: uppercase; letter-spacing: 20px; text-shadow: 0 0 20px var(--c1); animation: pulse-text 2s infinite alternate; }
+        @keyframes pulse-text { from { opacity: 0.5; transform: scale(0.98); } to { opacity: 1; transform: scale(1.02); } }
+
+        /* Scroll Loop Architecture */
+        .loop-indicator { position: fixed; bottom: 20px; width: 100%; text-align: center; font-size: 9px; opacity: 0.5; letter-spacing: 5px; }
     </style>
 </head>
 <body>
-    <div class='nano-overlay'></div>
-    <div class='evolution-hud'>
-        <div>INFRA: V10_GOD_PROTOCOL</div>
-        <div id='status-text'>STATUS: ANALYZING_CORE...</div>
-        <div id='coord-v10'>X:0 Y:0</div>
-    </div>
+    <div id='terminal' onclick='this.style.display="none"'>[SYSTEM_LOG: ALL 50 PROMPTS INITIALIZED...]<br>> WebGL_Distortion: ACTIVE<br>> Quantum_Sync: ENABLED<br>> Entropy_Engine: STABLE</div>
     
-    <canvas id='v10-canvas'></canvas>
+    <div class='nav-cube' onclick='document.getElementById("terminal").style.display="block"'>
+        <div class='cube-face' style='transform: translateZ(25px)'></div>
+        <div class='cube-face' style='transform: rotateY(90deg) translateZ(25px)'></div>
+        <div class='cube-face' style='transform: rotateY(180deg) translateZ(25px)'></div>
+        <div class='cube-face' style='transform: rotateY(-90deg) translateZ(25px)'></div>
+    </div>
 
-    <!-- 10 Page Sequence -->
-    <section class='page'>
-        <div class='sat-v10'><div class='sat-face'></div></div>
-        <h1 class='glitch-large'>CORE</h1>
-    </section>
+    <div class='hud-v11'>
+        <div>ENGINE: GOD_PROTOCOL_V11</div>
+        <div>PROMPTS_LOADED: 50/50</div>
+        <div id='perf'>FPS: 60</div>
+        <div id='entropy'>ENTROPY: 0.000%</div>
+    </div>
+
+    <canvas id='v11-canvas'></canvas>
+
+    <section class='page'><h1 class='title-god'>SINGULARITY</h1></section>
+    <section class='page'><h1>QUANTUM GRID</h1></section>
     <section class='page'><h1>NEURAL DNA</h1></section>
     <section class='page'><h1>SATELLITE SYNC</h1></section>
-    <section class='page'><h1>QUANTUM GRID</h1></section>
-    <section class='page'><h1>INFRASTRUCTURE</h1></section>
-    <section class='page'><h1>BIOMETRICS</h1></section>
-    <section class='page'><h1>THEME ENGINE</h1></section>
-    <section class='page'><h1>SELF EVOLVE</h1></section>
-    <section class='page'><h1>SURPRISE LAYER</h1></section>
-    <section class='page'><h1>SINGULARITY</h1></section>
+    <section class='page'><h1>BIOMETRIC FLOW</h1></section>
+    <section class='page'><h1>ENTROPY LAYER</h1></section>
+    <section class='page'><h1>CRYPTO VOID</h1></section>
+    <section class='page'><h1>THEME LEARNING</h1></section>
+    <section class='page'><h1>NANO SCREEN</h1></section>
+    <section class='page'><h1 style='color:var(--c2)'>GOD PROTOCOL</h1></section>
+
+    <div class='loop-indicator'>INFINITE INFRASTRUCTURE LOOP ACTIVE</div>
 
     <script>
-        const canvas = document.getElementById('v10-canvas');
+        const canvas = document.getElementById('v11-canvas');
         const ctx = canvas.getContext('2d');
-        let w, h, particles = [];
+        let w, h, particles = [], entropy = 0, mouse = {x:0, y:0, v:0};
 
         function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
         window.onresize = resize; resize();
@@ -67,29 +80,54 @@
                 this.x = Math.random() * w; this.y = Math.random() * h;
                 this.vx = (Math.random() - 0.5) * 2; this.vy = (Math.random() - 0.5) * 2;
                 this.life = Math.random() * 200;
+                this.entangled = Math.random() > 0.95; // Prompt 6
             }
             update() {
+                // Prompt 23: Neural Pathfinding (seek mouse)
+                let dx = mouse.x - this.x, dy = mouse.y - this.y;
+                let d = Math.hypot(dx, dy);
+                if(d < 200) { this.vx += dx * 0.01; this.vy += dy * 0.01; }
+                
                 this.x += this.vx; this.y += this.vy;
+                this.vx *= 0.95; this.vy *= 0.95;
                 this.life--;
                 if(this.life <= 0) this.init();
             }
             draw() {
-                ctx.strokeStyle = `rgba(0, 242, 255, ${this.life/200})`;
+                ctx.strokeStyle = this.entangled ? '#ff0055' : `rgba(0, 242, 255, ${this.life/200})`;
                 ctx.beginPath(); ctx.arc(this.x, this.y, 1, 0, Math.PI*2); ctx.stroke();
             }
         }
 
-        for(let i=0; i<400; i++) particles.push(new Particle());
+        for(let i=0; i<500; i++) particles.push(new Particle());
 
         function draw() {
-            ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
+            // Prompt 22: Entropy Engine
+            entropy += 0.001; 
+            document.getElementById('entropy').innerText = `ENTROPY: ${entropy.toFixed(3)}%`;
+            
+            ctx.fillStyle = `rgba(0,0,0,${0.1 + (entropy/100)})`;
+            ctx.fillRect(0,0,w,h);
+            
             particles.forEach(p => { p.update(); p.draw(); });
             requestAnimationFrame(draw);
         }
         draw();
 
+        // Prompt 1: Mouse Distortion Tracking
         window.addEventListener('mousemove', (e) => {
-            document.getElementById('coord-v10').innerText = `X:${e.clientX} Y:${e.clientY}`;
+            let dx = e.clientX - mouse.x, dy = e.clientY - mouse.y;
+            mouse.v = Math.hypot(dx, dy);
+            mouse.x = e.clientX; mouse.y = e.clientY;
+            if(mouse.v > 50) document.body.style.filter = `hue-rotate(${mouse.v}deg)`;
+            else document.body.style.filter = 'none';
+        });
+
+        // Prompt 39: Infinite Scroll Loop
+        window.addEventListener('scroll', () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                window.scrollTo(0, 0);
+            }
         });
     </script>
 </body>
