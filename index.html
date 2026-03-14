@@ -3,114 +3,59 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Core-Brain V3 | Infinite Infrastructure</title>
+    <title>Core-Brain V4 | Projector Matrix</title>
     <style>
-        :root { --neon-cyan: #00f2ff; --neon-purple: #7000ff; --deep-bg: #010101; --accent: #fff; }
-        body, html { margin: 0; padding: 0; background: var(--deep-bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+        :root { --neon-cyan: #00f2ff; --neon-purple: #7000ff; --deep-bg: #000; }
+        body, html { margin: 0; padding: 0; background: var(--deep-bg); color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
 
-        /* Global Neural Canvas */
-        #neural-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+        /* Projector Lens Flare Layer */
+        .projector-beam {
+            position: fixed; top: -10%; left: -10%; width: 120%; height: 120%;
+            background: radial-gradient(circle at 20% 20%, rgba(0, 242, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none; z-index: 5; animation: beam-flicker 4s infinite;
+        }
+        @keyframes beam-flicker { 0%, 100% { opacity: 0.8; } 50% { opacity: 0.4; } }
 
-        /* HUD Elements */
-        .hud { position: fixed; padding: 20px; font-family: monospace; z-index: 100; pointer-events: none; text-shadow: 0 0 5px var(--neon-cyan); }
-        .top-left { top: 0; left: 0; border-left: 1px solid var(--neon-cyan); }
-        .bottom-right { bottom: 0; right: 0; text-align: right; border-right: 1px solid var(--neon-purple); }
+        /* Chromatic Aberration & Scanlines */
+        .screen-fx {
+            position: fixed; inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 3px 100%; z-index: 10; pointer-events: none;
+        }
 
-        /* Swipe Architecture */
-        .page { height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        
-        /* Crystallized Satellite */
-        .satellite { width: 200px; height: 200px; border: 1px solid var(--neon-cyan); position: relative; animation: rotate3d 10s infinite linear; transform-style: preserve-3d; }
-        @keyframes rotate3d { from { transform: rotateX(0) rotateY(0); } to { transform: rotateX(360deg) rotateY(360deg); } }
-        .satellite::before { content: ''; position: absolute; inset: -20px; border: 1px solid var(--neon-purple); opacity: 0.5; animation: pulse 2s infinite; }
+        .core-v4 { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; perspective: 1000px; }
 
-        /* Glitch UI */
-        .glitch-title { font-size: clamp(2rem, 8vw, 6rem); font-weight: 900; letter-spacing: 20px; animation: glitch 2s infinite; }
-        @keyframes glitch { 0% { text-shadow: 2px 0 red; } 50% { text-shadow: -2px 0 blue; } 100% { text-shadow: 2px 0 red; } }
+        /* Floating Holo-Grid */
+        .holo-grid {
+            width: 500px; height: 500px; border: 1px solid rgba(0, 242, 255, 0.2);
+            position: absolute; transform: rotateX(60deg);
+            background-image: linear-gradient(var(--neon-cyan) 1px, transparent 1px),
+                              linear-gradient(90deg, var(--neon-cyan) 1px, transparent 1px);
+            background-size: 40px 40px; animation: grid-scroll 10s infinite linear;
+        }
+        @keyframes grid-scroll { from { background-position: 0 0; } to { background-position: 0 400px; } }
 
-        .scroll-hint { position: absolute; bottom: 30px; animation: bounce 2s infinite; font-size: 0.7rem; opacity: 0.5; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .glitch-v4 {
+            font-size: 5rem; font-weight: 900; color: #fff;
+            text-shadow: 2px 0 var(--neon-purple), -2px 0 var(--neon-cyan);
+            letter-spacing: 20px; z-index: 100; text-align: center;
+        }
     </style>
 </head>
 <body>
-    <canvas id='neural-canvas'></canvas>
+    <div class='projector-beam'></div>
+    <div class='screen-fx'></div>
 
-    <div class='hud top-left'>
-        <div>INFRASTRUCTURE: V3.0.1</div>
-        <div>ENGINE: SELF-EVOLVING</div>
-        <div id='coord'>X:0 Y:0</div>
-    </div>
-
-    <div class='hud bottom-right'>
-        <div>SATELLITE_LINK: ACTIVE</div>
-        <div>PARTICLE_SYNC: STABLE</div>
-        <div id='ms-timer'>0ms</div>
-    </div>
-
-    <div class='page'>
-        <div class='satellite'></div>
-        <h1 class='glitch-title'>CORE BRAIN</h1>
-        <p style='letter-spacing: 10px;'>Crystallized Energy Matrix</p>
-        <div class='scroll-hint'>SWIPE DOWN TO EXPLORE LAYERS</div>
-    </div>
-
-    <div class='page'>
-        <h1>NEURAL DNA</h1>
-        <p>1,000,000 sub-particles stabilizing per millisecond.</p>
-    </div>
-
-    <div class='page'>
-        <h1>ADAPTIVE GROWTH</h1>
-        <p>Self-destructing and rebuilding layers to ensure optimization.</p>
+    <div class='core-v4'>
+        <div class='holo-grid'></div>
+        <h1 class='glitch-v4'>CORE PROJECTOR</h1>
     </div>
 
     <script>
-        const canvas = document.getElementById('neural-canvas');
-        const ctx = canvas.getContext('2d');
-        let w, h, particles = [];
-
-        function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-        window.onresize = resize; resize();
-
-        class Particle {
-            constructor() {
-                this.reset();
-            }
-            reset() {
-                this.x = Math.random() * w;
-                this.y = Math.random() * h;
-                this.vx = (Math.random() - 0.5) * 2;
-                this.vy = (Math.random() - 0.5) * 2;
-                this.life = Math.random() * 100 + 100;
-            }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.life--;
-                if(this.life <= 0) this.reset();
-            }
-            draw() {
-                ctx.fillStyle = `rgba(0, 242, 255, ${this.life / 200})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        for(let i=0; i<300; i++) particles.push(new Particle());
-
-        function animate(time) {
-            ctx.fillStyle = 'rgba(1, 1, 1, 0.1)';
-            ctx.fillRect(0,0,w,h);
-            particles.forEach(p => { p.update(); p.draw(); });
-            document.getElementById('ms-timer').innerText = Math.floor(time) + 'ms';
-            requestAnimationFrame(animate);
-        }
-        animate(0);
-
-        window.addEventListener('mousemove', (e) => {
-            document.getElementById('coord').innerText = `X:${e.clientX} Y:${e.clientY}`;
-        });
+        setInterval(() => {
+            document.body.style.opacity = Math.random() > 0.98 ? '0.8' : '1';
+        }, 50);
     </script>
 </body>
 </html>
