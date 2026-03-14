@@ -3,86 +3,96 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V49 | 16D QUANTUM VOYAGER</title>
+<title>CORE V50 | NEURAL ODYSSEY</title>
 <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
 <style>
 :root{ --c1:#00f0ff; --c2:#ff2e88; --bg: #000; }
 body,html{ margin:0; padding:0; background:#000; color:#fff; font-family:'Michroma'; overflow:hidden; }
-canvas{ position:fixed; inset:0; z-index:1; cursor:none; }
-.hud-16d{ position:fixed; top:40px; left:40px; z-index:100; border-left:2px solid var(--c1); padding-left:20px; pointer-events:none; text-transform:uppercase; }
-.crosshair{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:40px; height:40px; border:1px solid var(--c1); border-radius:50%; z-index:200; pointer-events:none; opacity:0.5; }
-.crosshair::after{ content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:4px; height:4px; background:var(--c2); border-radius:50%; }
-#dim-status{ font-family:'Orbitron'; color:var(--c1); font-size:14px; letter-spacing:5px; }
+canvas{ position:fixed; inset:0; z-index:1; }
+.hud-v50{ position:fixed; top:40px; left:40px; z-index:100; border-left:2px solid var(--c1); padding-left:20px; pointer-events:none; text-transform:uppercase; }
+.game-overlay{ position:fixed; inset:0; z-index:200; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(0,0,0,0.9); transition:0.5s; text-align:center; }
+.btn{ background:transparent; border:1px solid var(--c1); color:#fff; padding:15px 40px; cursor:pointer; font-family:'Orbitron'; letter-spacing:5px; transition:0.3s; margin-top:20px; }
+.btn:hover{ background:var(--c1); color:#000; box-shadow:0 0 30px var(--c1); }
+#score-ui{ font-family:'Orbitron'; color:var(--c1); font-size:20px; }
+.pixel-fill{ position:fixed; inset:0; z-index:0; background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 4px 4px; pointer-events:none; }
 </style>
 </head>
 <body>
-<canvas id='space-canvas'></canvas>
-<div class='crosshair'></div>
-<div class='hud-16d'>
-    <div style='font-size:10px; letter-spacing:3px;'>SYSTEM: QUANTUM_VOYAGER_V49</div>
-    <div id='dim-status'>DIMENSION: 16D_ACTIVE</div>
-    <div style='font-size:10px; letter-spacing:3px; opacity:0.6;'>VELOCITY: <span id='speed'>0</span> LY/S</div>
+<div class='pixel-fill'></div>
+<canvas id='render-canvas'></canvas>
+<div class='hud-v50'>
+    <div style='font-size:10px; opacity:0.6;'>SYSTEM: ODYSSEY_V50</div>
+    <div style='font-size:14px; letter-spacing:5px;'>CORE_INTEGRITY: <span id='integrity'>100</span>%</div>
+    <div id='score-ui'>SCORE: 0</div>
+</div>
+<div id='overlay' class='game-overlay'>
+    <h1 style='font-family:Orbitron; font-size:3rem; letter-spacing:15px;'>NEURAL ODYSSEY</h1>
+    <p style='opacity:0.5; max-width:400px;'>DEFEND THE QUANTUM CORE. CLICK THE GLITCH VECTORS BEFORE THEY BREACH THE CENTER.</p>
+    <button class='btn' onclick='game.start()'>INITIALIZE ENGINE</button>
 </div>
 <script>
-const canvas=document.getElementById('space-canvas'), ctx=canvas.getContext('2d');
-let w, h, time=0, particles=[], mouse={x:innerWidth/2, y:innerHeight/2}, speed=0;
+const canvas=document.getElementById('render-canvas'), ctx=canvas.getContext('2d');
+let w, h, time=0, score=0, integrity=100, isPlaying=false, enemies=[];
+function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } resize(); addEventListener('resize',resize);
 
-function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
-resize(); addEventListener('resize',resize);
+const game = {
+    start() {
+        document.getElementById('overlay').style.display='none';
+        isPlaying=true; score=0; integrity=100; enemies=[];
+    },
+    over() {
+        isPlaying=false;
+        document.getElementById('overlay').style.display='flex';
+        document.querySelector('#overlay h1').innerText = 'CORE COLLAPSED';
+    }
+};
 
-for(let i=0; i<600; i++) {
-    particles.push({ 
-        x: Math.random()*w - w/2, 
-        y: Math.random()*h - h/2, 
-        z: Math.random()*w, 
-        color: Math.random()*360 
-    });
+function spawnEnemy() {
+    if(!isPlaying) return;
+    const angle = Math.random() * Math.PI * 2;
+    const dist = Math.max(w, h);
+    enemies.push({ x: w/2 + Math.cos(angle)*dist, y: h/2 + Math.sin(angle)*dist, speed: 2 + (score/100) });
 }
+setInterval(spawnEnemy, 1000);
 
-window.addEventListener('mousemove', e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-    speed = (Math.abs(e.clientX - w/2) + Math.abs(e.clientY - h/2)) / 50;
+window.addEventListener('mousedown', e => {
+    if(!isPlaying) return;
+    enemies.forEach((en, i) => {
+        if(Math.hypot(e.clientX - en.x, e.clientY - en.y) < 40) {
+            enemies.splice(i, 1);
+            score += 10;
+            document.getElementById('score-ui').innerText = `SCORE: ${score}`;
+        }
+    });
 });
 
 function draw(){
-    time+=0.01; 
-    ctx.fillStyle='rgba(0,0,0,0.2)'; 
-    ctx.fillRect(0,0,w,h);
+    time+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
+    const cx=w/2, cy=h/2;
     
-    const cx = w/2, cy = h/2;
-    
-    // 16D Dimensional Layers (Recursive Circles)
-    for(let i=0; i<16; i++) {
-        ctx.strokeStyle = `hsla(${time*50 + i*20}, 100%, 50%, ${0.05 - i*0.003})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        const r = 100 + (i * 40) + Math.sin(time + i)*20;
-        ctx.arc(cx, cy, r, 0, Math.PI*2);
-        ctx.stroke();
-    }
+    // Living Core visuals
+    ctx.strokeStyle = `hsla(${time*50}, 100%, 50%, 0.2)`;
+    ctx.beginPath(); ctx.arc(cx, cy, 50 + Math.sin(time*2)*10, 0, Math.PI*2); ctx.stroke();
 
-    particles.forEach(p => {
-        p.z -= 2 + speed;
-        if(p.z <= 0) p.z = w;
+    if(!isPlaying) { requestAnimationFrame(draw); return; }
 
-        let sc = 400/p.z;
-        let x2d = (p.x * sc) + cx + (mouse.x - cx) * (p.z/w);
-        let y2d = (p.y * sc) + cy + (mouse.y - cy) * (p.z/w);
+    enemies.forEach((en, i) => {
+        const dx = cx - en.x, dy = cy - en.y;
+        const dist = Math.hypot(dx, dy);
+        en.x += (dx/dist) * en.speed; en.y += (dy/dist) * en.speed;
 
-        ctx.fillStyle = `hsla(${p.color}, 80%, 70%, ${1 - p.z/w})`;
-        ctx.fillRect(x2d, y2d, sc, sc);
+        ctx.fillStyle = '#ff2e88';
+        ctx.shadowBlur = 15; ctx.shadowColor = '#ff2e88';
+        ctx.fillRect(en.x-5, en.y-5, 10, 10);
+        ctx.shadowBlur = 0;
 
-        if(sc > 2) {
-            ctx.strokeStyle = `hsla(${p.color}, 80%, 70%, ${0.1 * (1 - p.z/w)})`;
-            ctx.beginPath();
-            ctx.moveTo(x2d, y2d);
-            ctx.lineTo(cx, cy);
-            ctx.stroke();
+        if(dist < 50) {
+            integrity -= 5;
+            enemies.splice(i, 1);
+            document.getElementById('integrity').innerText = integrity;
+            if(integrity <= 0) game.over();
         }
     });
-
-    document.getElementById('speed').innerText = (speed * 100).toFixed(0);
     requestAnimationFrame(draw);
 }
 draw();
