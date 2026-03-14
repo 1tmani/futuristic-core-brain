@@ -1,0 +1,165 @@
+:root {
+    --primary: #00f2ff;
+    --secondary: #7000ff;
+    --bg: #010101;
+    --glass: rgba(255, 255, 255, 0.03);
+    --border: rgba(0, 242, 255, 0.15);
+    --text: #ffffff;
+    --font-main: 'Michroma', sans-serif;
+    --font-titles: 'Orbitron', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    margin: 0; padding: 0;
+}
+
+body, html {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-main);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* PROCEDURAL ASSETS */
+#universe-canvas {
+    position: fixed; inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.vibration-layer {
+    position: fixed; inset: 0;
+    background: radial-gradient(circle at center, transparent 30%, #000 150%);
+    z-index: 2;
+    pointer-events: none;
+    animation: vibe 10s infinite alternate ease-in-out;
+}
+
+.noise-overlay {
+    position: fixed; inset: 0;
+    background: url('https://grainy-gradients.vercel.app/noise.svg');
+    opacity: 0.03;
+    z-index: 3;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}
+
+@keyframes vibe { 0% { opacity: 0.4; } 100% { opacity: 0.7; } }
+
+/* HUD INTERFACE */
+.nav-hud {
+    position: fixed;
+    top: 40px; right: 50px;
+    z-index: 1000;
+    display: flex; gap: 15px;
+}
+
+.nav-link {
+    font-family: var(--font-titles);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--primary);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.nav-link:hover {
+    background: var(--primary); color: #000;
+    box-shadow: 0 0 30px var(--primary);
+    transform: translateY(-2px);
+}
+
+.system-status-hud {
+    position: fixed;
+    bottom: 40px; left: 50px;
+    z-index: 1000;
+    border-left: 2px solid var(--primary);
+    padding-left: 20px;
+    display: flex; flex-direction: column; gap: 5px;
+}
+
+.status-item {
+    font-family: 'JetBrains Mono';
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--primary);
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* SECTION LOGIC */
+main {
+    position: relative;
+    height: 100vh;
+    z-index: 10;
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+main::-webkit-scrollbar { display: none; }
+
+section {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: start;
+    padding: 100px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+}
+
+.content-box {
+    text-align: center;
+    max-width: 1000px;
+    z-index: 20;
+}
+
+h1 {
+    font-family: var(--font-titles);
+    font-size: clamp(3rem, 12vw, 6rem);
+    letter-spacing: 30px;
+    font-weight: 900;
+    text-transform: uppercase;
+    text-shadow: 0 0 40px var(--primary);
+    margin-bottom: 20px;
+}
+
+.sub-label {
+    font-family: 'JetBrains Mono';
+    font-size: 11px;
+    letter-spacing: 8px;
+    opacity: 0.5;
+    text-transform: uppercase;
+}
+
+/* GLITCH FX */
+.glitch-title {
+    position: relative;
+}
+
+.glitch-title::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 2px; text-shadow: -2px 0 red;
+    top: 0; width: 100%;
+    overflow: hidden;
+    clip: rect(0, 900px, 0, 0);
+    animation: glitch 3s infinite linear alternate-reverse;
+}
+
+@keyframes glitch {
+    0% { clip: rect(44px, 9999px, 56px, 0); }
+    20% { clip: rect(12px, 9999px, 30px, 0); }
+    100% { clip: rect(80px, 9999px, 90px, 0); }
+}
