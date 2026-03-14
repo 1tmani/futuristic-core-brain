@@ -3,156 +3,150 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>SPACE RACING CORE | V36 DEEP DEPTH</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Michroma&display=swap' rel='stylesheet'>
+<title>CORE V40 | NIGHTINGALE SINGULARITY</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&family=Syncopate:wght@400;700&display=swap' rel='stylesheet'>
 <style>
 :root{
-     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88;
+     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --c4:#00ff75; --dim: 1; --f-weight: 100; --f-width: 100%;
+     --bg: #000; --entry-op: 1;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{
-     background:#000; color:#fff; font-family:'Michroma',sans-serif; overflow:hidden;
+html,body{ background:var(--bg); color:#fff; font-family:'Michroma',sans-serif; overflow-x:hidden; scroll-behavior:smooth; }
+
+canvas{ position:fixed; inset:0; z-index:1; mix-blend-mode: screen; }
+
+/* ENTRY CINEMATIC LAYER */
+.entry-site{
+    position:relative; z-index:1000; min-height:200vh; background:#050505;
+    opacity: var(--entry-op); transition: opacity 2s cubic-bezier(0.19, 1, 0.22, 1);
+    display: flex; flex-direction: column; align-items: center;
 }
-canvas{
-     position:fixed; inset:0; z-index:0;
+.entry-hero{ height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+.premium-label{ font-family:'Syncopate'; font-weight:700; letter-spacing:20px; font-size:4rem; text-transform:uppercase; }
+
+/* 8D GAMING HUD */
+.game-hud{
+    position:fixed; top:30px; right:30px; z-index:2000; display:flex; gap:10px;
+    opacity: calc(1 - var(--entry-op)); pointer-events: auto;
 }
-header{
-     position:fixed; top:0; width:100%; z-index:100;
-     backdrop-filter:blur(20px); background:rgba(0,0,0,.3);
-     border-bottom:1px solid rgba(255,255,255,.1);
+.hud-btn{
+    background:rgba(255,255,255,0.05); border:1px solid var(--c1); color:#fff;
+    padding:10px 20px; font-family:'Orbitron'; font-size:10px; cursor:pointer; transition:0.3s;
 }
-nav{
-     display:flex; justify-content:space-between; padding:20px 40px;
+.hud-btn:hover{ background:var(--c1); color:#000; box-shadow:0 0 20px var(--c1); }
+
+/* NIGHTINGALE ELEMENTS */
+.nightingale-node{
+    position:fixed; width:2px; height:2px; background:#fff; border-radius:50%;
+    box-shadow:0 0 10px var(--c3); z-index:5; pointer-events:none;
 }
-.logo{
-     font-family:'Orbitron',sans-serif; letter-spacing:10px; font-weight:900; text-shadow:0 0 20px var(--c1);
+
+.pixel-fill{
+    position:fixed; inset:0; z-index:0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 4px 4px; pointer-events:none;
 }
-.controls{ display:flex; gap:15px; }
-button{
-     background:rgba(255,255,255,.05); color:#fff; border:1px solid rgba(255,255,255,.2);
-     padding:12px 20px; border-radius:4px; cursor:pointer; font-family:'Orbitron'; font-size:10px; transition:0.3s;
-}
-button:hover{ background:var(--c1); color:#000; box-shadow:0 0 20px var(--c1); }
-.overlay-hud{
-     position:relative; z-index:10; pointer-events:none; height:100vh; padding:120px 40px;
-}
-.stats-box{
-     background:rgba(0,0,0,0.6); border-left:4px solid var(--c1); padding:20px; width:fit-content;
-     backdrop-filter:blur(10px); font-size:12px; line-height:2; letter-spacing:2px;
-}
-.horizon-glow{
-     position:fixed; bottom:0; width:100%; height:40vh; z-index:1; pointer-events:none;
-     background:linear-gradient(to top, var(--c1), transparent); opacity:0.15;
-     transition: 1s ease-in-out;
+
+#main-title{
+    font-family:'Orbitron'; font-weight:var(--f-weight); font-stretch: var(--f-width);
+    font-size:clamp(3rem, 15vw, 10rem); letter-spacing:calc(var(--dim)*15px);
+    text-shadow: 0 0 30px var(--c1);
 }
 </style>
 </head>
 <body>
-<div class='horizon-glow' id='h-glow'></div>
-<canvas id='game'></canvas>
-<header>
-<nav>
-<div class='logo'>DEEP RACER</div>
-<div class='controls'>
-<button onclick='setSpeed(3)'>CRUISE</button>
-<button onclick='setSpeed(7)'>WARP</button>
-<button onclick='setSpeed(12)'>HYPER</button>
-</div>
-</nav>
-</header>
-<section class='overlay-hud'>
-    <div class='stats-box'>
-        SECTOR: <span id='level'>1</span><br>
-        VELOCITY: <span id='speed'>7</span> u/s<br>
-        SYNC: STABLE
-    </div>
-</section>
-<script>
-const canvas=document.getElementById('game');
-const ctx=canvas.getContext('2d');
-let w,h, speed=7, level=1, time=0;
-let car={ x:0, y:0, w:70, h:110 };
-let stars=[];
+<div class='pixel-fill'></div>
+<canvas id='universe-8d'></canvas>
 
-function resize(){
-     w=canvas.width=innerWidth;
-     h=canvas.height=innerHeight;
-     car.x=w/2; car.y=h-180;
-}
+<div class='game-hud'>
+    <button class='hud-btn' onclick='gameEngine.play()'>PLAY</button>
+    <button class='hud-btn' onclick='gameEngine.pause()'>PAUSE</button>
+    <button class='hud-btn' onclick='gameEngine.stop()'>STOP</button>
+</div>
+
+<main class='entry-site' id='entry'>
+    <section class='entry-hero'>
+        <h1 class='premium-label'>UNIVERSAL<br>ARCHITECTURE</h1>
+        <p style='margin-top:20px; letter-spacing:10px; opacity:0.5;'>SCROLL TO ENTER VOID</p>
+    </section>
+    <section style='height:100vh;'></section>
+</main>
+
+<div style='position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:10; pointer-events:none;'>
+    <h1 id='main-title'>CORE</h1>
+</div>
+
+<script>
+const canvas = document.getElementById('universe-8d');
+const ctx = canvas.getContext('2d');
+let w, h, time=0, particles=[], isRunning=true;
+
+function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
 resize(); addEventListener('resize',resize);
 
-for(let i=0;i<400;i++){
-     stars.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*3+1 });
+for(let i=0;i<300;i++){
+    particles.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w, r:Math.random()*2+1, color:Math.random()*360 });
 }
 
-function setSpeed(v){ speed=v; document.getElementById('speed').textContent=v; }
+const gameEngine = {
+    play: () => isRunning = true,
+    pause: () => isRunning = false,
+    stop: () => { isRunning = false; time = 0; }
+};
 
-addEventListener('keydown',e=>{
-     if(e.key==='ArrowLeft') car.x-=45;
-     if(e.key==='ArrowRight') car.x+=45;
-     if(e.code==='Space'){
-          level = (level % 5) + 1;
-          document.getElementById('level').textContent=level;
-          const colors=['#00f0ff','#8a2eff','#ff2e88','#ffb800','#00ff75'];
-          document.documentElement.style.setProperty('--c1', colors[level-1]);
-     }
+window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const opacity = Math.max(0, 1 - scrollY / 800);
+    document.documentElement.style.setProperty('--entry-op', opacity);
+    if(opacity <= 0) document.getElementById('entry').style.display = 'none';
 });
 
-function drawUniverse(){
-     time += 0.01;
-     for(const s of stars){
-          s.y += speed * (s.z * 0.5);
-          if(s.y > h){ s.y=0; s.x=Math.random()*w; }
-          ctx.fillStyle=`rgba(255,255,255,${s.z/4})`;
-          ctx.beginPath(); ctx.arc(s.x, s.y, s.z/2, 0, Math.PI*2); ctx.fill();
-     }
-}
+function draw8D(){
+    if(!isRunning) { requestAnimationFrame(draw8D); return; }
+    time += 0.01;
+    
+    ctx.fillStyle = 'rgba(0,0,0,0.1)';
+    ctx.fillRect(0,0,w,h);
+    
+    const cx = w/2, cy = h/2;
+    const dimension = 1 + (Math.sin(time*0.5)+1)*3.5;
+    document.documentElement.style.setProperty('--f-weight', Math.floor(100 + (Math.sin(time)+1)*400));
+    document.documentElement.style.setProperty('--f-width', Math.floor(50 + (Math.cos(time)+1)*50) + '%');
 
-function drawTrack(){
-     const horizon = h * 0.4;
-     ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--c1')+'44';
-     ctx.lineWidth=2;
-     
-     // Perspective lines
-     for(let i=-10; i<=10; i++){
-          ctx.beginPath();
-          ctx.moveTo(w/2 + (i*20), horizon);
-          ctx.lineTo(w/2 + (i*250), h);
-          ctx.stroke();
-     }
+    particles.forEach(p => {
+        p.z -= 5;
+        if(p.z <= 0) p.z = w;
+        let scale = 400/p.z;
+        let x2d = (p.x - cx) * scale + cx;
+        let y2d = (p.y - cy) * scale + cy;
+        
+        ctx.fillStyle = `hsla(${p.color}, 100%, 70%, ${1 - p.z/w})`;
+        ctx.beginPath();
+        ctx.arc(x2d, y2d, scale * dimension, 0, Math.PI*2);
+        ctx.fill();
 
-     // Horizontal depth lines
-     for(let i=0; i<15; i++){
-          let y = horizon + Math.pow(i/15, 2) * (h-horizon);
-          let fade = i/15;
-          ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--c1') + Math.floor(fade*255).toString(16).padStart(2,'0');
-          ctx.beginPath();
-          ctx.moveTo(0, y);
-          ctx.lineTo(w, y);
-          ctx.stroke();
-     }
-}
+        if(scale > 3) {
+            ctx.strokeStyle = `hsla(${p.color}, 100%, 50%, 0.1)`;
+            ctx.beginPath();
+            ctx.moveTo(x2d, y2d);
+            ctx.lineTo(cx, cy);
+            ctx.stroke();
+        }
+    });
 
-function drawCar(){
-     ctx.save();
-     ctx.shadowBlur=40; ctx.shadowColor=getComputedStyle(document.documentElement).getPropertyValue('--c1');
-     ctx.fillStyle='#fff';
-     ctx.fillRect(car.x-car.w/2, car.y, car.w, car.h);
-     
-     // Engine Glow
-     ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--c1');
-     ctx.fillRect(car.x-car.w/2, car.y+car.h-10, car.w, 15);
-     ctx.restore();
+    requestAnimationFrame(draw8D);
 }
+draw8D();
 
-function animate(){
-     ctx.fillStyle='#000'; ctx.fillRect(0,0,w,h);
-     drawUniverse();
-     drawTrack();
-     drawCar();
-     requestAnimationFrame(animate);
-}
-animate();
+setInterval(() => {
+    if(!isRunning) return;
+    const node = document.createElement('div');
+    node.className = 'nightingale-node';
+    node.style.left = Math.random()*100 + 'vw';
+    node.style.top = Math.random()*100 + 'vh';
+    document.body.appendChild(node);
+    setTimeout(() => node.remove(), 2000);
+}, 500);
 </script>
 </body>
 </html>
