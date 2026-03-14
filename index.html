@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-<meta charset='UTF-8'><title>CORE V69 | HYPER-ANIMATED</title>
+<meta charset='UTF-8'><title>CORE V69 | NEURAL BURST</title>
 <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap' rel='stylesheet'>
 <style>
 :root{ --p: #00f0ff; --bg: #000; }
 body,html{ margin:0; background:#000; color:#fff; font-family:'Orbitron'; overflow:hidden; }
-canvas{ position:fixed; inset:0; z-index:1; }
+canvas{ position:fixed; inset:0; z-index:1; filter: contrast(1.5) brightness(1.2); }
 .hud-v69{ position:fixed; top:40px; left:40px; z-index:100; border-left:4px solid var(--p); padding-left:20px; font-size:12px; letter-spacing:5px; background:rgba(0,0,0,0.8); }
 </style>
 </head>
 <body>
-<div class='hud-v69'>SYSTEM: HYPER_V69<br>STATUS: AGGRESSIVE_MUTATION<br>HUE: <span id='hue-val'>0</span></div>
+<div class='hud-v69'>INFRA: V69_BURST<br>STATUS: KINETIC_SINGULARITY_ACTIVE</div>
 <canvas id='c'></canvas>
 <script>
 const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
 let w, h, t=0; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
 function draw(){
-    t+=0.05; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
-    ctx.strokeStyle='var(--p)'; ctx.lineWidth=2;
-    for(let i=0; i<15; i++){
+    t+=0.05; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle='var(--p)'; ctx.lineWidth=3;
+    for(let i=0; i<20; i++){
         ctx.beginPath();
-        let r = Math.abs(Math.sin(t*0.2 + i)*300);
+        let r = Math.abs(Math.sin(t*0.1 + i)*w*0.4);
         ctx.arc(w/2, h/2, r, 0, Math.PI*2);
+        ctx.setLineDash([i*5, 10]);
         ctx.stroke();
     }
     requestAnimationFrame(draw);
 }
 draw();
 setInterval(() => {
-    const hue = Math.floor(Math.random()*360);
-    document.documentElement.style.setProperty('--p', `hsl(${hue}, 100%, 50%)`);
-    document.getElementById('hue-val').innerText = hue;
-}, 2000);
+    const colors = ['#00f0ff', '#ff0055', '#7000ff', '#00ff75'];
+    document.documentElement.style.setProperty('--p', colors[Math.floor(Math.random()*colors.length)]);
+}, 1500);
 </script></body></html>
