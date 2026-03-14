@@ -3,116 +3,130 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE-BRAIN V14 | STABILIZED</title>
+    <title>CORE-BRAIN V15 | 4K SINGULARITY</title>
     <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
     <style>
-        :root { --c1: #00f2ff; --c2: #7000ff; --accent: #fff; }
-        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Michroma', sans-serif; overflow: hidden; }
+        :root { --c1: #00f2ff; --c2: #7000ff; --energy: 0; --blur: 20px; }
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Michroma', sans-serif; overflow: hidden; height: 100vh; }
 
-        /* Layer 0: Parallax Void */
-        #void-bg { position: fixed; inset: 0; background: radial-gradient(circle at 50% 50%, #050505 0%, #000 100%); z-index: -2; }
+        /* 4K High-Fidelity Background */
+        #void { position: fixed; inset: 0; background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%); z-index: -1; }
 
-        /* Layer 1: Frosted Glass HUD */
-        .glass-hud {
-            position: fixed; top: 30px; left: 30px; padding: 20px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(0, 242, 255, 0.2);
-            border-radius: 4px;
-            z-index: 100; letter-spacing: 2px; font-size: 10px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        /* Ultra-Smooth HUD */
+        .hud-v15 {
+            position: fixed; top: 40px; left: 40px; padding: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(var(--blur));
+            border: 0.5px solid rgba(0, 242, 255, 0.3);
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            z-index: 100; text-transform: uppercase; letter-spacing: 3px; font-size: 9px;
         }
 
-        .status-line { display: flex; align-items: center; margin-bottom: 8px; }
-        .dot { width: 6px; height: 6px; background: var(--c1); border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px var(--c1); }
+        .scanline { position: absolute; width: 100%; height: 1px; background: rgba(0, 242, 255, 0.2); top: 0; left: 0; animation: move 4s infinite linear; }
+        @keyframes move { 0% { top: 0; } 100% { top: 100%; } }
 
-        /* Layer 2: Stabilized Neural Engine */
-        #stabilized-canvas { position: fixed; inset: 0; z-index: 1; }
+        /* The Core Engine */
+        #canvas-4k { position: fixed; inset: 0; z-index: 1; image-rendering: -webkit-optimize-contrast; }
 
-        /* Layer 3: The Core Singularity */
-        .core-center {
+        .central-node {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             z-index: 50; text-align: center; pointer-events: none;
         }
-        .core-text {
-            font-size: 4rem; font-weight: 900; font-family: 'Orbitron', sans-serif; letter-spacing: 40px;
-            background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.2));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.5));
-        }
 
-        /* Aesthetic Noise Layer */
-        .noise-overlay { position: fixed; inset: 0; background: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.03; pointer-events: none; z-index: 200; }
+        .kinetic-title {
+            font-family: 'Orbitron', sans-serif; font-size: 5rem; font-weight: 900; letter-spacing: 50px;
+            background: linear-gradient(to right, #fff, var(--c1));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px var(--c1));
+            animation: breathe 10s infinite ease-in-out;
+        }
+        @keyframes breathe { 0%, 100% { transform: scale(1); filter: blur(0px); } 50% { transform: scale(1.05); filter: blur(2px); } }
+
+        /* Pixel-Level Noise */
+        .grain { position: fixed; inset: 0; background: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.04; pointer-events: none; z-index: 200; }
     </style>
 </head>
 <body>
-    <div id='void-bg'></div>
-    <div class='noise-overlay'></div>
+    <div id='void'></div>
+    <div class='grain'></div>
 
-    <div class='glass-hud'>
-        <div class='status-line'><div class='dot'></div> SYSTEM: STABILIZED_V14</div>
-        <div class='status-line'><div class='dot' style='background:var(--c2);box-shadow:0 0 10px var(--c2);'></div> SYNC: 100%_FIDELITY</div>
-        <div id='coords'>X: 000 Y: 000</div>
+    <div class='hud-v15'>
+        <div class='scanline'></div>
+        <div style='color:var(--c1)'>● SYSTEM: SINGULARITY_V15</div>
+        <div>● RENDER: 4K_PIXEL_PERFECT</div>
+        <div>● STATUS: STABILIZED</div>
+        <div id='perf'>CPU_LOAD: 0.00%</div>
     </div>
 
-    <div class='core-center'>
-        <h1 class='core-text'>CORE</h1>
+    <div class='central-node'>
+        <h1 class='kinetic-title'>CORE</h1>
     </div>
 
-    <canvas id='stabilized-canvas'></canvas>
+    <canvas id='canvas-4k'></canvas>
 
     <script>
-        const canvas = document.getElementById('stabilized-canvas');
+        const canvas = document.getElementById('canvas-4k');
         const ctx = canvas.getContext('2d');
         let w, h, particles = [], mouse = {x: null, y: null};
 
-        function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+        function resize() {
+            w = canvas.width = window.innerWidth * window.devicePixelRatio;
+            h = canvas.height = window.innerHeight * window.devicePixelRatio;
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        }
         window.onresize = resize; resize();
 
-        class Neuron {
+        class Particle {
             constructor() {
-                this.x = Math.random() * w; this.y = Math.random() * h;
-                this.vx = (Math.random() - 0.5) * 0.8; this.vy = (Math.random() - 0.5) * 0.8;
-                this.radius = Math.random() * 1.5 + 0.5;
+                this.x = Math.random() * window.innerWidth;
+                this.y = Math.random() * window.innerHeight;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.accel = 0.02;
             }
             update() {
                 this.x += this.vx; this.y += this.vy;
-                if(this.x < 0 || this.x > w) this.vx *= -1; if(this.y < 0 || this.y > h) this.vy *= -1;
+                if(this.x < 0 || this.x > window.innerWidth) this.vx *= -1;
+                if(this.y < 0 || this.y > window.innerHeight) this.vy *= -1;
 
                 if(mouse.x) {
                     let dx = mouse.x - this.x, dy = mouse.y - this.y;
                     let d = Math.hypot(dx, dy);
-                    if(d < 200) { this.x -= dx * 0.01; this.y -= dy * 0.01; }
+                    if(d < 200) {
+                        this.vx -= dx * 0.001; this.vy -= dy * 0.001;
+                    }
                 }
             }
             draw() {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.8)';
+                ctx.beginPath(); ctx.arc(this.x, this.y, 1, 0, Math.PI*2); ctx.fill();
             }
         }
 
-        for(let i=0; i<200; i++) particles.push(new Neuron());
+        for(let i=0; i<400; i++) particles.push(new Particle());
 
         function animate() {
-            ctx.clearRect(0, 0, w, h);
+            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
             particles.forEach((p, i) => {
                 p.update(); p.draw();
                 for(let j=i+1; j<particles.length; j++) {
                     let p2 = particles[j], d = Math.hypot(p.x-p2.x, p.y-p2.y);
-                    if(d < 120) {
-                        ctx.strokeStyle = `rgba(0, 242, 255, ${1 - d/120})`;
-                        ctx.lineWidth = 0.5;
+                    if(d < 100) {
+                        ctx.strokeStyle = `rgba(112, 0, 255, ${1 - d/100})`;
+                        ctx.lineWidth = 0.3;
                         ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
                     }
                 }
             });
+            document.getElementById('perf').innerText = `RENDER_TIME: ${(performance.now()/10000).toFixed(2)}ms`;
             requestAnimationFrame(animate);
         }
         animate();
 
         window.addEventListener('mousemove', (e) => {
             mouse.x = e.clientX; mouse.y = e.clientY;
-            document.getElementById('coords').innerText = `X: ${e.clientX} Y: ${e.clientY}`;
         });
     </script>
 </body>
