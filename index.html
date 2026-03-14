@@ -3,132 +3,80 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE-BRAIN V11 | 50-PROMPT SINGULARITY</title>
+    <title>CORE-BRAIN V12 | SENSORY SUSPENSE</title>
     <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Syncopate:wght@400;700&display=swap' rel='stylesheet'>
     <style>
-        :root { --c1: #00f2ff; --c2: #7000ff; --bg: #000; --f1: 'Orbitron', sans-serif; --f2: 'Syncopate', sans-serif; --glass: rgba(0, 242, 255, 0.05); }
-        body, html { margin: 0; padding: 0; background: #000; color: #fff; overflow-x: hidden; scroll-behavior: smooth; font-family: var(--f1); transition: all 0.5s ease; }
-
-        /* 50-Layer Infrastructure */
-        canvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+        :root { --c1: #00f2ff; --c2: #7000ff; --bg: #000; --speed: 1s; --blur: 0px; }
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; overflow-x: hidden; font-family: 'Orbitron', sans-serif; transition: filter 0.3s ease; }
+        
+        body.suspense { filter: blur(var(--blur)) brightness(0.8); }
+        canvas { position: fixed; inset: 0; z-index: -1; }
         .page { height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid rgba(0,242,255,0.05); }
 
-        /* Prompt 11: Neural Terminal */
-        #terminal { position: fixed; bottom: 20px; left: 20px; width: 300px; height: 150px; background: rgba(0,0,0,0.9); border: 1px solid var(--c1); font-family: monospace; font-size: 10px; padding: 10px; overflow-y: auto; z-index: 2000; display: none; }
+        .motion-grid { position: fixed; inset: 0; display: grid; grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(10, 1fr); pointer-events: none; opacity: 0.1; }
+        .grid-cell { border: 0.5px solid var(--c1); transition: transform 0.2s ease; }
 
-        /* Prompt 4: 3D Nav Cube */
-        .nav-cube { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; transform-style: preserve-3d; animation: cube-rot 10s infinite linear; z-index: 2000; cursor: pointer; }
-        .cube-face { position: absolute; inset: 0; border: 1px solid var(--c1); background: var(--glass); }
-        @keyframes cube-rot { from { transform: rotateX(0) rotateY(0); } to { transform: rotateX(360deg) rotateY(720deg); } }
-
-        /* Prompt 7: Neon Data Rain */
-        .rain { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 5; opacity: 0.2; }
-
-        /* Prompt 31: Glassmorphism HUD */
-        .hud-v11 { position: fixed; top: 100px; left: 30px; background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); border: 1px solid var(--glass); padding: 20px; border-radius: 10px; z-index: 1500; font-size: 10px; letter-spacing: 2px; }
-
-        .title-god { font-family: var(--f2); font-size: 4rem; text-transform: uppercase; letter-spacing: 20px; text-shadow: 0 0 20px var(--c1); animation: pulse-text 2s infinite alternate; }
-        @keyframes pulse-text { from { opacity: 0.5; transform: scale(0.98); } to { opacity: 1; transform: scale(1.02); } }
-
-        /* Scroll Loop Architecture */
-        .loop-indicator { position: fixed; bottom: 20px; width: 100%; text-align: center; font-size: 9px; opacity: 0.5; letter-spacing: 5px; }
+        .hud-v12 { position: fixed; top: 30px; left: 30px; background: rgba(0,0,0,0.8); border-left: 3px solid var(--c1); padding: 15px; font-size: 10px; z-index: 1000; letter-spacing: 2px; }
+        .status-blink { width: 8px; height: 8px; background: #0f0; border-radius: 50%; display: inline-block; margin-right: 10px; animation: blink 0.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+        .suspense-label { font-size: 5rem; font-weight: 900; text-transform: uppercase; transition: transform var(--speed) linear; }
     </style>
 </head>
 <body>
-    <div id='terminal' onclick='this.style.display="none"'>[SYSTEM_LOG: ALL 50 PROMPTS INITIALIZED...]<br>> WebGL_Distortion: ACTIVE<br>> Quantum_Sync: ENABLED<br>> Entropy_Engine: STABLE</div>
-    
-    <div class='nav-cube' onclick='document.getElementById("terminal").style.display="block"'>
-        <div class='cube-face' style='transform: translateZ(25px)'></div>
-        <div class='cube-face' style='transform: rotateY(90deg) translateZ(25px)'></div>
-        <div class='cube-face' style='transform: rotateY(180deg) translateZ(25px)'></div>
-        <div class='cube-face' style='transform: rotateY(-90deg) translateZ(25px)'></div>
+    <div class='hud-v12'>
+        <div class='status-blink'></div> ENGINE: SUSPENSE_V12<br>
+        STATUS: MOTION_SENSORS_ACTIVE<br>
+        VELOCITY: <span id='speed-val'>0</span> km/ms<br>
+        THEME: AUTO_UPGRADING
     </div>
+    <div class='motion-grid' id='grid'></div>
 
-    <div class='hud-v11'>
-        <div>ENGINE: GOD_PROTOCOL_V11</div>
-        <div>PROMPTS_LOADED: 50/50</div>
-        <div id='perf'>FPS: 60</div>
-        <div id='entropy'>ENTROPY: 0.000%</div>
-    </div>
+    <section class='page'><h1 class='suspense-label'>SUSPENSE</h1></section>
+    <section class='page'><h1>MOTION SENSOR</h1></section>
+    <section class='page'><h1>AUTO UPGRADE</h1></section>
+    <section class='page'><h1>NEURAL CAMERA</h1></section>
 
-    <canvas id='v11-canvas'></canvas>
-
-    <section class='page'><h1 class='title-god'>SINGULARITY</h1></section>
-    <section class='page'><h1>QUANTUM GRID</h1></section>
-    <section class='page'><h1>NEURAL DNA</h1></section>
-    <section class='page'><h1>SATELLITE SYNC</h1></section>
-    <section class='page'><h1>BIOMETRIC FLOW</h1></section>
-    <section class='page'><h1>ENTROPY LAYER</h1></section>
-    <section class='page'><h1>CRYPTO VOID</h1></section>
-    <section class='page'><h1>THEME LEARNING</h1></section>
-    <section class='page'><h1>NANO SCREEN</h1></section>
-    <section class='page'><h1 style='color:var(--c2)'>GOD PROTOCOL</h1></section>
-
-    <div class='loop-indicator'>INFINITE INFRASTRUCTURE LOOP ACTIVE</div>
+    <canvas id='v12-canvas'></canvas>
 
     <script>
-        const canvas = document.getElementById('v11-canvas');
-        const ctx = canvas.getContext('2d');
-        let w, h, particles = [], entropy = 0, mouse = {x:0, y:0, v:0};
-
-        function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-        window.onresize = resize; resize();
-
-        class Particle {
-            constructor() { this.init(); }
-            init() {
-                this.x = Math.random() * w; this.y = Math.random() * h;
-                this.vx = (Math.random() - 0.5) * 2; this.vy = (Math.random() - 0.5) * 2;
-                this.life = Math.random() * 200;
-                this.entangled = Math.random() > 0.95; // Prompt 6
-            }
-            update() {
-                // Prompt 23: Neural Pathfinding (seek mouse)
-                let dx = mouse.x - this.x, dy = mouse.y - this.y;
-                let d = Math.hypot(dx, dy);
-                if(d < 200) { this.vx += dx * 0.01; this.vy += dy * 0.01; }
-                
-                this.x += this.vx; this.y += this.vy;
-                this.vx *= 0.95; this.vy *= 0.95;
-                this.life--;
-                if(this.life <= 0) this.init();
-            }
-            draw() {
-                ctx.strokeStyle = this.entangled ? '#ff0055' : `rgba(0, 242, 255, ${this.life/200})`;
-                ctx.beginPath(); ctx.arc(this.x, this.y, 1, 0, Math.PI*2); ctx.stroke();
-            }
+        const grid = document.getElementById('grid');
+        for(let i=0; i<100; i++) {
+            let div = document.createElement('div');
+            div.className = 'grid-cell';
+            grid.appendChild(div);
         }
 
-        for(let i=0; i<500; i++) particles.push(new Particle());
-
-        function draw() {
-            // Prompt 22: Entropy Engine
-            entropy += 0.001; 
-            document.getElementById('entropy').innerText = `ENTROPY: ${entropy.toFixed(3)}%`;
-            
-            ctx.fillStyle = `rgba(0,0,0,${0.1 + (entropy/100)})`;
-            ctx.fillRect(0,0,w,h);
-            
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(draw);
-        }
-        draw();
-
-        // Prompt 1: Mouse Distortion Tracking
-        window.addEventListener('mousemove', (e) => {
-            let dx = e.clientX - mouse.x, dy = e.clientY - mouse.y;
-            mouse.v = Math.hypot(dx, dy);
-            mouse.x = e.clientX; mouse.y = e.clientY;
-            if(mouse.v > 50) document.body.style.filter = `hue-rotate(${mouse.v}deg)`;
-            else document.body.style.filter = 'none';
-        });
-
-        // Prompt 39: Infinite Scroll Loop
+        let lastScroll = 0;
         window.addEventListener('scroll', () => {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-                window.scrollTo(0, 0);
-            }
+            let currentScroll = window.scrollY;
+            let diff = Math.abs(currentScroll - lastScroll);
+            document.getElementById('speed-val').innerText = diff;
+            document.documentElement.style.setProperty('--blur', (diff / 10) + 'px');
+            if (diff > 50) document.body.classList.add('suspense');
+            else document.body.classList.remove('suspense');
+            lastScroll = currentScroll;
         });
+
+        window.addEventListener('mousemove', (e) => {
+            const cells = document.querySelectorAll('.grid-cell');
+            cells.forEach((cell) => {
+                let dist = Math.hypot(cell.offsetLeft - e.clientX, cell.offsetTop - e.clientY);
+                if(dist < 200) {
+                    cell.style.transform = `scale(1.5) rotate(${dist/10}deg)`;
+                    cell.style.borderColor = 'var(--c2)';
+                } else {
+                    cell.style.transform = 'scale(1)';
+                    cell.style.borderColor = 'var(--c1)';
+                }
+            });
+        });
+
+        const canvas = document.getElementById('v12-canvas');
+        const ctx = canvas.getContext('2d');
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.onresize = resize; resize();
+        function draw() { ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,canvas.width,canvas.height); requestAnimationFrame(draw); }
+        draw();
     </script>
 </body>
 </html>
