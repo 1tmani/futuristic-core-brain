@@ -3,103 +3,156 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V43 | GEOMETRIC SINGULARITY</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=Syncopate:wght@400;700&display=swap' rel='stylesheet'>
+<title>SPACE RACING CORE | V36 DEEP DEPTH</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Michroma&display=swap' rel='stylesheet'>
 <style>
 :root{
-     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --c4:#00ff75;
-     --font-w: 100; --entry-op: 1;
+     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{ background:#000; color:#fff; font-family:'Michroma',sans-serif; overflow:hidden; }
-
-canvas{ position:fixed; inset:0; z-index:1; mix-blend-mode: screen; }
-
-/* 3D RECTANGULAR CIRCLE SYSTEM */
-.geometry-core{
-    position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-    width:100vw; height:100vh; z-index:5; pointer-events:none; perspective:1200px;
+html,body{
+     background:#000; color:#fff; font-family:'Michroma',sans-serif; overflow:hidden;
 }
-.rect-ring{
-    position:absolute; top:50%; left:50%; transform-style:preserve-3d;
-    border:2px solid var(--c1); box-shadow: 0 0 30px var(--c1);
-    animation: rotateRect linear infinite;
+canvas{
+     position:fixed; inset:0; z-index:0;
 }
-@keyframes rotateRect { 
-    from{ transform: translate(-50%,-50%) rotateX(0deg) rotateY(0deg); } 
-    to{ transform: translate(-50%,-50%) rotateX(360deg) rotateY(720deg); } 
+header{
+     position:fixed; top:0; width:100%; z-index:100;
+     backdrop-filter:blur(20px); background:rgba(0,0,0,.3);
+     border-bottom:1px solid rgba(255,255,255,.1);
 }
-
-.starting-menu{ 
-    position:fixed; top:0; left:0; width:100%; height:100vh; z-index:1000;
-    background: radial-gradient(circle at center, rgba(0,0,0,0.6), #000);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    opacity: var(--entry-op); transition: 2s cubic-bezier(0.19, 1, 0.22, 1);
+nav{
+     display:flex; justify-content:space-between; padding:20px 40px;
 }
-.menu-title{ font-family:'Syncopate'; font-weight:700; letter-spacing:25px; font-size:4rem; text-shadow: 0 0 30px #fff; text-transform:uppercase; }
-.start-btn{ 
-    margin-top:50px; background:transparent; border:1px solid var(--c1); color:#fff; 
-    padding:20px 60px; font-family:'Orbitron'; letter-spacing:10px; cursor:pointer;
-    transition:0.4s; backdrop-filter:blur(10px); box-shadow: 0 0 15px rgba(0,240,255,0.2);
+.logo{
+     font-family:'Orbitron',sans-serif; letter-spacing:10px; font-weight:900; text-shadow:0 0 20px var(--c1);
 }
-.start-btn:hover{ background:var(--c1); color:#000; box-shadow: 0 0 40px var(--c1); transform: scale(1.1); }
-
-.pixel-fill{ position:fixed; inset:0; z-index:0; background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 8px 8px; }
-
+.controls{ display:flex; gap:15px; }
+button{
+     background:rgba(255,255,255,.05); color:#fff; border:1px solid rgba(255,255,255,.2);
+     padding:12px 20px; border-radius:4px; cursor:pointer; font-family:'Orbitron'; font-size:10px; transition:0.3s;
+}
+button:hover{ background:var(--c1); color:#000; box-shadow:0 0 20px var(--c1); }
+.overlay-hud{
+     position:relative; z-index:10; pointer-events:none; height:100vh; padding:120px 40px;
+}
+.stats-box{
+     background:rgba(0,0,0,0.6); border-left:4px solid var(--c1); padding:20px; width:fit-content;
+     backdrop-filter:blur(10px); font-size:12px; line-height:2; letter-spacing:2px;
+}
+.horizon-glow{
+     position:fixed; bottom:0; width:100%; height:40vh; z-index:1; pointer-events:none;
+     background:linear-gradient(to top, var(--c1), transparent); opacity:0.15;
+     transition: 1s ease-in-out;
+}
 </style>
 </head>
 <body>
-<div class='pixel-fill'></div>
-<canvas id='universe'></canvas>
-
-<div class='geometry-core' id='rect-system'>
-    <div class='rect-ring' style='width:300px; height:300px; animation-duration:10s; border-color:var(--c1);'></div>
-    <div class='rect-ring' style='width:250px; height:250px; animation-duration:15s; border-color:var(--c2); opacity:0.6;'></div>
-    <div class='rect-ring' style='width:400px; height:200px; animation-duration:20s; border-color:var(--c3); opacity:0.4;'></div>
+<div class='horizon-glow' id='h-glow'></div>
+<canvas id='game'></canvas>
+<header>
+<nav>
+<div class='logo'>DEEP RACER</div>
+<div class='controls'>
+<button onclick='setSpeed(3)'>CRUISE</button>
+<button onclick='setSpeed(7)'>WARP</button>
+<button onclick='setSpeed(12)'>HYPER</button>
 </div>
-
-<main class='starting-menu' id='menu'>
-    <h1 class='menu-title'>NIGHTINGALE</h1>
-    <button class='start-btn' onclick='enter()'>ENGAGE CORE</button>
-</main>
-
+</nav>
+</header>
+<section class='overlay-hud'>
+    <div class='stats-box'>
+        SECTOR: <span id='level'>1</span><br>
+        VELOCITY: <span id='speed'>7</span> u/s<br>
+        SYNC: STABLE
+    </div>
+</section>
 <script>
-const canvas = document.getElementById('universe');
-const ctx = canvas.getContext('2d');
-let w, h, time=0, particles=[];
+const canvas=document.getElementById('game');
+const ctx=canvas.getContext('2d');
+let w,h, speed=7, level=1, time=0;
+let car={ x:0, y:0, w:70, h:110 };
+let stars=[];
 
-function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
+function resize(){
+     w=canvas.width=innerWidth;
+     h=canvas.height=innerHeight;
+     car.x=w/2; car.y=h-180;
+}
 resize(); addEventListener('resize',resize);
 
 for(let i=0;i<400;i++){
-    particles.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w, r:Math.random()*2+1, color:Math.random()*360 });
+     stars.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*3+1 });
 }
 
-function enter(){
-    document.documentElement.style.setProperty('--entry-op', '0');
-    setTimeout(() => document.getElementById('menu').style.display = 'none', 2000);
+function setSpeed(v){ speed=v; document.getElementById('speed').textContent=v; }
+
+addEventListener('keydown',e=>{
+     if(e.key==='ArrowLeft') car.x-=45;
+     if(e.key==='ArrowRight') car.x+=45;
+     if(e.code==='Space'){
+          level = (level % 5) + 1;
+          document.getElementById('level').textContent=level;
+          const colors=['#00f0ff','#8a2eff','#ff2e88','#ffb800','#00ff75'];
+          document.documentElement.style.setProperty('--c1', colors[level-1]);
+     }
+});
+
+function drawUniverse(){
+     time += 0.01;
+     for(const s of stars){
+          s.y += speed * (s.z * 0.5);
+          if(s.y > h){ s.y=0; s.x=Math.random()*w; }
+          ctx.fillStyle=`rgba(255,255,255,${s.z/4})`;
+          ctx.beginPath(); ctx.arc(s.x, s.y, s.z/2, 0, Math.PI*2); ctx.fill();
+     }
 }
 
-function draw(){
-    time += 0.01;
-    ctx.fillStyle = 'rgba(0,0,0,0.15)';
-    ctx.fillRect(0,0,w,h);
-    const cx = w/2, cy = h/2;
+function drawTrack(){
+     const horizon = h * 0.4;
+     ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--c1')+'44';
+     ctx.lineWidth=2;
+     
+     // Perspective lines
+     for(let i=-10; i<=10; i++){
+          ctx.beginPath();
+          ctx.moveTo(w/2 + (i*20), horizon);
+          ctx.lineTo(w/2 + (i*250), h);
+          ctx.stroke();
+     }
 
-    particles.forEach(p => {
-        p.z -= 5;
-        if(p.z <= 0) p.z = w;
-        let scale = 400/p.z;
-        let x2d = (p.x - cx) * scale + cx;
-        let y2d = (p.y - cy) * scale + cy;
-        ctx.fillStyle = `hsla(${p.color}, 100%, 70%, ${1 - p.z/w})`;
-        ctx.beginPath();
-        ctx.arc(x2d, y2d, scale * 2, 0, Math.PI*2);
-        ctx.fill();
-    });
-    requestAnimationFrame(draw);
+     // Horizontal depth lines
+     for(let i=0; i<15; i++){
+          let y = horizon + Math.pow(i/15, 2) * (h-horizon);
+          let fade = i/15;
+          ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--c1') + Math.floor(fade*255).toString(16).padStart(2,'0');
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(w, y);
+          ctx.stroke();
+     }
 }
-draw();
+
+function drawCar(){
+     ctx.save();
+     ctx.shadowBlur=40; ctx.shadowColor=getComputedStyle(document.documentElement).getPropertyValue('--c1');
+     ctx.fillStyle='#fff';
+     ctx.fillRect(car.x-car.w/2, car.y, car.w, car.h);
+     
+     // Engine Glow
+     ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--c1');
+     ctx.fillRect(car.x-car.w/2, car.y+car.h-10, car.w, 15);
+     ctx.restore();
+}
+
+function animate(){
+     ctx.fillStyle='#000'; ctx.fillRect(0,0,w,h);
+     drawUniverse();
+     drawTrack();
+     drawCar();
+     requestAnimationFrame(animate);
+}
+animate();
 </script>
 </body>
 </html>
