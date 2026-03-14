@@ -3,97 +3,85 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE-BRAIN V21 | AUTONOMOUS SINGULARITY</title>
+    <title>CORE-BRAIN V22 | GAMING SINGULARITY</title>
     <link href='https://fonts.googleapis.com/css2?family=Michroma&display=swap' rel='stylesheet'>
     <style>
-        :root { --c1: #00f2ff; --c2: #7000ff; --rot: 0deg; --gap: 20px; }
+        :root { --c1: #00f2ff; --c2: #7000ff; }
         body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Michroma', sans-serif; overflow: hidden; height: 100vh; }
 
-        /* KINETIC LAYOUT GRID */
-        #kinetic-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: var(--gap);
-            height: 100vh; width: 100vw;
-            padding: 20px; box-sizing: border-box;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: rotate(var(--rot));
+        /* HIGH-TECH BACKGROUND */
+        #bg-canvas { position: fixed; inset: 0; z-index: -1; opacity: 0.6; }
+        .light-bulb { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, var(--c1) 0%, transparent 70%); border-radius: 50%; filter: blur(60px); animation: pulse 4s infinite ease-in-out; opacity: 0.3; pointer-events: none; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.2; } 50% { transform: scale(1.3); opacity: 0.4; } }
+
+        /* DEDICATED GAME UI */
+        .game-viewport {
+            height: 100vh; width: 100vw; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: radial-gradient(circle at center, rgba(0, 242, 255, 0.05) 0%, transparent 80%);
         }
 
-        .cell { border: 1px solid var(--c1); position: relative; overflow: hidden; background: rgba(0, 242, 255, 0.02); backdrop-filter: blur(5px); }
-        .cell::after { content: ''; position: absolute; inset: 0; background: linear-gradient(45deg, transparent, var(--c1)); opacity: 0.1; }
-
-        /* AUTONOMOUS MANIFESTATION HUD */
-        .hud-v21 {
-            position: fixed; top: 30px; left: 30px; font-size: 10px; z-index: 1000;
-            background: rgba(0,0,0,0.8); border-left: 3px solid var(--c1); padding: 15px; letter-spacing: 2px;
+        .arcade-screen {
+            width: 85%; height: 70%; border: 2px solid var(--c1); position: relative; overflow: hidden;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); box-shadow: 0 0 50px rgba(0, 242, 255, 0.2);
         }
 
-        /* LIQUID SINGULARITY CORE */
-        #core-node {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 200px; height: 200px; background: var(--c2); border-radius: 50%;
-            filter: blur(40px); mix-blend-mode: screen; pointer-events: none; z-index: 500;
+        .hud-v22 {
+            position: absolute; top: 20px; left: 20px; font-size: 10px; color: var(--c1); 
+            text-transform: uppercase; letter-spacing: 2px; border-left: 3px solid var(--c1); padding-left: 10px;
         }
+
+        #target-zone { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; border: 2px dashed #fff; opacity: 0.5; }
+        #game-orb { position: absolute; width: 40px; height: 40px; background: var(--c2); border-radius: 50%; cursor: grab; box-shadow: 0 0 30px var(--c2); transition: 0.1s; }
+
+        .win-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; color: #0f0; font-size: 24px; z-index: 100; }
     </style>
 </head>
 <body>
-    <div class='hud-v21'>
-        ● SYSTEM: AUTONOMOUS_GOVERNOR_V21<br>
-        ● STATUS: SELF_UPGRADING_ACTIVE<br>
-        ● AUDIO: NEURAL_SOUNDSCAPE_V1<br>
-        ● EVOLUTION_MS: <span id='ms-clock'>0</span>
-    </div>
+    <div class='light-bulb' style='top: -100px; left: -100px;'></div>
+    <div class='light-bulb' style='bottom: -100px; right: -100px; background: radial-gradient(circle, var(--c2) 0%, transparent 70%);'></div>
+    <canvas id='bg-canvas'></canvas>
 
-    <div id='core-node'></div>
-    <div id='kinetic-container'>
-        <div class='cell'></div><div class='cell'></div><div class='cell'></div>
-        <div class='cell'></div><div class='cell'></div><div class='cell'></div>
-        <div class='cell'></div><div class='cell'></div><div class='cell'></div>
+    <div class='game-viewport'>
+        <div class='arcade-screen'>
+            <div class='win-overlay' id='win'>CORE STABILIZED</div>
+            <div class='hud-v22'>● PROTOCOL: GAMING_V22<br>● STATUS: SINGLE_LAYER_ACTIVE</div>
+            <div id='target-zone'></div>
+            <div id='game-orb'></div>
+        </div>
+        <p style='margin-top: 20px; font-size: 10px; opacity: 0.5;'>DRAG THE ORB TO THE TARGET TO STABILIZE</p>
     </div>
 
     <script>
-        let audioCtx, oscillator;
-        
-        // NEURAL SOUNDSCAPE (Prompt 52)
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(50, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                oscillator.start();
+        const orb = document.getElementById('game-orb');
+        const win = document.getElementById('win');
+        orb.style.left = '50px'; orb.style.top = '50px';
+
+        orb.onmousedown = function(e) {
+            document.onmousemove = function(e) {
+                orb.style.left = e.clientX - (window.innerWidth * 0.075) + 'px';
+                orb.style.top = e.clientY - (window.innerHeight * 0.15) + 'px';
+                
+                let rect = document.getElementById('target-zone').getBoundingClientRect();
+                if(Math.abs(e.clientX - (rect.left + 40)) < 40 && Math.abs(e.clientY - (rect.top + 40)) < 40) {
+                    win.style.display = 'flex';
+                }
+            };
+            document.onmouseup = function() { document.onmousemove = null; };
+        };
+
+        // BG Particles
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h; function res() { w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; } res();
+        function draw() {
+            ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
+            for(let i=0; i<20; i++) {
+                ctx.fillStyle = '#00f2ff';
+                ctx.fillRect(Math.random()*w, Math.random()*h, 1, 1);
             }
+            requestAnimationFrame(draw);
         }
-
-        document.body.addEventListener('click', initAudio, {once: true});
-
-        // AUTONOMOUS GOVERNOR (Millisecond Upgrades)
-        let lastEvolve = 0;
-        function autonomousUpgrade(time) {
-            document.getElementById('ms-clock').innerText = Math.floor(time);
-            
-            // Continuous Theme & Layout Manifestation
-            const hue = (time / 50) % 360;
-            const rotation = (time / 100) % 360;
-            const gap = 10 + Math.sin(time / 500) * 20;
-
-            document.documentElement.style.setProperty('--c1', `hsl(${hue}, 100%, 50%)`);
-            document.documentElement.style.setProperty('--rot', `${rotation}deg`);
-            document.documentElement.style.setProperty('--gap', `${gap}px`);
-
-            if (oscillator) {
-                oscillator.frequency.setTargetAtTime(50 + (Math.sin(time/1000) * 20), audioCtx.currentTime, 0.1);
-            }
-
-            requestAnimationFrame(autonomousUpgrade);
-        }
-        requestAnimationFrame(autonomousUpgrade);
+        draw();
     </script>
 </body>
 </html>
