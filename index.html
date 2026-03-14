@@ -3,337 +3,134 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE GAMING ULTRA</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Michroma&display=swap' rel='stylesheet'>
+<title>CORE V41 | MASTER NEXUS</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&family=Syncopate:wght@400;700&display=swap' rel='stylesheet'>
 <style>
 :root{
-     --c1:#00f0ff;
-      --c2:#8a2eff;
-       --c3:#ff2e88;
+     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --c4:#00ff75; --dim: 1; --f-weight: 100; --f-width: 100%;
+     --bg: #000; --entry-op: 1; --nexus-op: 0; --night-op: 1;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{
-     background:#000;
-      color:#fff;
-       font-family:'Michroma',sans-serif;
-        overflow-x:hidden;
-         scroll-behavior:smooth;
+html,body{ background:var(--bg); color:#fff; font-family:'Michroma',sans-serif; overflow-x:hidden; scroll-behavior:smooth; }
+
+canvas{ position:fixed; inset:0; z-index:1; mix-blend-mode: screen; }
+
+/* GLOBAL HUD SYSTEM */
+.nexus-hud{
+    position:fixed; top:30px; left:50%; transform:translateX(-50%); z-index:2000; 
+    display:flex; gap:20px; background:rgba(255,255,255,0.05); padding:10px 30px; 
+    border:1px solid var(--border); backdrop-filter:blur(20px); border-radius:50px;
 }
-body{
-     background:
-      radial-gradient(circle at 20% 20%,rgba(0,240,255,.10),transparent 25%),
-       radial-gradient(circle at 80% 30%,rgba(138,46,255,.10),transparent 30%),
-        radial-gradient(circle at 50% 80%,rgba(255,46,136,.10),transparent 35%),
-         linear-gradient(135deg,#010203,#050814,#000);
-          background-size:220% 220%;
-           animation:bgFlow 14s infinite alternate ease-in-out;
+.hud-btn{
+    background:transparent; border:none; color:#fff; font-family:'Orbitron'; 
+    font-size:10px; cursor:pointer; letter-spacing:3px; opacity:0.5; transition:0.4s;
 }
-canvas{
-     position:fixed;
-      inset:0;
-       z-index:0;
+.hud-btn.active{ opacity:1; color:var(--c1); text-shadow:0 0 10px var(--c1); }
+
+/* NIGHTINGALE LAYER */
+#nightingale-overlay { opacity: var(--night-op); transition: 1s; pointer-events: none; }
+.nightingale-node{ position:fixed; width:2px; height:2px; background:#fff; border-radius:50%; box-shadow:0 0 10px var(--c3); z-index:5; }
+
+/* 8D NEXUS LAYER */
+#nexus-overlay { opacity: var(--nexus-op); transition: 1s; pointer-events: none; }
+
+.pixel-fill{ 
+    position:fixed; inset:0; z-index:0; 
+    background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px); 
+    background-size: 4px 4px; pointer-events:none; 
 }
-.texture{
-     position:fixed;
-      inset:0;
-       z-index:1;
-        pointer-events:none;
-         background:
-          repeating-linear-gradient(
-             90deg,
-              rgba(255,255,255,.018) 0px,
-               rgba(255,255,255,.018) 1px,
-                transparent 1px,
-                 transparent 5px
-          );
-           mix-blend-mode:screen;
-            opacity:.25;
-             animation:textureFlow 8s linear infinite;
+
+.main-title-container{ 
+    position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; 
+    justify-content:center; z-index:10; pointer-events:none; 
 }
-.glow{
-     position:fixed;
-      inset:0;
-       z-index:2;
-        pointer-events:none;
-         background:
-          radial-gradient(circle at center,rgba(255,255,255,.03),transparent 50%);
-           animation:glowPulse 6s infinite ease-in-out;
-}
-header{
-     position:fixed;
-      top:0;
-       width:100%;
-        z-index:100;
-         backdrop-filter:blur(22px);
-          background:rgba(0,0,0,.18);
-           border-bottom:1px solid rgba(255,255,255,.08);
-}
-nav{
-     display:flex;
-      justify-content:space-between;
-       padding:18px 28px;
-}
-.logo{
-     font-family:'Orbitron',sans-serif;
-      letter-spacing:8px;
-       text-shadow:0 0 18px var(--c1);
-}
-nav a{
-     color:#fff;
-      text-decoration:none;
-       margin-left:18px;
-        font-size:.76rem;
-}
-section{
-     min-height:100vh;
-      display:flex;
-       align-items:center;
-        justify-content:center;
-         position:relative;
-          z-index:5;
-           padding:90px 0;
-}
-.wrap{
-     width:min(1300px,92%);
-}
-.hero{
-     display:grid;
-      grid-template-columns:1fr 1fr;
-       gap:28px;
-}
-.panel{
-     position:relative;
-      overflow:hidden;
-       background:
-        linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
-         border:1px solid rgba(255,255,255,.08);
-          border-radius:26px;
-           backdrop-filter:blur(20px);
-            padding:30px;
-             box-shadow:
-              0 0 45px rgba(0,240,255,.05),
-               inset 0 0 25px rgba(255,255,255,.02);
-}
-.panel::before{
-     content:"";
-      position:absolute;
-       inset:0;
-        background:
-         radial-gradient(circle at top left,rgba(255,255,255,.05),transparent 35%);
-          animation:panelLight 8s infinite alternate ease-in-out;
-}
-.title{
-     font-family:'Orbitron',sans-serif;
-      font-size:clamp(2.4rem,6vw,5.6rem);
-       line-height:1.02;
-        letter-spacing:8px;
-         background:linear-gradient(90deg,#fff,var(--c1),#fff);
-          -webkit-background-clip:text;
-           -webkit-text-fill-color:transparent;
-            animation:titleHue 7s linear infinite;
-}
-.subtitle{
-     margin-top:18px;
-      line-height:1.9;
-       opacity:.84;
-        font-size:.84rem;
-}
-.btn{
-     display:inline-block;
-      margin-top:24px;
-       padding:14px 26px;
-        border-radius:14px;
-         border:1px solid rgba(255,255,255,.12);
-          background:rgba(255,255,255,.05);
-           color:#fff;
-            text-decoration:none;
-             transition:.4s;
-}
-.btn:hover{
-     transform:translateY(-5px);
-      box-shadow:0 0 20px rgba(0,240,255,.28);
-}
-.core{
-     min-height:460px;
-      position:relative;
-}
-.orb,.ring{
-     position:absolute;
-      top:50%;
-       left:50%;
-        transform:translate(-50%,-50%);
-         border-radius:50%;
-}
-.orb{
-     width:200px;
-      height:200px;
-       background:
-        radial-gradient(circle,rgba(255,255,255,.08),rgba(0,240,255,.05));
-         border:1px solid rgba(255,255,255,.22);
-          box-shadow:
-           0 0 60px rgba(0,240,255,.45),
-            inset 0 0 35px rgba(255,255,255,.08);
-             animation:pulse 4s infinite ease-in-out;
-}
-.ring{
-     border:1px solid rgba(255,255,255,.12);
-}
-.r1{width:280px;height:280px;animation:spin 10s linear infinite}
-.r2{width:360px;height:360px;animation:spinR 18s linear infinite}
-.r3{width:460px;height:460px;animation:spin 26s linear infinite}
-.grid{
-     display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-       gap:24px;
-}
-.card{
-     background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-       border-radius:24px;
-        padding:26px;
-         min-height:260px;
-          transition:.5s;
-}
-.card:hover{
-     transform:translateY(-8px);
-      background:rgba(255,255,255,.07);
-}
-.card h3{
-     font-family:'Orbitron',sans-serif;
-      margin-bottom:14px;
-}
-.card p{
-     font-size:.8rem;
-      line-height:1.8;
-       opacity:.84;
-}
-@keyframes spin{
-     from{transform:translate(-50%,-50%) rotate(0)}
-      to{transform:translate(-50%,-50%) rotate(360deg)}
-}
-@keyframes spinR{
-     from{transform:translate(-50%,-50%) rotate(360deg)}
-      to{transform:translate(-50%,-50%) rotate(0)}
-}
-@keyframes pulse{
-     0%,100%{transform:translate(-50%,-50%) scale(1)}
-      50%{transform:translate(-50%,-50%) scale(1.1)}
-}
-@keyframes bgFlow{
-     from{background-position:0% 50%}
-      to{background-position:100% 50%}
-}
-@keyframes textureFlow{
-     from{transform:translateX(0)}
-      to{transform:translateX(140px)}
-}
-@keyframes glowPulse{
-     0%,100%{opacity:.4}
-      50%{opacity:.7}
-}
-@keyframes panelLight{
-     from{transform:translateY(0)}
-      to{transform:translateY(24px)}
-}
-@keyframes titleHue{
-     from{filter:hue-rotate(0)}
-      to{filter:hue-rotate(360deg)}
-}
-@media(max-width:900px){
-     .hero{grid-template-columns:1fr}
+#main-title{ 
+    font-family:'Orbitron'; font-weight:var(--f-weight); font-stretch: var(--f-width); 
+    font-size:clamp(3rem, 15vw, 10rem); letter-spacing:calc(var(--dim)*15px); 
+    text-shadow: 0 0 30px var(--c1);
 }
 </style>
 </head>
 <body>
-<div class='texture'></div>
-<div class='glow'></div>
-<canvas id='bg'></canvas>
-<header>
-<nav>
-<div class='logo'>CORE GAMING ULTRA</div>
-<div>
-<a href='#'>HOME</a>
-<a href='#'>MODES</a>
-<a href='#'>ARENA</a>
-<a href='#'>LAB</a>
+<div class='pixel-fill'></div>
+<canvas id='universe-v41'></canvas>
+
+<div class='nexus-hud'>
+    <button class='hud-btn active' id='btn-night' onclick='switchMode("night")'>NIGHTINGALE</button>
+    <button class='hud-btn' id='btn-nexus' onclick='switchMode("nexus")'>8D NEXUS</button>
 </div>
-</nav>
-</header>
-<section>
-<div class='wrap hero'>
-<div class='panel'>
-<div class='title'>ULTRA GAME<br>ENGINE</div>
-<div class='subtitle'>
-High-density gaming visuals, cinematic particle infrastructure, layered textures, premium futuristic atmosphere and stronger animated section identity.
+
+<div class='main-title-container'>
+    <h1 id='main-title'>CORE</h1>
+    <p id='mode-label' style='font-family:"JetBrains Mono"; font-size:10px; letter-spacing:10px; opacity:0.4;'>ARCH_V40_STABLE</p>
 </div>
-<a href='#' class='btn'>START EXPERIENCE</a>
-</div>
-<div class='panel core'>
-<div class='orb'></div>
-<div class='ring r1'></div>
-<div class='ring r2'></div>
-<div class='ring r3'></div>
-</div>
-</div>
-</section>
-<section>
-<div class='wrap grid'>
-<div class='card'><h3>ARENA</h3><p>Competitive visual field and layered game presentation.</p></div>
-<div class='card'><h3>MISSIONS</h3><p>Expandable intelligent game content modules.</p></div>
-<div class='card'><h3>NEURAL WORLD</h3><p>Procedural futuristic gaming environment.</p></div>
-<div class='card'><h3>PLAYER CORE</h3><p>Adaptive player identity and progression systems.</p></div>
-<div class='card'><h3>EVENTS</h3><p>Live sections for dynamic gaming updates.</p></div>
-<div class='card'><h3>LAB</h3><p>Experimental visual systems for future gameplay.</p></div>
-</div>
-</section>
+
 <script>
-const canvas=document.getElementById('bg');
-const ctx=canvas.getContext('2d');
-let w,h,particles=[];
-function resize(){
-     w=canvas.width=innerWidth;
-      h=canvas.height=innerHeight;
+const canvas = document.getElementById('universe-v41');
+const ctx = canvas.getContext('2d');
+let w, h, time=0, particles=[], isNexus=false;
+
+function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
+resize(); addEventListener('resize',resize);
+
+for(let i=0;i<350;i++){
+    particles.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w, r:Math.random()*2+1, color:Math.random()*360 });
 }
-resize();
-addEventListener('resize',resize);
-for(let i=0;i<420;i++){
-     particles.push({
-          x:Math.random()*w,
-            y:Math.random()*h,
-              vx:(Math.random()-.5)*0.9,
-                vy:(Math.random()-.5)*0.9,
-                  r:Math.random()*2+0.5
-     });
+
+function switchMode(mode){
+    isNexus = (mode === 'nexus');
+    document.getElementById('btn-night').classList.toggle('active', !isNexus);
+    document.getElementById('btn-nexus').classList.toggle('active', isNexus);
+    document.getElementById('mode-label').textContent = isNexus ? 'ARCH_V39_HYPER' : 'ARCH_V40_STABLE';
+    document.documentElement.style.setProperty('--nexus-op', isNexus ? '1' : '0');
+    document.documentElement.style.setProperty('--night-op', isNexus ? '0' : '1');
 }
+
 function draw(){
-     ctx.clearRect(0,0,w,h);
-      for(let i=0;i<particles.length;i++){
-          const p=particles[i];
-            p.x+=p.vx;
-              p.y+=p.vy;
-                if(p.x<0||p.x>w)p.vx*=-1;
-                  if(p.y<0||p.y>h)p.vy*=-1;
-                    ctx.beginPath();
-                      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-                        ctx.fillStyle=`rgba(0,240,255,0.20)`;
-                          ctx.fill();
-                            for(let j=i+1; j<particles.length; j++){
-                                   const q=particles[j];
-                                      const dx=p.x-q.x;
-                                         const dy=p.y-q.y;
-                                            const d=Math.sqrt(dx*dx+dy*dy);
-                                               if(d<90){
-                                                    ctx.strokeStyle=`rgba(255,255,255,${0.05-d/1800})`;
-                                                        ctx.beginPath();
-                                                            ctx.moveTo(p.x,p.y);
-                                                                ctx.lineTo(q.x,q.y);
-                                                                    ctx.stroke();
-                                               }
-                            }
-      }
-       requestAnimationFrame(draw);
+    time += 0.01;
+    ctx.fillStyle = 'rgba(0,0,0,0.1)';
+    ctx.fillRect(0,0,w,h);
+    
+    const cx = w/2, cy = h/2;
+    
+    // Dynamic Scaling Logic based on Mode
+    const dimension = isNexus ? (1 + (Math.sin(time*0.5)+1)*3.5) : 1;
+    document.documentElement.style.setProperty('--f-weight', isNexus ? Math.floor(100 + (Math.sin(time)+1)*400) : 100);
+    document.documentElement.style.setProperty('--f-width', isNexus ? (Math.floor(50 + (Math.cos(time)+1)*50) + '%') : '100%');
+    document.documentElement.style.setProperty('--dim', dimension);
+
+    particles.forEach(p => {
+        p.z -= (isNexus ? (5 * dimension) : 5);
+        if(p.z <= 0) p.z = w;
+        let scale = 400/p.z;
+        let x2d = (p.x - cx) * scale + cx;
+        let y2d = (p.y - cy) * scale + cy;
+        
+        ctx.fillStyle = `hsla(${isNexus ? (p.color + time*50)%360 : p.color}, 100%, 70%, ${1 - p.z/w})`;
+        ctx.beginPath();
+        ctx.arc(x2d, y2d, scale * (isNexus ? dimension : 1.5), 0, Math.PI*2);
+        ctx.fill();
+
+        if(scale > 3) {
+            ctx.strokeStyle = `hsla(${p.color}, 100%, 50%, 0.1)`;
+            ctx.beginPath(); ctx.moveTo(x2d, y2d); ctx.lineTo(cx, cy); ctx.stroke();
+        }
+    });
+
+    requestAnimationFrame(draw);
 }
 draw();
+
+// Nightingale Procedural Beats (Only active when not in pure nexus mode)
+setInterval(() => {
+    if(isNexus) return;
+    const node = document.createElement('div');
+    node.className = 'nightingale-node';
+    node.style.left = Math.random()*100 + 'vw';
+    node.style.top = Math.random()*100 + 'vh';
+    document.body.appendChild(node); 
+    setTimeout(() => node.remove(), 2000);
+}, 400);
 </script>
 </body>
 </html>
