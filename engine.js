@@ -1,88 +1,69 @@
 const canvas = document.getElementById('universe-canvas');
-const ctx = canvas.getContext('2d');
-let w, h, particles = [], time = 0;
+const ctx = canvas.getContext('2d', { alpha: false });
+let w, h, time = 0;
 
-/* PROCEDURAL UNIVERSE INITIALIZATION */
+/* 8K PROCEDURAL TEXTURE GENERATOR */
+const generateMegaTexture = (t) => {
+    const offCanvas = document.createElement('canvas');
+    offCanvas.width = 512; offCanvas.height = 512;
+    const octx = offCanvas.getContext('2d');
+    const imgData = octx.createImageData(512, 512);
+    const data = imgData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+        const x = (i / 4) % 512;
+        const y = Math.floor((i / 4) / 512);
+        const noise = Math.sin(x * 0.01 + t) * Math.cos(y * 0.01 + t * 0.5) * 127 + 128;
+        data[i] = noise * 0.2;     // R
+        data[i+1] = noise * 0.8;   // G
+        data[i+2] = 255;           // B
+        data[i+3] = 255;           // A
+    }
+    octx.putImageData(imgData, 0, 0);
+    return offCanvas;
+};
+
 const init = () => {
-    w = canvas.width = window.innerWidth * window.devicePixelRatio;
-    h = canvas.height = window.innerHeight * window.devicePixelRatio;
-    canvas.style.width = window.innerWidth + 'px';
-    canvas.style.height = window.innerHeight + 'px';
-    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    
-    particles = Array.from({length: 120}, () => ({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 0.8,
-        vy: (Math.random() - 0.5) * 0.8,
-        size: Math.random() * 2 + 1,
-        color: getComputedStyle(document.documentElement).getPropertyValue('--primary')
-    }));
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
 };
 
 window.addEventListener('resize', init);
 init();
 
-/* RENDER LOOP */
 const render = () => {
-    time += 0.005;
-    ctx.fillStyle = '#010101';
-    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-
-    // NEURAL LIGHT FIELD
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, window.innerWidth);
-    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary');
+    time += 0.01;
     
-    gradient.addColorStop(0, primaryColor + '11');
-    gradient.addColorStop(1, 'transparent');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    // BASE VOID
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, w, h);
 
-    // PARTICLE PHYSICS
+    // LAYERED GENERATIVE ATMOSPHERE
+    ctx.save();
+    ctx.globalAlpha = 0.15;
+    ctx.globalCompositeOperation = 'screen';
+    
+    for(let i = 0; i < 3; i++) {
+        const scale = 1 + i * 0.5;
+        const shiftX = Math.sin(time * 0.2 + i) * 100;
+        const shiftY = Math.cos(time * 0.2 + i) * 100;
+        ctx.drawImage(generateMegaTexture(time + i), shiftX, shiftY, w * scale, h * scale);
+    }
+    ctx.restore();
+
+    // NEURAL BEAMS
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary');
     ctx.lineWidth = 0.5;
-    particles.forEach((p, i) => {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if(p.x < 0 || p.x > window.innerWidth) p.vx *= -1;
-        if(p.y < 0 || p.y > window.innerHeight) p.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = primaryColor + 'aa';
-        ctx.fill();
-
-        // NEURAL CONNECTIONS
-        for(let j = i + 1; j < particles.length; j++) {
-            const p2 = particles[j];
-            const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-            if(dist < 150) {
-                ctx.beginPath();
-                ctx.moveTo(p.x, p.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.strokeStyle = primaryColor + (0.2 * (1 - dist/150)).toString(16).substring(2, 4);
-                ctx.stroke();
-            }
-        }
-    });
+    ctx.beginPath();
+    for(let i = 0; i < 10; i++) {
+        const x = (w / 10) * i;
+        const offset = Math.sin(time + i) * 50;
+        ctx.moveTo(x, 0);
+        ctx.quadraticCurveTo(w/2 + offset, h/2, x, h);
+    }
+    ctx.stroke();
 
     requestAnimationFrame(render);
 };
 
 render();
-
-/* AUTOMATION ENGINE: SELF EVOLUTION */
-setInterval(() => {
-    const hue = Math.floor(Math.random() * 360);
-    const newPrimary = `hsl(${hue}, 100%, 50%)`;
-    document.documentElement.style.setProperty('--primary', newPrimary);
-    document.getElementById('evo-status').innerText = 'MUTATING_0x' + hue.toString(16).toUpperCase();
-}, 8000);
-
-/* INTERACTION INTELLIGENCE */
-window.addEventListener('scroll', () => {
-    // Inertia and transition logic could be handled here
-    // Section reveal logic managed by CSS snap
-});
