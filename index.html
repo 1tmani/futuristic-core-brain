@@ -3,130 +3,102 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>SPACE RACER | FINAL SINGULARITY</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
+<title>CORE V45 | NIGHTINGALE HARMONICS</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
 <style>
 :root{
-     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --bg:#000;
+     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --dim: 1; --f-weight: 100; --bg: #000; --entry-op: 1;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{ background:#000; color:#fff; font-family:'Michroma',sans-serif; overflow:hidden; }
 canvas{ position:fixed; inset:0; z-index:1; }
 
-/* GAME HUD STACK */
-.hud-layer{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:40px; display:flex; flex-direction:column; justify-content:space-between; }
-.hud-top{ display:flex; justify-content:space-between; align-items:flex-start; }
-.hud-bottom{ display:flex; justify-content:space-between; align-items:flex-end; }
-.stat-box{ background:rgba(0,0,0,0.7); border-left:3px solid var(--c1); padding:15px 25px; backdrop-filter:blur(10px); font-family:'Orbitron'; font-size:12px; letter-spacing:3px; }
+/* PREMIUM HUD */
+.interface-hud{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:40px; display:flex; flex-direction:column; justify-content:space-between; }
+.hud-top{ display:flex; justify-content:space-between; }
+.stat-box{ background:rgba(0,0,0,0.8); border-left:2px solid var(--c1); padding:10px 20px; font-family:'Orbitron'; font-size:10px; letter-spacing:2px; backdrop-filter:blur(10px); }
 
-.game-over{ 
-    position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:1000; 
-    display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center;
-}
-.restart-btn{ 
-    margin-top:30px; pointer-events:all; background:transparent; border:1px solid var(--c1); 
-    color:#fff; padding:15px 40px; cursor:pointer; font-family:'Orbitron'; letter-spacing:5px; transition:0.3s;
-}
-.restart-btn:hover{ background:var(--c1); color:#000; box-shadow:0 0 30px var(--c1); }
+.nightingale-node{ position:fixed; width:3px; height:3px; background:#fff; border-radius:50%; box-shadow:0 0 15px var(--c3); z-index:5; pointer-events:none; }
+
+.action-panel{ position:fixed; bottom:40px; left:50%; transform:translateX(-50%); z-index:200; display:flex; gap:20px; pointer-events:all; }
+.ctrl-btn{ background:transparent; border:1px solid var(--c1); color:#fff; padding:12px 30px; font-family:'Orbitron'; cursor:pointer; transition:0.2s; letter-spacing:3px; font-size:10px; }
+.ctrl-btn:hover{ background:var(--c1); color:#000; box-shadow:0 0 30px var(--c1); }
 </style>
 </head>
 <body>
-<canvas id='race-canvas'></canvas>
-<div class='hud-layer'>
+<canvas id='render-canvas'></canvas>
+<div class='interface-hud'>
     <div class='hud-top'>
-        <div class='stat-box'>SCORE: <span id='score'>0000</span></div>
-        <div class='stat-box'>SPEED: <span id='speed'>0</span> MK/H</div>
-    </div>
-    <div class='hud-bottom'>
-        <div class='stat-box' style='border-color:var(--c2)'>SECTOR: <span id='sector'>ALPHA</span></div>
-        <div class='stat-box' style='font-size:10px; opacity:0.6;'>USE ARROWS TO NAVIGATE</div>
+        <div class='stat-box'>FPS: <span id='fps-val'>120</span></div>
+        <div class='stat-box'>AUDIO: <span id='audio-status'>STANDBY</span></div>
     </div>
 </div>
-<div id='game-over' class='game-over'>
-    <h1 style='font-family:Orbitron; font-size:4rem; letter-spacing:20px; color:red;'>CRITICAL FAILURE</h1>
-    <p style='margin-top:10px; opacity:0.5;'>CORE INTEGRITY DEPLETED</p>
-    <button class='restart-btn' onclick='location.reload()'>REBOOT CORE</button>
+<div class='action-panel'>
+    <button class='ctrl-btn' onclick='initSystem()'>INITIALIZE CORE</button>
+    <button class='ctrl-btn' onclick='triggerHarmonic()'>HARMONIC BURST</button>
 </div>
 <script>
-const canvas = document.getElementById('race-canvas');
+const canvas = document.getElementById('render-canvas');
 const ctx = canvas.getContext('2d');
-let w, h, score=0, speed=10, isDead=false, time=0;
+let w, h, time=0, particles=[], isRunning=false, audioCtx, masterGain;
 
 function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
 resize(); addEventListener('resize',resize);
 
-let player = { x: 0, targetX: 0, lane: 1, w: 60, h: 100 };
-let enemies = [];
-let stars = [];
+for(let i=0; i<300; i++) particles.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w, color:Math.random()*360 });
 
-for(let i=0; i<200; i++) stars.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w });
-
-function spawnEnemy(){
-    if(isDead) return;
-    const lane = Math.floor(Math.random()*3);
-    enemies.push({ lane: lane, y: -200, speed: 5 + Math.random()*speed });
+function initAudio(){
+    if(audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    masterGain.connect(audioCtx.destination);
+    document.getElementById('audio-status').textContent = 'ACTIVE';
 }
-setInterval(spawnEnemy, 1500);
 
-addEventListener('keydown', e => {
-    if(e.key === 'ArrowLeft' && player.lane > 0) player.lane--;
-    if(e.key === 'ArrowRight' && player.lane < 2) player.lane++;
-});
+function playClick(){
+    if(!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.1);
+    g.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
+    osc.connect(g); g.connect(masterGain);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+}
+
+function initSystem(){
+    initAudio(); playClick(); isRunning = true;
+}
+
+function triggerHarmonic(){
+    playClick();
+    for(let i=0; i<5; i++){
+        const node = document.createElement('div');
+        node.className = 'nightingale-node';
+        node.style.left = Math.random()*100 + 'vw';
+        node.style.top = Math.random()*100 + 'vh';
+        document.body.appendChild(node);
+        setTimeout(() => node.remove(), 1000);
+    }
+}
 
 function draw(){
-    if(isDead) return;
-    time += 0.01; score++;
-    document.getElementById('score').textContent = score.toString().padStart(4, '0');
-    document.getElementById('speed').textContent = Math.floor(speed * 20);
-
-    ctx.fillStyle = '#000'; ctx.fillRect(0,0,w,h);
+    time += 0.01; 
+    ctx.fillStyle = 'rgba(0,0,0,0.1)';
+    ctx.fillRect(0,0,w,h);
     const cx = w/2, cy = h/2;
 
-    // Draw Universe
-    stars.forEach(s => {
-        s.z -= speed; if(s.z <= 0) s.z = w;
-        let sc = 400/s.z;
-        ctx.fillStyle = `rgba(255,255,255,${1 - s.z/w})`;
-        ctx.fillRect((s.x-cx)*sc+cx, (s.y-cy)*sc+cy, sc, sc);
+    particles.forEach(p => {
+        p.z -= 5; if(p.z <= 0) p.z = w;
+        let sc = 400/p.z;
+        let x2d = (p.x - cx) * sc + cx;
+        let y2d = (p.y - cy) * sc + cy;
+        ctx.fillStyle = `hsla(${p.color + time*20}, 80%, 70%, ${1 - p.z/w})`;
+        ctx.fillRect(x2d, y2d, sc*2, sc*2);
     });
-
-    // Track Geometry
-    const horizon = h*0.4;
-    ctx.strokeStyle = 'rgba(0,240,255,0.2)';
-    for(let i=-1.5; i<=1.5; i++){
-        ctx.beginPath(); ctx.moveTo(cx + i*100, horizon); ctx.lineTo(cx + i*800, h); ctx.stroke();
-    }
-
-    // Player Physics
-    const laneWidth = 200;
-    player.targetX = cx + (player.lane - 1) * laneWidth;
-    player.x += (player.targetX - player.x) * 0.15;
-    
-    ctx.save();
-    ctx.shadowBlur = 20; ctx.shadowColor = '#00f0ff';
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(player.x - player.w/2, h - 150, player.w, player.h);
-    ctx.restore();
-
-    // Enemy Logic
-    enemies.forEach((e, index) => {
-        e.y += e.speed;
-        const ex = cx + (e.lane - 1) * (laneWidth * (e.y/horizon + 1));
-        const ew = player.w * (e.y/h + 0.5);
-        const eh = player.h * (e.y/h + 0.5);
-
-        ctx.fillStyle = '#ff2e88';
-        ctx.fillRect(ex - ew/2, e.y, ew, eh);
-
-        // Collision Detection
-        if(e.y > h - 200 && e.y < h - 50 && Math.abs(ex - player.x) < 50){
-            isDead = true;
-            document.getElementById('game-over').style.display = 'flex';
-        }
-        if(e.y > h) enemies.splice(index, 1);
-    });
-
-    speed += 0.001;
     requestAnimationFrame(draw);
 }
 draw();
