@@ -3,51 +3,68 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE-BRAIN V13 | HYPER-REACTIVE</title>
-    <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Syncopate:wght@400;700&family=Michroma&display=swap' rel='stylesheet'>
+    <title>CORE-BRAIN V14 | STABILIZED</title>
+    <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
     <style>
-        :root { --c1: #00f2ff; --c2: #7000ff; --energy: 0; }
-        body, html { margin: 0; padding: 0; background: #000; color: #fff; overflow: hidden; font-family: 'Syncopate', sans-serif; }
+        :root { --c1: #00f2ff; --c2: #7000ff; --accent: #fff; }
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Michroma', sans-serif; overflow: hidden; }
 
-        /* The Living Canvas */
-        #hyper-canvas { position: fixed; inset: 0; z-index: 1; filter: contrast(1.2) brightness(1.1); }
+        /* Layer 0: Parallax Void */
+        #void-bg { position: fixed; inset: 0; background: radial-gradient(circle at 50% 50%, #050505 0%, #000 100%); z-index: -2; }
 
-        /* HUD: Neural Analytics */
-        .hud-v13 { position: fixed; top: 40px; left: 40px; z-index: 100; font-family: 'Michroma', sans-serif; text-transform: uppercase; letter-spacing: 4px; pointer-events: none; }
-        .energy-bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 10px; position: relative; }
-        .energy-fill { position: absolute; height: 100%; background: var(--c1); width: var(--energy); box-shadow: 0 0 15px var(--c1); transition: width 0.1s linear; }
-
-        /* Central Singularity */
-        .core-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 50; text-align: center; pointer-events: none; }
-        .living-title { font-size: 6rem; font-weight: 900; margin: 0; letter-spacing: 30px; animation: breathe-text 3s infinite ease-in-out; text-shadow: 0 0 20px var(--c1); }
-
-        @keyframes breathe-text {
-            0%, 100% { transform: scale(1); letter-spacing: 30px; filter: blur(0px); }
-            50% { transform: scale(1.05); letter-spacing: 40px; filter: blur(2px); }
+        /* Layer 1: Frosted Glass HUD */
+        .glass-hud {
+            position: fixed; top: 30px; left: 30px; padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            border-radius: 4px;
+            z-index: 100; letter-spacing: 2px; font-size: 10px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
 
-        /* Scanline Interference */
-        .noise { position: fixed; inset: 0; z-index: 200; pointer-events: none; background: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.05; mix-blend-mode: overlay; }
+        .status-line { display: flex; align-items: center; margin-bottom: 8px; }
+        .dot { width: 6px; height: 6px; background: var(--c1); border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px var(--c1); }
+
+        /* Layer 2: Stabilized Neural Engine */
+        #stabilized-canvas { position: fixed; inset: 0; z-index: 1; }
+
+        /* Layer 3: The Core Singularity */
+        .core-center {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 50; text-align: center; pointer-events: none;
+        }
+        .core-text {
+            font-size: 4rem; font-weight: 900; font-family: 'Orbitron', sans-serif; letter-spacing: 40px;
+            background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.2));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.5));
+        }
+
+        /* Aesthetic Noise Layer */
+        .noise-overlay { position: fixed; inset: 0; background: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.03; pointer-events: none; z-index: 200; }
     </style>
 </head>
 <body>
-    <div class='noise'></div>
-    <div class='hud-v13'>
-        <div>System Evolution: V13</div>
-        <div>Core Connectivity: <span id='conn-val'>0</span>%</div>
-        <div class='energy-bar'><div class='energy-fill' id='energy-bar'></div></div>
+    <div id='void-bg'></div>
+    <div class='noise-overlay'></div>
+
+    <div class='glass-hud'>
+        <div class='status-line'><div class='dot'></div> SYSTEM: STABILIZED_V14</div>
+        <div class='status-line'><div class='dot' style='background:var(--c2);box-shadow:0 0 10px var(--c2);'></div> SYNC: 100%_FIDELITY</div>
+        <div id='coords'>X: 000 Y: 000</div>
     </div>
 
-    <div class='core-container'>
-        <h1 class='living-title' id='title'>CORE</h1>
+    <div class='core-center'>
+        <h1 class='core-text'>CORE</h1>
     </div>
 
-    <canvas id='hyper-canvas'></canvas>
+    <canvas id='stabilized-canvas'></canvas>
 
     <script>
-        const canvas = document.getElementById('hyper-canvas');
+        const canvas = document.getElementById('stabilized-canvas');
         const ctx = canvas.getContext('2d');
-        let w, h, particles = [], mouse = {x: null, y: null, v: 0};
+        let w, h, particles = [], mouse = {x: null, y: null};
 
         function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
         window.onresize = resize; resize();
@@ -55,58 +72,48 @@
         class Neuron {
             constructor() {
                 this.x = Math.random() * w; this.y = Math.random() * h;
-                this.vx = (Math.random() - 0.5) * 2; this.vy = (Math.random() - 0.5) * 2;
-                this.size = Math.random() * 2 + 1; this.energy = 0;
+                this.vx = (Math.random() - 0.5) * 0.8; this.vy = (Math.random() - 0.5) * 0.8;
+                this.radius = Math.random() * 1.5 + 0.5;
             }
             update() {
-                if (mouse.x) {
+                this.x += this.vx; this.y += this.vy;
+                if(this.x < 0 || this.x > w) this.vx *= -1; if(this.y < 0 || this.y > h) this.vy *= -1;
+
+                if(mouse.x) {
                     let dx = mouse.x - this.x, dy = mouse.y - this.y;
                     let d = Math.hypot(dx, dy);
-                    if (d < 250) {
-                        this.vx += dx * 0.002; this.vy += dy * 0.002;
-                        this.energy = Math.min(this.energy + 0.1, 1);
-                    } else { this.energy *= 0.95; }
+                    if(d < 200) { this.x -= dx * 0.01; this.y -= dy * 0.01; }
                 }
-                this.x += this.vx; this.y += this.vy;
-                this.vx *= 0.98; this.vy *= 0.98;
-                if(this.x<0||this.x>w) this.vx*=-1; if(this.y<0||this.y>h) this.vy*=-1;
             }
             draw() {
-                let glow = this.energy * 20;
-                ctx.shadowBlur = glow; ctx.shadowColor = '#00f2ff';
-                ctx.fillStyle = `rgba(0, 242, 255, ${0.2 + this.energy})`;
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size + (this.energy * 2), 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2); ctx.fill();
             }
         }
 
-        for(let i=0; i<300; i++) particles.push(new Neuron());
+        for(let i=0; i<200; i++) particles.push(new Neuron());
 
-        function draw() {
-            ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
-            let totalEnergy = 0;
-            
+        function animate() {
+            ctx.clearRect(0, 0, w, h);
             particles.forEach((p, i) => {
                 p.update(); p.draw();
-                totalEnergy += p.energy;
                 for(let j=i+1; j<particles.length; j++) {
                     let p2 = particles[j], d = Math.hypot(p.x-p2.x, p.y-p2.y);
-                    if(d < 100) {
-                        ctx.strokeStyle = `rgba(112, 0, 255, ${(1 - d/100) * (p.energy + p2.energy)})`;
-                        ctx.lineWidth = 0.5 + (p.energy * 2);
+                    if(d < 120) {
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${1 - d/120})`;
+                        ctx.lineWidth = 0.5;
                         ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
                     }
                 }
             });
-
-            let avgEnergy = (totalEnergy / particles.length) * 1000;
-            document.documentElement.style.setProperty('--energy', avgEnergy + '%');
-            document.getElementById('energy-bar').style.width = Math.min(avgEnergy, 100) + '%';
-            document.getElementById('conn-val').innerText = Math.min(avgEnergy, 100).toFixed(1);
-            requestAnimationFrame(draw);
+            requestAnimationFrame(animate);
         }
-        draw();
+        animate();
 
-        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX; mouse.y = e.clientY;
+            document.getElementById('coords').innerText = `X: ${e.clientX} Y: ${e.clientY}`;
+        });
     </script>
 </body>
 </html>
