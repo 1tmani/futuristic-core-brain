@@ -3,56 +3,51 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V65 | NEURAL NETWORKING</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@100&display=swap' rel='stylesheet'>
+<title>CORE V66 | THE ARCHITECT</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
 <style>
-:root{ --c1:#00f0ff; --c2:#8a2eff; --bg:#000; }
+:root{ --c1:#00f0ff; --c2:#ff0055; --bg:#000; }
 body,html{ margin:0; padding:0; background:#000; color:#fff; font-family:'Orbitron'; overflow:hidden; }
 canvas{ position:fixed; inset:0; z-index:1; }
-.hud-layer{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:40px; display:flex; flex-direction:column; justify-content:space-between; }
-.top-bar{ display:flex; justify-content:space-between; border-bottom:1px solid rgba(0,240,255,0.2); padding-bottom:10px; }
-.stat-box{ background:rgba(0,0,0,0.8); border-left:2px solid var(--c1); padding:10px 20px; font-size:10px; letter-spacing:3px; backdrop-filter:blur(10px); }
-.main-display{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; z-index:10; pointer-events:none; }
-.title-xl{ font-size:clamp(3rem, 12vw, 10rem); font-weight:900; letter-spacing:30px; opacity:0.8; text-shadow: 0 0 40px var(--c1); }
-.mono-tag{ font-family:'JetBrains Mono'; font-size:10px; opacity:0.4; letter-spacing:10px; margin-top:20px; }
+.hud-v66{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:50px; display:flex; flex-direction:column; justify-content:space-between; }
+.protocol-box{ background:rgba(0,0,0,0.9); border:1px solid var(--c1); padding:20px; font-size:10px; letter-spacing:5px; backdrop-filter:blur(20px); border-radius:2px; }
+.robot-status{ color:var(--c2); font-weight:900; animation: blink 1s infinite; }
+@keyframes blink{ 50%{ opacity:0.3; } }
+.central-sphere{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10; pointer-events:none; text-align:center; }
+.sig-text{ font-size:clamp(2rem, 10vw, 6rem); letter-spacing:30px; text-shadow: 0 0 30px var(--c1); opacity:0.8; }
+.btn-activate{ position:fixed; bottom:50px; right:50px; background:transparent; border:1px solid var(--c1); color:#fff; padding:20px 40px; cursor:pointer; font-family:'Orbitron'; letter-spacing:10px; z-index:200; pointer-events:all; }
+.btn-activate:hover{ background:var(--c1); color:#000; box-shadow: 0 0 50px var(--c1); }
 </style>
 </head>
 <body>
-<canvas id='net-canvas'></canvas>
-<div class='hud-layer'>
-    <div class='top-bar'>
-        <div class='stat-box'>CORE_V65_ULTRA</div>
-        <div class='stat-box'>NODES: 256_ACTIVE</div>
-    </div>
-    <div class='top-bar' style='border:none; margin-top:auto;'>
-        <div class='stat-box'>LATENCY: 0.0001ms</div>
-        <div class='stat-box'>STABILITY: PEAK_STABLE</div>
+<canvas id='sphere-canvas'></canvas>
+<div class='hud-v66'>
+    <div style='display:flex; justify-content:space-between;'>
+        <div class='protocol-box'>SYSTEM: ARCHITECT_V66<br>PROTOCOL: <span class='robot-status'>BIT_OROT_ACTIVE</span></div>
+        <div class='protocol-box'>SINGULARITY: PEAK_STABLE</div>
     </div>
 </div>
-<div class='main-display'>
-    <h1 class='title-xl'>NEURAL</h1>
-    <div class='mono-tag'>QUANTUM_NETWORK_ESTABLISHED</div>
-</div>
+<div class='central-sphere'><h1 class='sig-text' id='status-msg'>NEURAL</h1></div>
+<button class='btn-activate' onclick='robot.speak()'>ACTIVATE ROBOT</button>
 <script>
-const canvas=document.getElementById('net-canvas'), ctx=canvas.getContext('2d');
-let w, h, particles=[];
-function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
-resize(); addEventListener('resize',resize);
-for(let i=0;i<150;i++) particles.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-0.5)*2, vy:(Math.random()-0.5)*2});
+const canvas=document.getElementById('sphere-canvas'), ctx=canvas.getContext('2d');
+let w, h, time=0; function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } resize(); addEventListener('resize',resize);
+const robot = {
+    speak() {
+        document.getElementById('status-msg').innerText = 'GOD_MODE';
+        const msg = new SpeechSynthesisUtterance('Neural singularity activated at peak. Bit protocol active. I am the Architect.');
+        msg.pitch = 0.1; msg.rate = 0.7; window.speechSynthesis.speak(msg);
+    }
+};
 function draw(){
-    ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
-    particles.forEach((p,i) => {
-        p.x+=p.vx; p.y+=p.vy;
-        if(p.x<0||p.x>w) p.vx*=-1; if(p.y<0||p.y>h) p.vy*=-1;
-        ctx.fillStyle='var(--c1)'; ctx.beginPath(); ctx.arc(p.x,p.y,1.5,0,Math.PI*2); ctx.fill();
-        for(let j=i+1;j<particles.length;j++){
-            const p2=particles[j]; const d=Math.hypot(p.x-p2.x, p.y-p2.y);
-            if(d<150){
-                ctx.strokeStyle=`rgba(0,240,255,${1 - d/150})`;
-                ctx.lineWidth=0.5; ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p2.x,p2.y); ctx.stroke();
-            }
-        }
-    });
+    time+=0.01; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
+    const cx=w/2, cy=h/2; ctx.strokeStyle='var(--c1)'; ctx.lineWidth=0.5;
+    for(let i=0; i<30; i++){
+        ctx.beginPath();
+        let r = 150 + Math.sin(time + i) * 50;
+        ctx.ellipse(cx, cy, r, r * Math.cos(time*0.5), time + i, 0, Math.PI*2);
+        ctx.stroke();
+    }
     requestAnimationFrame(draw);
 } draw();
 </script>
