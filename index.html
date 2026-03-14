@@ -1,51 +1,289 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>CORE BRAIN | PHASE 10</title>
-    <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
-    <style>
-        :root { --c1: #00f0ff; --bg: #02040a; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Michroma', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
-        canvas#universe { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-        header { position: fixed; top: 0; width: 100%; z-index: 50; backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 20px; }
-        section { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10; }
-        .hero-title { font-family: 'Orbitron'; font-size: 4rem; text-align: center; text-shadow: 0 0 20px var(--c1); }
-    </style>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>CORE BRAIN VISUAL FINAL</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Michroma&display=swap' rel='stylesheet'>
+<style>
+:root {
+     --c1:#00f0ff;
+      --c2:#8a2eff;
+       --c3:#ff2e88;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body {
+     background:#000;
+      color:#fff;
+       font-family:'Michroma',sans-serif;
+        overflow-x:hidden;
+         scroll-behavior:smooth;
+}
+body {
+     background:
+      radial-gradient(circle at 20% 20%,rgba(0,240,255,.08),transparent 25%),
+       radial-gradient(circle at 80% 30%,rgba(138,46,255,.08),transparent 30%),
+        radial-gradient(circle at 50% 80%,rgba(255,46,136,.08),transparent 35%),
+         linear-gradient(135deg,#010203,#050914,#000);
+          background-size:200% 200%;
+           animation:bgShift 18s infinite alternate ease-in-out;
+}
+canvas {
+     position:fixed;
+      inset:0;
+       z-index:0;
+}
+.texture {
+     position:fixed;
+      inset:0;
+       z-index:1;
+        pointer-events:none;
+         background:
+          repeating-linear-gradient(
+              90deg,
+                rgba(255,255,255,.015) 0px,
+                  rgba(255,255,255,.015) 1px,
+                    transparent 1px,
+                      transparent 6px
+          );
+           opacity:.22;
+            mix-blend-mode:screen;
+             animation:textureMove 12s linear infinite;
+}
+header {
+     position:fixed;
+      top:0;
+       width:100%;
+        z-index:100;
+         backdrop-filter:blur(20px);
+          background:rgba(0,0,0,.18);
+           border-bottom:1px solid rgba(255,255,255,.08);
+}
+nav {
+     display:flex;
+      justify-content:space-between;
+       padding:18px 26px;
+}
+.logo {
+     font-family:'Orbitron',sans-serif;
+      letter-spacing:7px;
+       text-shadow:0 0 14px var(--c1);
+}
+section {
+     min-height:100vh;
+      display:flex;
+       align-items:center;
+        justify-content:center;
+         position:relative;
+          z-index:5;
+           padding:90px 0;
+}
+.wrap {
+     width:min(1250px,92%);
+}
+.hero {
+     display:grid;
+      grid-template-columns:1fr 1fr;
+       gap:26px;
+}
+.grid {
+     display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+       gap:24px;
+}
+.panel {
+     position:relative;
+      overflow:hidden;
+       background:
+        linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+         border:1px solid rgba(255,255,255,.08);
+          border-radius:24px;
+           backdrop-filter:blur(18px);
+            padding:26px;
+             box-shadow:
+              0 0 30px rgba(0,240,255,.05),
+               inset 0 0 25px rgba(255,255,255,.02);
+}
+.panel::before {
+     content:"";
+      position:absolute;
+       inset:0;
+        background:
+         radial-gradient(circle at top left,rgba(255,255,255,.05),transparent 35%);
+          animation:panelShift 8s infinite alternate ease-in-out;
+}
+.title {
+     font-family:'Orbitron',sans-serif;
+      font-size:clamp(2rem, 6vw, 5rem);
+       line-height:1.05;
+        letter-spacing:8px;
+         background:linear-gradient(90deg,#fff,var(--c1),#fff);
+          -webkit-background-clip:text;
+           -webkit-text-fill-color:transparent;
+            animation:titleFlow 6s infinite linear;
+}
+.text {
+     margin-top:16px;
+      line-height:1.9;
+       opacity:.84;
+        font-size:.82rem;
+}
+.core {
+     min-height:430px;
+      position:relative;
+}
+.orb,.ring {
+     position:absolute;
+      top:50%;
+       left:50%;
+        transform:translate(-50%,-50%);
+         border-radius:50%;
+}
+.orb {
+     width:180px;
+      height:180px;
+       background:
+        radial-gradient(circle,rgba(255,255,255,.08),rgba(0,240,255,.05));
+         border:1px solid rgba(255,255,255,.22);
+          box-shadow:
+           0 0 45px rgba(0,240,255,.45),
+            inset 0 0 30px rgba(255,255,255,.08);
+             animation:pulse 4s infinite ease-in-out;
+}
+.ring {
+     border:1px solid rgba(255,255,255,.12);
+}
+.r1{width:260px;height:260px;animation:spin 12s linear infinite}
+.r2{width:340px;height:340px;animation:spinR 20s linear infinite}
+.r3{width:420px;height:420px;animation:spin 28s linear infinite}
+.metric {
+     font-size:.76rem;
+      line-height:2;
+}
+@keyframes spin {
+     from{transform:translate(-50%,-50%) rotate(0)}
+      to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+@keyframes spinR {
+     from{transform:translate(-50%,-50%) rotate(360deg)}
+      to{transform:translate(-50%,-50%) rotate(0)}
+}
+@keyframes pulse {
+     0%,100%{transform:translate(-50%,-50%) scale(1)}
+      50%{transform:translate(-50%,-50%) scale(1.08)}
+}
+@keyframes bgShift {
+     from{background-position:0% 50%}
+      to{background-position:100% 50%}
+}
+@keyframes textureMove {
+     from{transform:translateX(0)}
+      to{transform:translateX(120px)}
+}
+@keyframes panelShift {
+     from{transform:translateY(0)}
+      to{transform:translateY(20px)}
+}
+@keyframes titleFlow {
+     from{filter:hue-rotate(0deg)}
+      to{filter:hue-rotate(360deg)}
+}
+@media(max-width:900px) {
+     .hero{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
-    <canvas id='universe'></canvas>
-    <header><div style='letter-spacing:5px'>CORE-BRAIN</div></header>
-    <section><div><h1 class='hero-title'>PHASE 10<br>DIGITAL ORGANISM</h1></div></section>
-    <section><h1>NEURAL INTELLIGENCE</h1></section>
-    <section><h1>PARTICLE FIELD</h1></section>
-    <section><h1>CRYSTAL ENERGY</h1></section>
-    <section><h1>ADAPTIVE AI</h1></section>
-    <section><h1>MOTION ENGINE</h1></section>
-    <section><h1>AUTOMATED SYSTEMS</h1></section>
-    <section><h1>VISUAL LEARNING</h1></section>
-    <section><h1>IMAGE EVOLUTION</h1></section>
-    <section><h1>FUTURE DEPLOY</h1></section>
-    <script>
-        const canvas = document.getElementById('universe');
-        const ctx = canvas.getContext('2d');
-        let w, h, time = 0;
-        const init = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
-        window.onresize = init; init();
-        const render = () => {
-            time += 0.01; ctx.fillStyle = '#000'; ctx.fillRect(0,0,w,h);
-            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--c1');
-            ctx.beginPath();
-            for(let i=0; i<10; i++) {
-                let x = (w/10)*i; let off = Math.sin(time+i)*50;
-                ctx.moveTo(x, 0); ctx.quadraticCurveTo(w/2+off, h/2, x, h);
-            }
-            ctx.stroke(); requestAnimationFrame(render);
-        };
-        render();
-        setInterval(() => { document.documentElement.style.setProperty('--c1', `hsl(${Math.random()*360}, 100%, 50%)`); }, 4000);
-    </script>
-<script src='audio_engine.js'></script></body>
+<div class='texture'></div>
+<canvas id='bg'></canvas>
+<header>
+<nav>
+<div class='logo'>CORE VISUAL X</div>
+<div id='status'>TEXTURE ACTIVE</div>
+</nav>
+</header>
+<section>
+<div class='wrap hero'>
+<div class='panel'>
+<div class='title'>TEXTURE<br>ANIMATION<br>THEME CORE</div>
+<div class='text' id='feed'></div>
+</div>
+<div class='panel core'>
+<div class='orb'></div>
+<div class='ring r1'></div>
+<div class='ring r2'></div>
+<div class='ring r3'></div>
+</div>
+</div>
+</section>
+<section>
+<div class='wrap grid' id='grid'></div>
+</section>
+<script>
+const canvas=document.getElementById('bg');
+const ctx=canvas.getContext('2d');
+let w,h;
+let hue=180;
+let particles=[];
+function resize() {
+     w=canvas.width=innerWidth;
+      h=canvas.height=innerHeight;
+}
+resize();
+addEventListener('resize',resize);
+for(let i=0;i<320;i++) {
+     particles.push({
+          x:Math.random()*w,
+            y:Math.random()*h,
+              vx:(Math.random()-.5)*0.8,
+                vy:(Math.random()-.5)*0.8,
+                  r:Math.random()*2+0.5
+     });
+}
+function draw() {
+     const g=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,w);
+      g.addColorStop(0,`hsla(${hue},100%,12%,0.18)`);
+       g.addColorStop(1,"rgba(0,0,0,.25)");
+        ctx.fillStyle=g;
+         ctx.fillRect(0,0,w,h);
+          for(let i=0;i<particles.length;i++) {
+              const p=particles[i];
+                p.x+=p.vx;
+                  p.y+=p.vy;
+                    if(p.x<0||p.x>w)p.vx*=-1;
+                      if(p.y<0||p.y>h)p.vy*=-1;
+                        ctx.beginPath();
+                          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+                            ctx.fillStyle=`hsla(${(hue+p.x*.05)%360},100%,70%,0.18)`;
+                              ctx.fill();
+          }
+           requestAnimationFrame(draw);
+}
+draw();
+function randomText() {
+     const arr=[
+          "Living textures evolving",
+            "Crystal light adapting",
+              "Theme field rotating",
+                "Surface reflections mutating"
+     ];
+      return arr[Math.floor(Math.random()*arr.length)];
+}
+function rebuild() {
+     const grid=document.getElementById('grid');
+      grid.innerHTML="";
+       for(let i=0;i<6;i++) {
+          const d=document.createElement('div');
+            d.className='panel';
+              d.innerHTML=`<div class='metric'>${randomText()}</div>`;
+                grid.appendChild(d);
+       }
+        document.getElementById('feed').innerHTML=
+         randomText()+"<br>"+randomText()+"<br>"+randomText();
+          hue=(hue+40)%360;
+}
+rebuild();
+setInterval(rebuild,3500);
+</script>
+</body>
 </html>
