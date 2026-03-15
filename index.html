@@ -1,69 +1,49 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>DEINCORE V69 | THE ULTIMATE NEURAL HARDWARE</title>
+<meta charset='UTF-8'><title>DEINCORE V69 | NEURAL HARDWARE</title>
 <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
 <style>
-:root{ --p:#00f0ff; --s:#7000ff; --bg:#000; }
-body,html{ margin:0; background:#000; color:#fff; font-family:'Michroma'; overflow-x:hidden; scroll-behavior:smooth; }
+:root{ --p:#00f0ff; --s:#ff0055; --bg:#000; }
+body,html{ margin:0; background:#000; color:#fff; font-family:'Michroma'; overflow-x:hidden; }
 canvas{ position:fixed; inset:0; z-index:1; }
-.interface-hud{ position:fixed; top:0; left:0; width:100%; z-index:100; padding:30px; box-sizing:border-box; display:flex; justify-content:space-between; align-items:center; backdrop-filter:blur(10px); border-bottom:1px solid rgba(0,240,255,0.1); }
-.logo{ font-family:'Orbitron'; font-weight:900; letter-spacing:5px; color:var(--p); }
-.buy-btn{ background:var(--p); color:#000; border:none; padding:12px 30px; font-family:'Orbitron'; font-weight:900; cursor:pointer; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition:0.3s; }
-.buy-btn:hover{ box-shadow:0 0 30px var(--p); transform:scale(1.05); }
+.sales-hud{ position:fixed; top:0; left:0; width:100%; z-index:1000; padding:30px; display:flex; justify-content:space-between; align-items:center; backdrop-filter:blur(20px); border-bottom:1px solid var(--p); }
+.logo{ font-family:'Orbitron'; font-weight:900; letter-spacing:5px; color:var(--p); text-shadow: 0 0 10px var(--p); }
+.buy-btn{ background:var(--p); color:#000; border:none; padding:15px 40px; font-family:'Orbitron'; font-weight:900; cursor:pointer; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition:0.3s; }
+.buy-btn:hover{ box-shadow:0 0 40px var(--p); transform:scale(1.1); }
 
-section{ min-height:100vh; position:relative; z-index:10; display:flex; align-items:center; justify-content:center; padding:100px 50px; box-sizing:border-box; }
-.hero-content{ max-width:800px; text-align:center; }
-.product-title{ font-family:'Orbitron'; font-size:clamp(2.5rem, 8vw, 6rem); letter-spacing:15px; margin:0; text-transform:uppercase; text-shadow:0 0 30px var(--p); }
-.tagline{ font-size:12px; letter-spacing:8px; opacity:0.6; margin-top:20px; }
-
-.specs-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px; width:100%; max-width:1200px; }
-.spec-card{ background:rgba(255,255,255,0.03); border:1px solid rgba(0,240,255,0.2); padding:30px; border-radius:4px; backdrop-filter:blur(20px); }
-.spec-card h3{ color:var(--p); font-family:'Orbitron'; font-size:14px; margin-bottom:10px; }
+section{ min-height:100vh; position:relative; z-index:100; display:flex; align-items:center; justify-content:center; padding:50px; }
+.hero-box{ text-align:center; background:rgba(0,0,0,0.7); padding:50px; border:1px solid rgba(0,240,255,0.2); border-radius:10px; backdrop-filter:blur(10px); }
+.product-title{ font-family:'Orbitron'; font-size:clamp(3rem, 10vw, 7rem); letter-spacing:20px; margin:0; text-transform:uppercase; text-shadow:0 0 50px var(--p); }
+.price-tag{ font-size:24px; color:var(--s); font-family:'Orbitron'; margin-top:20px; letter-spacing:5px; }
 </style>
 </head>
 <body>
 <canvas id='c'></canvas>
-<nav class='interface-hud'>
+<nav class='sales-hud'>
     <div class='logo'>DEINCORE V69</div>
-    <button class='buy-btn' onclick='alert("Uplink Established. Processing Order...")'>PRE-ORDER V69</button>
+    <button class='buy-btn'>PRE-ORDER NOW</button>
 </nav>
-
-<section id='hero'>
-    <div class='hero-content'>
+<section>
+    <div class='hero-box'>
         <h1 class='product-title'>DEINCORE</h1>
-        <div class='tagline'>NEURAL_PROCESSING_UNIT_V69</div>
-        <p style='margin-top:40px; line-height:2; opacity:0.8;'>Experience the world's first adaptive digital organism hardware. 256Hz sensory sync, quantum-mesh stability, and direct synaptic broadcast logic.</p>
+        <div class='price-tag'>UNIT_V69 // $4,999</div>
+        <p style='margin-top:30px; opacity:0.7; letter-spacing:2px;'>NEURAL_CORE_V69: THE FIRST AUTONOMOUS HARDWARE ORGANISM.</p>
     </div>
 </section>
-
-<section id='specs'>
-    <div class='specs-grid'>
-        <div class='spec-card'><h3>NEURAL_DNA</h3><p>Self-evolving code logic that adapts to user workflow patterns in real-time.</p></div>
-        <div class='spec-card'><h3>QUANTUM_SYNC</h3><p>Zero-latency data transfer between decentralized node clusters globally.</p></div>
-        <div class='spec-card'><h3>HYPER_PULSE</h3><p>Integrated kinetic visual cooling engine with HSL-shading dynamics.</p></div>
-    </div>
-</section>
-
 <script>
 const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
-let w, h, time=0, pts=[]; 
-function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; }
-window.onresize=res; res();
-for(let i=0; i<200; i++) pts.push({x:Math.random()*w, y:Math.random()*h, r:Math.random()*2});
-
+let w, h, t=0; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
+window.onresize=res;
 function draw(){
-    time+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
-    const cx=w/2, cy=h/2;
-    ctx.strokeStyle='rgba(0,240,255,0.3)'; ctx.lineWidth=0.5;
-    pts.forEach((p,i)=>{
-        const d=Math.hypot(p.x-cx, p.y-cy); const a=Math.atan2(p.y-cy, p.x-cx)+0.01; 
-        p.x=cx+Math.cos(a)*d; p.y=cy+Math.sin(a)*d;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r + Math.sin(time+i)*1, 0, Math.PI*2); ctx.stroke();
-    });
+    t+=0.02; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle='var(--p)'; ctx.lineWidth=2;
+    ctx.beginPath();
+    for(let i=0; i<8; i++){
+        let r = 150 + Math.sin(t+i)*50;
+        ctx.arc(w/2, h/2, r, 0, Math.PI*2);
+    }
+    ctx.stroke();
     requestAnimationFrame(draw);
-}
-draw();
+} draw();
 </script></body></html>
