@@ -1,48 +1,76 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-<meta charset='UTF-8'><title>DEINCORE V69 | NETWORK POWERED</title>
+<meta charset='UTF-8'><title>CORE V81 | ENGINE ARCHITECTURE</title>
 <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
 <style>
-:root{ --p:#00ff75; --s:#ff0055; --bg:#000; }
-body,html{ margin:0; background:#000; color:#fff; font-family:'Michroma'; overflow-x:hidden; }
-canvas{ position:fixed; inset:0; z-index:1; opacity:0.6; }
-.premium-hud{ position:fixed; top:0; left:0; width:100%; z-index:1000; padding:30px; display:flex; justify-content:space-between; align-items:center; backdrop-filter:blur(20px); border-bottom:1px solid rgba(0,255,117,0.1); }
-.telemetry-box{ background:rgba(0,0,0,0.8); border:1px solid var(--p); padding:15px; font-family:'JetBrains Mono'; font-size:9px; letter-spacing:2px; min-width:250px; }
-.buy-btn{ background:var(--p); color:#000; border:none; padding:15px 40px; font-family:'Orbitron'; font-weight:900; cursor:pointer; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition:0.4s; }
-
-section{ min-height:100vh; position:relative; z-index:100; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.product-core{ width:350px; height:350px; border:2px solid var(--p); border-radius:50%; display:flex; align-items:center; justify-content:center; animation: pulse 3s infinite alternate; }
-@keyframes pulse{ from{box-shadow:0 0 20px var(--p);} to{box-shadow:0 0 100px var(--p);} }
-.price-display{ font-family:'Orbitron'; font-size:3rem; margin-top:30px; letter-spacing:10px; color:white; text-shadow:0 0 30px var(--p); }
+:root{ --p:#00f0ff; --s:#ff0055; --bg:#000; --glass:rgba(255,255,255,0.02); }
+body,html{ margin:0; background:#000; color:#fff; font-family:'Michroma'; scroll-behavior:smooth; overflow-x:hidden; }
+canvas{ position:fixed; inset:0; z-index:1; opacity:0.5; }
+.engine-hud{ position:fixed; top:40px; left:40px; z-index:1000; border-left:2px solid var(--p); padding-left:20px; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); }
+.section-layer{ height:100vh; width:100vw; position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center; border-bottom:1px solid rgba(255,255,255,0.05); }
+.engine-image{ width:80%; max-width:1000px; height:450px; background-size:cover; background-position:center; border:1px solid var(--p); box-shadow:0 0 50px rgba(0,240,255,0.1); margin-bottom:30px; position:relative; overflow:hidden; }
+.engine-image::after{ content:''; position:absolute; inset:0; background:linear-gradient(to bottom, transparent, rgba(0,0,0,0.8)); }
+.label-4k{ position:absolute; top:20px; right:20px; background:var(--p); color:#000; font-family:'Orbitron'; padding:5px 15px; font-size:10px; font-weight:900; }
+.text-block{ max-width:800px; text-align:center; padding:0 20px; }
+h1{ font-family:'Orbitron'; font-size:clamp(2rem, 8vw, 5rem); letter-spacing:15px; text-transform:uppercase; margin:0; text-shadow:0 0 30px var(--p); }
+.dev-log{ font-family:'JetBrains Mono'; font-size:11px; color:var(--p); opacity:0.6; margin-top:20px; letter-spacing:3px; }
 </style>
 </head>
 <body>
 <canvas id='c'></canvas>
-<nav class='premium-hud'>
-    <div class='telemetry-box'>
-        [NETWORK_STATS] ACTIVE<br>
-        VELOCITY: <span id='v-val'>0</span> Q-m/s<br>
-        STABILITY: <span id='s-val'>0</span> TH/s
+<div class='engine-hud'>
+    <div style='font-size:9px; letter-spacing:5px;'>INFRASTRUCTURE: V81_ENGINE_SCAN</div>
+    <div style='font-family:Orbitron; font-size:12px; margin-top:5px; color:var(--p);'>NODE: DEINCORE_CORE</div>
+    <div class='dev-log'>THEME_LEARNING: ACTIVE<br>SCAN_DEPTH: <span id='depth'>0</span>%</div>
+</div>
+
+<section class='section-layer'>
+    <div class='engine-image' style='background-image:url("https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop")'>
+        <div class='label-4k'>4K_NEURAL_CORE</div>
     </div>
-    <button class='buy-btn'>PRE-ORDER V69</button>
-</nav>
-<section>
-    <div class='product-core'><h1 style='font-family:Orbitron; letter-spacing:10px;'>V69_CORE</h1></div>
-    <div class='price-display' id='price-val'>$8,399</div>
-    <p style='margin-top:20px; font-size:10px; opacity:0.5; letter-spacing:5px;'>POWERED BY GLOBAL MINING NETWORK</p>
+    <div class='text-block'>
+        <h1>CORE_PRIMARY</h1>
+        <p>Phase 1: Neural processing lattice. Stabilizing 1 million logic gates per millisecond.</p>
+    </div>
 </section>
+
+<section class='section-layer'>
+    <div class='engine-image' style='background-image:url("https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop")'>
+        <div class='label-4k'>4K_LIQUID_COOLING</div>
+    </div>
+    <div class='text-block'>
+        <h1>THERMAL_SYNC</h1>
+        <p>Phase 2: High-frequency kinetic cooling utilizing liquid HSL-shading dynamics.</p>
+    </div>
+</section>
+
+<section class='section-layer'>
+    <div class='engine-image' style='background-image:url("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop")'>
+        <div class='label-4k'>4K_QUANTUM_MESH</div>
+    </div>
+    <div class='text-block'>
+        <h1>VOID_OUTPUT</h1>
+        <p>Phase 3: The final singularity. Broadcasting 8D themes to the synchronized node network.</p>
+    </div>
+</section>
+
 <script>
 const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
 let w, h, t=0; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
-setInterval(()=>{
-    document.getElementById('v-val').innerText = (5000 + Math.random()*4000).toFixed(0);
-    document.getElementById('s-val').innerText = (Math.random()*500).toFixed(2);
-}, 2000);
+window.onscroll = () => {
+    const scroll = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+    document.getElementById('depth').innerText = (scroll * 100).toFixed(1);
+};
 function draw(){
     t+=0.01; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
-    ctx.strokeStyle='var(--p)'; ctx.beginPath();
-    for(let i=0; i<5; i++){ let r = 100 + i*30 + Math.sin(t+i)*20; ctx.arc(w/2, h/2, r, 0, Math.PI*2); }
-    ctx.stroke(); requestAnimationFrame(draw);
+    ctx.strokeStyle='var(--p)'; ctx.lineWidth=0.5;
+    for(let i=0; i<15; i++){
+        ctx.beginPath();
+        let r = 100 + i*40 + Math.sin(t+i)*20;
+        ctx.ellipse(w/2, h/2, r, r * Math.cos(t*0.5), t+i, 0, Math.PI*2);
+        ctx.stroke();
+    }
+    requestAnimationFrame(draw);
 } draw();
 </script></body></html>
