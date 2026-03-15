@@ -1,49 +1,72 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-<meta charset='UTF-8'><title>DEINCORE V69 | NEURAL HARDWARE</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&display=swap' rel='stylesheet'>
+<meta charset='UTF-8'><title>DEINCORE V69 | ULTRA RENDER</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
 <style>
-:root{ --p:#00f0ff; --s:#ff0055; --bg:#000; }
+:root{ --p:#00f0ff; --s:#ff0055; --bg:#000; --glass:rgba(255,255,255,0.03); }
 body,html{ margin:0; background:#000; color:#fff; font-family:'Michroma'; overflow-x:hidden; }
-canvas{ position:fixed; inset:0; z-index:1; }
-.sales-hud{ position:fixed; top:0; left:0; width:100%; z-index:1000; padding:30px; display:flex; justify-content:space-between; align-items:center; backdrop-filter:blur(20px); border-bottom:1px solid var(--p); }
-.logo{ font-family:'Orbitron'; font-weight:900; letter-spacing:5px; color:var(--p); text-shadow: 0 0 10px var(--p); }
-.buy-btn{ background:var(--p); color:#000; border:none; padding:15px 40px; font-family:'Orbitron'; font-weight:900; cursor:pointer; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition:0.3s; }
-.buy-btn:hover{ box-shadow:0 0 40px var(--p); transform:scale(1.1); }
+canvas{ position:fixed; inset:0; z-index:1; filter: contrast(1.2) brightness(1.1); }
+.ultra-hud{ position:fixed; top:0; left:0; width:100%; z-index:1000; padding:40px; display:flex; justify-content:space-between; align-items:center; backdrop-filter:blur(30px); border-bottom:1px solid rgba(0,240,255,0.1); }
+.logo{ font-family:'Orbitron'; font-weight:900; letter-spacing:10px; color:var(--p); text-shadow:0 0 20px var(--p); }
+.auto-selector{ background:var(--glass); border:1px solid var(--p); padding:10px 20px; font-family:'JetBrains Mono'; font-size:10px; color:var(--p); letter-spacing:2px; }
+.buy-btn{ background:var(--p); color:#000; border:none; padding:18px 50px; font-family:'Orbitron'; font-weight:900; cursor:pointer; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition:0.4s; }
+.buy-btn:hover{ box-shadow:0 0 50px var(--p); transform:scale(1.1); }
 
-section{ min-height:100vh; position:relative; z-index:100; display:flex; align-items:center; justify-content:center; padding:50px; }
-.hero-box{ text-align:center; background:rgba(0,0,0,0.7); padding:50px; border:1px solid rgba(0,240,255,0.2); border-radius:10px; backdrop-filter:blur(10px); }
-.product-title{ font-family:'Orbitron'; font-size:clamp(3rem, 10vw, 7rem); letter-spacing:20px; margin:0; text-transform:uppercase; text-shadow:0 0 50px var(--p); }
-.price-tag{ font-size:24px; color:var(--s); font-family:'Orbitron'; margin-top:20px; letter-spacing:5px; }
+section{ min-height:100vh; position:relative; z-index:100; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:100px 50px; }
+.hero-box{ text-align:center; max-width:900px; background:rgba(0,0,0,0.8); padding:60px; border:1px solid rgba(255,255,255,0.05); border-radius:4px; backdrop-filter:blur(20px); box-shadow:0 40px 100px rgba(0,0,0,0.9); }
+.product-label{ font-family:'Orbitron'; font-size:clamp(3rem, 12vw, 8rem); letter-spacing:30px; margin:0; text-transform:uppercase; background:linear-gradient(to right, #fff, var(--p)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.price-tag{ font-size:28px; color:var(--s); font-family:'Orbitron'; margin-top:20px; letter-spacing:10px; }
+.selection-status{ color:var(--p); font-size:11px; margin-top:40px; font-family:'JetBrains Mono'; text-transform:uppercase; letter-spacing:5px; opacity:0.6; }
 </style>
 </head>
 <body>
 <canvas id='c'></canvas>
-<nav class='sales-hud'>
-    <div class='logo'>DEINCORE V69</div>
-    <button class='buy-btn'>PRE-ORDER NOW</button>
+<nav class='ultra-hud'>
+    <div class='logo'>DEINCORE</div>
+    <div class='auto-selector' id='selector-ui'>ANALYZING_MARKET_DEMAND...</div>
+    <button class='buy-btn'>PRE-ORDER V69</button>
 </nav>
 <section>
     <div class='hero-box'>
-        <h1 class='product-title'>DEINCORE</h1>
-        <div class='price-tag'>UNIT_V69 // $4,999</div>
-        <p style='margin-top:30px; opacity:0.7; letter-spacing:2px;'>NEURAL_CORE_V69: THE FIRST AUTONOMOUS HARDWARE ORGANISM.</p>
+        <h1 class='product-label' id='product-name'>V69_CORE</h1>
+        <div class='price-tag' id='price'>$4,999</div>
+        <div class='selection-status' id='logic-status'>Logic: Neutral_Equilibrium</div>
+        <p style='margin-top:40px; line-height:2.2; opacity:0.8; letter-spacing:2px; font-size:13px;'>The ultimate autonomous neural hardware. Integrated with Synaptic Overlord broadcasting and ultra-high frequency geometric cooling.</p>
     </div>
 </section>
 <script>
 const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
 let w, h, t=0; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
 window.onresize=res;
+
+/* PRODUCT CHOOSING LOGIC */
+const variants = [
+    { name: "V69_SILENT", price: "$4,999", logic: "Optimizing_for_Stealth" },
+    { name: "V69_HYPER", price: "$6,499", logic: "Maximizing_Neural_Throughput" },
+    { name: "V69_QUANTUM", price: "$8,999", logic: "Quantum_Entanglement_Active" }
+];
+
+function autoEvolveProduct() {
+    const roll = Math.floor(Math.random() * variants.length);
+    const v = variants[roll];
+    document.getElementById('product-name').innerText = v.name;
+    document.getElementById('price').innerText = v.price;
+    document.getElementById('logic-status').innerText = "Logic: " + v.logic;
+    document.getElementById('selector-ui').innerText = "AUTO_SELECTED: " + v.name;
+}
+setInterval(autoEvolveProduct, 8000);
+
 function draw(){
-    t+=0.02; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
-    ctx.strokeStyle='var(--p)'; ctx.lineWidth=2;
-    ctx.beginPath();
-    for(let i=0; i<8; i++){
-        let r = 150 + Math.sin(t+i)*50;
+    t+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
+    ctx.lineWidth=1; ctx.shadowBlur=15; ctx.shadowColor='var(--p)';
+    for(let i=0; i<12; i++){
+        ctx.strokeStyle = i % 2 == 0 ? 'var(--p)' : 'rgba(255,255,255,0.1)';
+        ctx.beginPath();
+        let r = 100 + i*40 + Math.sin(t+i)*30;
         ctx.arc(w/2, h/2, r, 0, Math.PI*2);
+        ctx.stroke();
     }
-    ctx.stroke();
     requestAnimationFrame(draw);
 } draw();
 </script></body></html>
