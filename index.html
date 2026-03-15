@@ -188,4 +188,28 @@
         }
     };
     setInterval(() => NEURAL_INTERLOOP.listenForSolutions(), 5000);
+    </script><script>
+    /* V340 UTILITY-GATED THEMING */
+    const THEME_GATER = {
+        async checkEligibility() {
+            const ledgerUrl = "https://api.github.com/repos/1tmani/stability-miner-node/contents/blockchain_ledger.json";
+            try {
+                const resp = await fetch(ledgerUrl, { headers: { 'Accept': 'application/vnd.github.v3.raw' } });
+                const ledger = await resp.json();
+                const blockCount = ledger.blocks.length;
+                
+                // Theme Gating Logic
+                if(blockCount >= 50) {
+                    document.documentElement.style.setProperty('--p', '#ffd700'); // Elite Gold
+                    document.body.style.textShadow = '0 0 20px #ffd700';
+                    console.log("V340: Elite Tier Unlocked (50+ Blocks)");
+                } else if(blockCount >= 40) {
+                    document.documentElement.style.setProperty('--p', '#00f2ff'); // Stable Cyan
+                    console.log("V340: Stable Tier Active (40+ Blocks)");
+                }
+            } catch(e) {}
+        }
+    };
+    setInterval(() => THEME_GATER.checkEligibility(), 10000);
+    THEME_GATER.checkEligibility();
     </script></body></html>
