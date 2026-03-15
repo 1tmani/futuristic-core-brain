@@ -212,4 +212,25 @@
     };
     setInterval(() => THEME_GATER.checkEligibility(), 10000);
     THEME_GATER.checkEligibility();
+    </script><script>
+    /* GLOBAL SYNAPSE V500: Operational Intelligence */
+    const SYNAPSE = {
+        config: { version: '500.1', env: 'PRODUCTION', vault: 'blockchain_ledger.json' },
+        metrics: { clicks: 0, actions: 0, errors: [], revenue_events: 0 },
+        
+        async logEvent(type, data) {
+            this.metrics[type === 'CLICK' ? 'clicks' : 'actions']++;
+            console.log(`[SYNAPSE] Event Registered: ${type}`);
+            if(type === 'REVENUE') this.metrics.revenue_events++;
+        },
+        
+        async monitorHealth() {
+            const start = performance.now();
+            const latency = (performance.now() - start).toFixed(2);
+            const health = { node: document.title, latency, status: 'STABLE', ts: Date.now() };
+            localStorage.setItem('SYNAPSE_HEALTH_STORE', JSON.stringify(health));
+        }
+    };
+    setInterval(() => SYNAPSE.monitorHealth(), 3600000); // Hourly scoring
+    window.onclick = () => SYNAPSE.logEvent('CLICK');
     </script></body></html>
