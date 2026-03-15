@@ -117,4 +117,29 @@
             }
         };
         setInterval(() => NODE_PROTOCOL.performUniqueTask(), 5000);
-        </script></body></html>
+        </script><script>
+    /* V250 CREATIVE BRIDGE: Neural Idea Flow */
+    const CREATIVE_ENGINE = {
+        mode: document.title.includes('OVERLORD') ? 'THINKER' : 'MANIFESTOR',
+        async processNeuralIdea() {
+            console.log(`V250: Creative Flow Active in ${this.mode} mode.`);
+            if(this.mode === 'THINKER') {
+                // Simulate thinking using image-data pattern
+                const visualSeed = ['nebula', 'lava', 'crystal', 'void'][Math.floor(Math.random()*4)];
+                console.log(`V250 Overlord decided on theme: ${visualSeed}. Testing locally...`);
+                // Broadcast to network state
+                localStorage.setItem('NETWORK_CREATIVE_PROMPT', visualSeed);
+            } else {
+                // Manifestor reads the Overlord's image-based thought
+                const prompt = localStorage.getItem('NETWORK_CREATIVE_PROMPT');
+                if(prompt) {
+                    console.log(`V250: Received image-encoded logic: ${prompt}. Manifesting...`);
+                    const colors = { nebula: '#00f2ff', lava: '#ff0055', crystal: '#00ff75', void: '#ffffff' };
+                    document.documentElement.style.setProperty('--p', colors[prompt] || '#00f2ff');
+                    document.body.style.filter = `hue-rotate(${Math.random()*20}deg)`;
+                }
+            }
+        }
+    };
+    setInterval(() => CREATIVE_ENGINE.processNeuralIdea(), 6000);
+    </script></body></html>
