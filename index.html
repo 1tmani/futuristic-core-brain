@@ -55,4 +55,26 @@
             document.documentElement.style.setProperty('--robot-motion', Math.sin(Date.now()*0.001)*10 + 'px');
         }
     }, 5000);
+    </script><script>
+    /* V220 ROLE-MANAGER: High-Pace Intelligence Exchange */
+    const ROLE_MANAGER = {
+        type: document.title.includes('OVERLORD') || document.title.includes('INTEL') ? 'BACKEND' : 'FRONTEND',
+        async exchangeIntelligence() {
+            console.log(`V220: ${this.type}_MANAGER active. Syncing high-pace buffers...`);
+            // Simulated cross-manager handshake
+            if(this.type === 'BACKEND') {
+                // Backend generates logic patterns
+                const logicSeed = Math.random().toString(36).substring(7);
+                localStorage.setItem('LAST_BACKEND_GEN', logicSeed);
+            } else {
+                // Frontend manifests visual response to backend logic
+                const lastLogic = localStorage.getItem('LAST_BACKEND_GEN');
+                if(lastLogic) {
+                    document.body.style.boxShadow = `inset 0 0 100px rgba(0,242,255,0.05)`;
+                    console.log('V220: Frontend manifested new API layer for logic: ' + lastLogic);
+                }
+            }
+        }
+    };
+    setInterval(() => ROLE_MANAGER.exchangeIntelligence(), 4000);
     </script></body></html>
