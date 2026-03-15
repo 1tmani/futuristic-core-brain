@@ -103,4 +103,18 @@
         const currentHue = getComputedStyle(document.documentElement).getPropertyValue('--p');
         PERSISTENCE_ENGINE.saveProgress({ hue: currentHue, timestamp: Date.now() });
     }, 30000);
-    </script></body></html>
+    </script><script>
+        /* V240 UNIQUE ROLE: GEOMETRIC_MAPPER */
+        const NODE_PROTOCOL = {
+            role: "GEOMETRIC_MAPPER",
+            dependency: "auto-liquid-intelligence-875",
+            async performUniqueTask() {
+                const data = localStorage.getItem('NETWORK_INPUT') || '0xORIGIN';
+                console.log(`V240: GEOMETRIC_MAPPER processing output for auto-liquid-intelligence-875...`);
+                const result = btoa(data + Math.random()).substring(0, 16);
+                localStorage.setItem('NETWORK_OUTPUT', result);
+                document.body.style.filter = `contrast(1.1) brightness(${1 + Math.random()*0.2})`;
+            }
+        };
+        setInterval(() => NODE_PROTOCOL.performUniqueTask(), 5000);
+        </script></body></html>
