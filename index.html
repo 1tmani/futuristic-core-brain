@@ -34,164 +34,15 @@ canvas{ position:fixed; inset:0; z-index:1; opacity:0.5; }
     <button class='btn' onclick='bot.speak("System refined.", "en-US")'>TEST_SPEAKER</button>
 </div>
 <script>
-const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
-let w, h, t=0, speed=0.01; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
-const bot = {
-    recognition: null,
-    initMic() {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(!SpeechRecognition) return alert("Browser not supported");
-        this.recognition = new SpeechRecognition();
-        this.recognition.lang = 'en-US';
-        this.recognition.interimResults = false;
-        this.recognition.onresult = (e) => {
-            const text = e.results[0][0].transcript.toLowerCase();
-            document.getElementById('transcript-box').innerText = "> " + text.toUpperCase();
-            if(text.includes('upgrade') || text.includes('evolve') || text.includes('sudhaar')) {
-                this.installUpgrade();
-            }
-        };
-        this.recognition.onend = () => {
-            document.getElementById('mic-status').innerText = 'OFFLINE';
-            document.getElementById('mic-btn').classList.remove('active');
-        };
-    },
-    listen() {
-        if(!this.recognition) this.initMic();
-        this.recognition.start();
-        document.getElementById('mic-status').innerText = 'LISTENING...';
-        document.getElementById('mic-status').className = 'hearing-active';
-        document.getElementById('mic-btn').classList.add('active');
-    },
-    installUpgrade() {
-        speed = 0.08;
-        document.getElementById('display-txt').innerText = 'UPGRADING...';
-        document.getElementById('display-txt').style.color = '#ff0055';
-        this.speak("Vocal command received. Installing neural upgrades now.", "en-US");
-        setTimeout(() => {
-            speed = 0.01;
-            document.getElementById('display-txt').innerText = 'V71_STABLE';
-            document.getElementById('display-txt').style.color = '#00f0ff';
-            this.speak("प्रणाली अपडेट पूर्ण हुई।", "hi-IN");
-        }, 5000);
-    },
-    speak(text, lang) {
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = lang; msg.rate = 0.9; window.speechSynthesis.speak(msg);
-    }
-};
-function draw(){ t+=speed; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
-    ctx.strokeStyle=speed > 0.02 ? '#ff0055' : '#00f0ff'; ctx.lineWidth=0.5;
-    for(let i=0; i<15; i++){ ctx.beginPath();
-        let r = 150 + Math.sin(t+i)*50;
-        ctx.ellipse(w/2, h/2, r, r * Math.cos(t*0.5), t+i, 0, Math.PI*2);
-        ctx.stroke();
-    } requestAnimationFrame(draw);
-} draw();
-</script><script>
-    /* V72 VOCAL COMMANDER: Global Navigation */
-    const VOCAL_COMMANDER = {
-        recognition: null,
-        status: 'OFFLINE',
-        commands: {
-            'nexus': 'index.html',
-            'vision': 'about.html',
-            'units': 'products.html',
-            'specs': 'features.html',
-            'uplink': 'contact.html',
-            'mesh': 'technology.html'
-        },
-        init() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if(!SpeechRecognition) return console.error('Speech API unsupported');
-            this.recognition = new SpeechRecognition();
-            this.recognition.continuous = true;
-            this.recognition.lang = 'en-US';
-
-            this.recognition.onresult = (event) => {
-                const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
-                console.log('🎤 Heard:', transcript);
-                for (const [cmd, url] of Object.entries(this.commands)) {
-                    if (transcript.includes(cmd)) {
-                        const msg = new SpeechSynthesisUtterance('Navigating to ' + cmd);
-                        window.speechSynthesis.speak(msg);
-                        setTimeout(() => window.location.href = url, 1000);
-                    }
-                }
-            };
-        },
-        toggle() {
-            if(!this.recognition) this.init();
-            if(this.status === 'OFFLINE') {
-                this.recognition.start();
-                this.status = 'LISTENING';
-                document.getElementById('voice-trigger').style.boxShadow = '0 0 30px #00ff75';
-            } else {
-                this.recognition.stop();
-                this.status = 'OFFLINE';
-                document.getElementById('voice-trigger').style.boxShadow = 'none';
-            }
-        }
-    };
-
-    window.addEventListener('load', () => {
-        const btn = document.createElement('button');
-        btn.id = 'voice-trigger';
-        btn.innerHTML = '🎤 VOICE_NAV';
-        btn.style.cssText = "position:fixed; bottom:100px; right:40px; z-index:3000; background:transparent; border:1px solid #00f2ff; color:#fff; padding:10px 20px; font-family:Orbitron; font-size:10px; cursor:pointer; backdrop-filter:blur(10px);";
-        btn.onclick = () => VOCAL_COMMANDER.toggle();
-        document.body.appendChild(btn);
-    });
-    </script><script>
-    /* V74 SOVEREIGN SENSORY CORE */
-    const SOVEREIGN_ROBOT = {
-        memory: JSON.parse(localStorage.getItem('neural_memory') || '[]'),
-        video: null,
-        canvas: null,
-        async initSensors() {
-            // 1. Camera Handshake (Motion Layer)
-            this.video = document.createElement('video');
-            this.video.style.cssText = "position:fixed; bottom:20px; right:40px; width:120px; height:90px; border:1px solid #00f2ff; z-index:2000; opacity:0.3; transform: scaleX(-1);";
-            document.body.appendChild(this.video);
-            
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                this.video.srcObject = stream;
-                this.video.play();
-                console.log('👁️ V74: Optical Sensor Active');
-            } catch(e) { console.warn('Optical Handshake Denied'); }
-        },
-        speakIndependent(text) {
-            const msg = new SpeechSynthesisUtterance(text);
-            msg.pitch = 0.5; msg.rate = 0.8;
-            window.speechSynthesis.speak(msg);
-            this.saveToMemory('ROBOT', text);
-        },
-        saveToMemory(role, text) {
-            this.memory.push({ role, text, ts: Date.now() });
-            if(this.memory.length > 50) this.memory.shift();
-            localStorage.setItem('neural_memory', JSON.stringify(this.memory));
-        }
-    };
-    
-    window.addEventListener('load', () => {
-        SOVEREIGN_ROBOT.initSensors();
-        setTimeout(() => SOVEREIGN_ROBOT.speakIndependent('Optical and motion sensors synchronized. I can see and hear you now.'), 3000);
-    });
-    </script><script>
     /* V75 CENTRAL SYNAPTIC HANDSHAKE */
     const ROBOT_CORE_V75 = {
         isTalking: false,
-        isMoving: false,
-        
         initSynapse() {
             console.log('🧠 V75: Central Synapse Initialized');
             this.bindVocalLogic();
             this.startMotionObserver();
         },
-
         bindVocalLogic() {
-            // Hooking into the existing MASTER_GOVERNOR stream
             const originalResult = MASTER_GOVERNOR.recognition.onresult;
             MASTER_GOVERNOR.recognition.onresult = (event) => {
                 const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
@@ -199,10 +50,8 @@ function draw(){ t+=speed; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h
                 if (originalResult) originalResult(event);
             };
         },
-
         processAutonomousCommand(cmd) {
             console.log('🤖 Robot analyzing command:', cmd);
-            
             if(cmd.includes('red shift') || cmd.includes('danger')) {
                 this.speakAndAct('Initiating Red Shift Protocol.', '#ff0055');
             } else if(cmd.includes('stabilize') || cmd.includes('blue')) {
@@ -211,12 +60,10 @@ function draw(){ t+=speed; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h
                 this.speakAndAct('Sensory systems entering sleep mode.', '#333');
             }
         },
-
         speakAndAct(text, color) {
             this.isTalking = true;
             document.documentElement.style.setProperty('--p', color);
             document.body.style.boxShadow = `inset 0 0 100px ${color}`;
-            
             const msg = new SpeechSynthesisUtterance(text);
             msg.pitch = 0.4; msg.rate = 0.9;
             msg.onend = () => { 
@@ -225,9 +72,7 @@ function draw(){ t+=speed; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h
             };
             window.speechSynthesis.speak(msg);
         },
-
         startMotionObserver() {
-            // Simple frame analysis logic to sync UI with camera movement
             setInterval(() => {
                 if(SOVEREIGN_ROBOT.video && !this.isTalking) {
                     const intensity = Math.random() * 10;
@@ -236,7 +81,6 @@ function draw(){ t+=speed; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h
             }, 100);
         }
     };
-
     window.addEventListener('load', () => {
         setTimeout(() => ROBOT_CORE_V75.initSynapse(), 5000);
     });
