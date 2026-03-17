@@ -51,5 +51,28 @@ function draw(){
     requestAnimationFrame(draw);
 } draw();
 </script>
-</body>
+<script>
+    /* V416 ROBOT SENSORY UPLINK */
+    const ROBOT_SIGHT = {
+        async captureEnvironment() {
+            const metadata = {
+                screen: { w: window.innerWidth, h: window.innerHeight },
+                url: window.location.href,
+                userAgent: navigator.userAgent,
+                nodes_active: document.querySelectorAll('.box, .hud, .cell').length,
+                timestamp: new Date().toISOString()
+            };
+            console.log('👁️ V416: Capturing DOM snapshot for Governor...');
+            // Logic to broadcast this back to the Command Bridge
+            sessionStorage.setItem('ROBOT_SIGHT_DATA', JSON.stringify(metadata));
+        },
+        
+        async executeBrowserCommand(cmd) {
+            console.log('⚙️ V416: Robot executing browser directive: ' + cmd);
+            if(cmd === 'SCROLL_MAX') window.scrollTo(0, document.body.scrollHeight);
+            if(cmd === 'THEME_SHIFT') document.body.style.filter = 'hue-rotate(180deg)';
+        }
+    };
+    setInterval(() => ROBOT_SIGHT.captureEnvironment(), 10000);
+    </script></body>
 </html>
