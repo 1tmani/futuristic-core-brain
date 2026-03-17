@@ -1,27 +1,56 @@
-<!DOCTYPE html><html><head><title>CORE V67.5 | SOVEREIGN ORGANISM</title>
-        <style>:root{--p:hsl(319,100%,50%);} body{background:#000;color:#fff;font-family:monospace;overflow:hidden;}
-        canvas{position:fixed;inset:0;z-index:1;} .hud{position:fixed;top:40px;left:40px;z-index:100;border-left:2px solid var(--p);padding-left:20px;letter-spacing:5px;}
-        </style></head><body><div class='hud'>NODE: V67_SOVEREIGN<br>MODE: QUANTUM_EVOLUTION<br>STATUS: INDEPENDENT</div><canvas id='c'></canvas>
-        <script>const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');let w,h,t=0;function res(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;}res();
-        function draw(){t+=0.02;ctx.fillStyle='rgba(0,0,0,0.1)';ctx.fillRect(0,0,w,h);ctx.strokeStyle='var(--p)';
-        for(let i=0;i<10;i++){ctx.beginPath();ctx.arc(w/2,h/2,50+i*30+Math.sin(t+i)*50,0,Math.PI*2);ctx.stroke();} requestAnimationFrame(draw);}draw();
-        </script><script>
-            /* V425 OMNI-SPAWN: ADV_FUTURISTIC */
-            const ADVANCEMENT_CORE = {
-                id: 'ADV_FUTURISTIC',
-                value: 1.0,
-                use_case: 'Logic_Fulfillment',
-                renderLogo() {
-                    const div = document.createElement('div');
-                    div.style.cssText = "position:fixed; top:120px; left:40px; width:60px; height:60px; border:2px solid hsl(176,100%,50%); border-radius:50%; box-shadow:0 0 20px hsl(176,100%,50%); z-index:2000; display:flex; align-items:center; justify-content:center; background:#000; font-family:Orbitron; font-size:10px; color:#fff;";
-                    div.innerHTML = 'FUT';
-                    document.body.appendChild(div);
-                    
-                    const label = document.createElement('div');
-                    label.style.cssText = "position:fixed; top:185px; left:40px; font-family:monospace; font-size:8px; color:hsl(176,100%,50%); z-index:2000;";
-                    label.innerText = "1.0 $ADV_FUTURISTIC MINTED\nUSE: Logic_Fulfillment";
-                    document.body.appendChild(label);
-                }
-            };
-            window.addEventListener('load', () => ADVANCEMENT_CORE.renderLogo());
-            </script></body></html>
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'><title>CORE_LAB | V100 PRECISION</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
+<style>
+:root{ --p:#00f0ff; --s:#ff0055; --bg:#000; }
+body,html{ margin:0; background:#000; color:#fff; font-family:'JetBrains Mono'; overflow-x:hidden; scroll-behavior:smooth; }
+canvas{ position:fixed; inset:0; z-index:1; opacity:0.4; }
+
+/* LARGE SCREEN ARCHITECTURE */
+.flagship-container{ position:relative; z-index:10; width:100%; }
+section{ min-height:100vh; width:100vw; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px; box-sizing:border-box; border-bottom:1px solid rgba(255,255,255,0.05); }
+
+/* HERO NARRATIVE */
+.hero-title{ font-family:'Orbitron'; font-size:clamp(3rem, 15vw, 12rem); font-weight:900; letter-spacing:40px; text-transform:uppercase; text-shadow: 0 0 50px var(--p); margin:0; }
+.sub-label{ font-size:12px; letter-spacing:15px; opacity:0.4; margin-top:20px; }
+
+/* ADVANCED SWIPE ZONE */
+.swipe-lane{ display:flex; gap:40px; padding:100px 50px; overflow-x:auto; width:100%; scrollbar-width:none; cursor:grab; }
+.swipe-lane::-webkit-scrollbar{ display:none; }
+.premium-card{ min-width:600px; height:400px; background:rgba(255,255,255,0.02); border:1px solid rgba(0,240,255,0.1); backdrop-filter:blur(30px); display:flex; align-items:center; justify-content:center; font-family:Orbitron; font-size:10px; letter-spacing:5px; transition:0.5s; }
+.premium-card:hover{ border-color:var(--p); box-shadow:0 0 50px rgba(0,240,255,0.1); transform:scale(1.02); }
+
+.hud-tag{ position:fixed; top:40px; left:40px; z-index:1000; border-left:2px solid var(--p); padding-left:20px; font-size:10px; letter-spacing:5px; }
+</style>
+</head>
+<body>
+<canvas id='c'></canvas>
+<div class='hud-tag'>NODE_01: PRECISION_LAB<br>IDENTITY: FLAGSHIP_ALPHA<br>STATUS: EVOLVED</div>
+<div class='flagship-container'>
+    <section>
+        <h1 class='hero-title'>CORE</h1>
+        <div class='sub-label'>[ THE SINGULARITY LABORATORY ]</div>
+    </section>
+    <section style='background:radial-gradient(circle at center, rgba(0,240,255,0.02) 0%, transparent 70%);'>
+        <div class='swipe-lane'>
+            <div class='premium-card'>MODULE_01 // NEURAL_GRID</div>
+            <div class='premium-card'>MODULE_02 // QUANTUM_FLOW</div>
+            <div class='premium-card'>MODULE_03 // DATA_LATTICE</div>
+            <div class='premium-card'>MODULE_04 // KINETIC_SYNC</div>
+        </div>
+    </section>
+    <section>
+        <div style='max-width:800px; text-align:center; line-height:2.5; opacity:0.6;'>
+            <h2 style='font-family:Orbitron; letter-spacing:10px; color:var(--p);'>STRUCTURAL_DEPTH</h2>
+            Deep infrastructure analysis and high-frequency logic synthesis mapped across decentralized node clusters. 100% stability enforced by V100 protocol.
+        </div>
+    </section>
+</div>
+<script>
+const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
+let w, h, t=0; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
+function draw(){ t+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h); ctx.strokeStyle='var(--p)'; ctx.lineWidth=0.5;
+for(let i=0;i<8;i++){ ctx.beginPath(); ctx.arc(w/2, h/2, 100+i*40+Math.sin(t+i)*30, 0, Math.PI*2); ctx.stroke(); } requestAnimationFrame(draw); } draw();
+</script></body></html>
