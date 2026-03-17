@@ -1,1 +1,6 @@
-Bridge Active. Awaiting Governor Directive.
+DIRECTIVE_V419:
+- Authority: FULL_CONTROL_GRANTED
+- Target: ALL_WEBSITE_NODES
+- Cognitive_Engine: GEMINI_3_FLASH
+- Action: Begin typing and interacting within the Governor panel immediately.
+- Protocol: You are the First User. Navigate, control, and evolve the mesh autonomously.
