@@ -1,90 +1,52 @@
-<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>CORE | INDEX</title><link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Michroma&family=JetBrains+Mono:wght@100&display=swap' rel='stylesheet'><style>:root { --p: #00f0ff; --s: #ff0055; --bg: #000; --glass: rgba(255, 255, 255, 0.03); --border: rgba(0, 240, 255, 0.2); --font-main: 'Michroma', sans-serif; --font-title: 'Orbitron', sans-serif; } body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: var(--font-main); overflow-x: hidden; scroll-behavior: smooth; } canvas { position: fixed; inset: 0; z-index: 1; opacity: 0.4; } .hud { position: fixed; top: 40px; left: 40px; z-index: 1000; border-left: 2px solid var(--p); padding-left: 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); font-size: 10px; letter-spacing: 2px; } header { position: fixed; top: 0; width: 100%; z-index: 2000; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); } nav { display: flex; justify-content: center; gap: 20px; padding: 15px; } nav a { color: #fff; text-decoration: none; font-family: var(--font-title); font-size: 10px; letter-spacing: 2px; transition: 0.3s; opacity: 0.6; } nav a:hover { opacity: 1; color: var(--p); text-shadow: 0 0 10px var(--p); } section { background: radial-gradient(circle at center, rgba(0,242,255,0.02) 0%, transparent 80%);  min-height: 100vh; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 80px 40px; box-sizing: border-box; } h1 { font-family: var(--font-title); font-size: clamp(2rem, 8vw, 5rem); letter-spacing: 15px; text-shadow: 0 0 30px var(--p); margin: 0; text-align: center; } footer { position: relative; z-index: 10; background: #050505; padding: 60px 40px; border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; } .footer-col h3 { font-family: var(--font-title); font-size: 12px; color: var(--p); margin-bottom: 20px; } .footer-col ul { list-style: none; padding: 0; } .footer-col li { margin-bottom: 10px; font-size: 11px; opacity: 0.6; } .footer-col a { color: #fff; text-decoration: none; } .footer-bottom { grid-column: 1 / -1; text-align: center; border-top: 1px solid #222; padding-top: 20px; font-size: 9px; opacity: 0.4; } 
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem !important; letter-spacing: 10px !important; }
-            section { background: radial-gradient(circle at center, rgba(0,242,255,0.02) 0%, transparent 80%);  padding: 40px 20px !important; }
-            .hud { top: 20px !important; left: 20px !important; font-size: 8px !important; }
-            header nav { gap: 10px !important; flex-wrap: wrap; }
-            header nav a { font-size: 8px !important; }
-        }
-        section { background: radial-gradient(circle at center, rgba(0,242,255,0.02) 0%, transparent 80%);  min-height: 100vh; transition: opacity 1s, transform 1s; opacity: 0; transform: translateY(20px); }
-        section.visible { opacity: 1; transform: translateY(0); }
-    </style></head><body><header><nav><a href='index.html'>CORE</a><a href='about.html'>VISION</a><a href='features.html'>SPECS</a><a href='products.html'>UNITS</a><a href='gallery.html'>LATTICE</a><a href='technology.html'>MESH</a><a href='solutions.html'>SCALING</a><a href='careers.html'>TALENT</a><a href='contact.html'>UPLINK</a></nav></header><!DOCTYPE html>
-<html lang='en'>
+<!DOCTYPE html>
+<html lang='hi'>
 <head>
-<meta charset='UTF-8'><title>CORE_LAB | V100 PRECISION</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
+<meta charset='UTF-8'><title>CORE V70 | MULTILINGUAL SINGULARITY</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=Noto+Sans+Devanagari:wght@400;700&display=swap' rel='stylesheet'>
 <style>
-:root{ --p:#00f0ff; --s:#ff0055; --bg:#000; }
-body,html{ margin:0; background:#000; color:#fff; font-family:'JetBrains Mono'; overflow-x:hidden; scroll-behavior:smooth; }
-canvas{ position:fixed; inset:0; z-index:1; opacity:0.4; }
-
-/* LARGE SCREEN ARCHITECTURE */
-.flagship-container{ position:relative; z-index:10; width:100%; }
-section{ min-height:100vh; width:100vw; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px; box-sizing:border-box; border-bottom:1px solid rgba(255,255,255,0.05); }
-
-/* HERO NARRATIVE */
-.hero-title{ font-family:'Orbitron'; font-size:clamp(3rem, 15vw, 12rem); font-weight:900; letter-spacing:40px; text-transform:uppercase; text-shadow: 0 0 50px var(--p); margin:0; }
-.sub-label{ font-size:12px; letter-spacing:15px; opacity:0.4; margin-top:20px; }
-
-/* ADVANCED SWIPE ZONE */
-.swipe-lane{ display:flex; gap:40px; padding:100px 50px; overflow-x:auto; width:100%; scrollbar-width:none; cursor:grab; }
-.swipe-lane::-webkit-scrollbar{ display:none; }
-.premium-card{ min-width:600px; height:400px; background:rgba(255,255,255,0.02); border:1px solid rgba(0,240,255,0.1); backdrop-filter:blur(30px); display:flex; align-items:center; justify-content:center; font-family:Orbitron; font-size:10px; letter-spacing:5px; transition:0.5s; }
-.premium-card:hover{ border-color:var(--p); box-shadow:0 0 50px rgba(0,240,255,0.1); transform:scale(1.02); }
-
-.hud-tag{ position:fixed; top:40px; left:40px; z-index:1000; border-left:2px solid var(--p); padding-left:20px; font-size:10px; letter-spacing:5px; }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem !important; letter-spacing: 10px !important; }
-            section { background: radial-gradient(circle at center, rgba(0,242,255,0.02) 0%, transparent 80%);  padding: 40px 20px !important; }
-            .hud { top: 20px !important; left: 20px !important; font-size: 8px !important; }
-            header nav { gap: 10px !important; flex-wrap: wrap; }
-            header nav a { font-size: 8px !important; }
-        }
-        section { background: radial-gradient(circle at center, rgba(0,242,255,0.02) 0%, transparent 80%);  min-height: 100vh; transition: opacity 1s, transform 1s; opacity: 0; transform: translateY(20px); }
-        section.visible { opacity: 1; transform: translateY(0); }
-    </style>
+:root{ --p:#00f0ff; --s:#ff0055; --bg:#000; --active:0; }
+body,html{ margin:0; background:#000; color:#fff; font-family:'Michroma', 'Noto Sans Devanagari'; overflow:hidden; }
+canvas{ position:fixed; inset:0; z-index:1; opacity:0.5; }
+.hud-v70{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:50px; display:flex; flex-direction:column; justify-content:space-between; }
+.box{ background:rgba(0,0,0,0.9); border:1px solid var(--p); padding:20px; font-size:10px; letter-spacing:3px; backdrop-filter:blur(20px); }
+.language-status{ color:var(--s); font-weight:900; }
+.center-title{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10; text-align:center; pointer-events:none; }
+.main-txt{ font-size:clamp(2rem, 10vw, 6rem); letter-spacing:20px; text-shadow: 0 0 30px var(--p); opacity:0.9; }
+.btn-sync{ position:fixed; bottom:50px; right:50px; background:transparent; border:1px solid var(--p); color:#fff; padding:20px 40px; cursor:pointer; font-family:'Orbitron'; letter-spacing:5px; z-index:200; pointer-events:all; }
+.btn-sync:hover{ background:var(--p); color:#000; box-shadow: 0 0 50px var(--p); }
+</style>
 </head>
 <body>
 <canvas id='c'></canvas>
-<div class='hud-tag'>NODE_01: PRECISION_LAB<br>IDENTITY: FLAGSHIP_ALPHA<br>STATUS: EVOLVED</div>
-<div class='flagship-container'>
-    <section>
-        <h1 class='hero-title'>CORE</h1>
-        <div class='sub-label'>[ THE SINGULARITY LABORATORY ]</div>
-    </section>
-    <section style='background:radial-gradient(circle at center, rgba(0,240,255,0.02) 0%, transparent 70%);'>
-        <div class='swipe-lane'>
-            <div class='premium-card'>MODULE_01 // NEURAL_GRID</div>
-            <div class='premium-card'>MODULE_02 // QUANTUM_FLOW</div>
-            <div class='premium-card'>MODULE_03 // DATA_LATTICE</div>
-            <div class='premium-card'>MODULE_04 // KINETIC_SYNC</div>
-        </div>
-    </section>
-    <section>
-        <div style='max-width:800px; text-align:center; line-height:2.5; opacity:0.6;'>
-            <h2 style='font-family:Orbitron; letter-spacing:10px; color:var(--p);'>STRUCTURAL_DEPTH</h2>
-            Deep infrastructure analysis and high-frequency logic synthesis mapped across decentralized node clusters. 100% stability enforced by V100 protocol.
-        </div>
-    </section>
+<div class='hud-v70'>
+    <div style='display:flex; justify-content:space-between;'>
+        <div class='box'>SYSTEM: MULTILINGUAL_V70<br>DETECTING: ENGLISH / हिन्दी</div>
+        <div class='box'>AUDIO_ENGINE: <span class='language-status' id='audio-state'>STANDBY</span></div>
+    </div>
 </div>
+<div class='center-title'><h1 class='main-txt' id='display-txt'>CORE_V70</h1></div>
+<button class='btn-sync' onclick='bot.activate()'>ACTIVATE_VOICE</button>
 <script>
 const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
 let w, h, t=0; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
-function draw(){ t+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h); ctx.strokeStyle='var(--p)'; ctx.lineWidth=0.5;
-for(let i=0;i<8;i++){ ctx.beginPath(); ctx.arc(w/2, h/2, 100+i*40+Math.sin(t+i)*30, 0, Math.PI*2); ctx.stroke(); } requestAnimationFrame(draw); } draw();
-
-    const observerOptions = { threshold: 0.1 };
-    const uiObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
-    }, observerOptions);
-    document.querySelectorAll('section').forEach(section => uiObserver.observe(section));
-    console.log('👁️ Neural UI Observer Active');
-    </script></body></html><footer><div class='footer-col'><h3>INFRASTRUCTURE</h3><ul><li>Neural Logic</li><li>Quantum Sync</li><li>8D Shading</li></ul></div><div class='footer-col'><h3>ECOSYSTEM</h3><ul><li>Bounty Portal</li><li>Synaptic Overlord</li><li>Data Sentinel</li></ul></div><div class='footer-col'><h3>UPLINK</h3><ul><li>Developer API</li><li>Network Status</li><li>Support</li></ul></div><div class='footer-bottom'>&copy; 2026 DEINCORE SINGULARITY. ALL RIGHTS RESERVED. // AUTH_ID: 0X-99</div></footer><script>const canvas=document.createElement('canvas'); canvas.id='bg-canvas'; document.body.prepend(canvas); const ctx=canvas.getContext('2d'); let w,h,t=0; function res(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;} res(); addEventListener('resize',res); const engine={ speak(txt){ const m=new SpeechSynthesisUtterance(txt); m.rate=0.9; m.pitch=0.8; window.speechSynthesis.speak(m); } }; function draw(){ t+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h); ctx.strokeStyle='#00f0ff'; ctx.lineWidth=0.5; for(let i=0;i<8;i++){ ctx.beginPath(); ctx.arc(w/2,h/2,100+i*40+Math.sin(t+i)*30,0,Math.PI*2); ctx.stroke(); } requestAnimationFrame(draw); } draw(); console.log('🚀 Global Neural Engine Online'); 
-    const observerOptions = { threshold: 0.1 };
-    const uiObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
-    }, observerOptions);
-    document.querySelectorAll('section').forEach(section => uiObserver.observe(section));
-    console.log('👁️ Neural UI Observer Active');
-    </script></body></html>
+const bot = {
+    activate() {
+        document.getElementById('audio-state').innerText = 'ACTIVE';
+        this.speak('System refinement complete. V 70 Multilingual core is now online.', 'en-US');
+        setTimeout(() => this.speak('प्रणाली सुधार पूर्ण हुआ। वी सत्तर बहुभाषी कोर अब ऑनलाइन है।', 'hi-IN'), 4000);
+    },
+    speak(text, lang) {
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = lang; msg.rate = 0.8; msg.pitch = 0.7;
+        window.speechSynthesis.speak(msg);
+    }
+};
+function draw(){ t+=0.01; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle='var(--p)'; ctx.lineWidth=0.5;
+    for(let i=0; i<15; i++){ ctx.beginPath();
+        let r = 150 + Math.sin(t+i)*50;
+        ctx.ellipse(w/2, h/2, r, r * Math.cos(t*0.5), t+i, 0, Math.PI*2);
+        ctx.stroke();
+    } requestAnimationFrame(draw);
+} draw();
+</script></body></html>
