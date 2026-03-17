@@ -1,108 +1,47 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>CORE V40 | NIGHTINGALE DEFENSE</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&family=Syncopate:wght@400;700&display=swap' rel='stylesheet'>
+<meta charset='UTF-8'><title>CORE V70 | CREATIVE SINGULARITY</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Michroma&display=swap' rel='stylesheet'>
 <style>
-:root{
-     --c1:#00f0ff; --c2:#8a2eff; --c3:#ff2e88; --c4:#00ff75; --dim: 1; --f-weight: 100; --f-width: 100%;
-     --bg: #000; --ui-op: 1;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{ background:var(--bg); color:#fff; font-family:'Michroma',sans-serif; overflow:hidden; }
-
+:root{ --p:#00f0ff; --s:#7000ff; --bg:#000; --blur: 15px; --hash: '0xDEINCORE_INIT'; }
+body,html{ margin:0; background:#000; color:#fff; font-family:'Michroma'; overflow:hidden; }
 canvas{ position:fixed; inset:0; z-index:1; mix-blend-mode: screen; }
-
-.pixel-fill{ position:fixed; inset:0; z-index:0; background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 4px 4px; pointer-events:none; }
-
-/* ARCADE HUD STACK */
-.arcade-hud{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:40px; display:flex; flex-direction:column; justify-content:space-between; opacity: var(--ui-op); transition: 0.5s; }
-.hud-top{ display:flex; justify-content:space-between; }
-.stat-box{ background:rgba(0,0,0,0.8); border-left:2px solid var(--c1); padding:10px 20px; font-family:'Orbitron'; font-size:10px; letter-spacing:2px; backdrop-filter:blur(10px); }
-
-/* GAME OVERLAY CONTROLS */
-.control-panel{ position:fixed; bottom:40px; right:40px; z-index:200; display:flex; flex-direction:column; gap:10px; pointer-events:all; }
-.btn{ background:transparent; border:1px solid var(--c1); color:#fff; padding:15px 30px; font-family:'Orbitron'; cursor:pointer; transition:0.3s; letter-spacing:3px; font-size:10px; text-transform:uppercase; }
-.btn:hover{ background:var(--c1); color:#000; box-shadow:0 0 30px var(--c1); }
-
-#main-title{ font-family:'Orbitron'; font-weight:var(--f-weight); font-stretch: var(--f-width); font-size:clamp(3rem, 15vw, 10rem); letter-spacing:calc(var(--dim)*15px); text-shadow: 0 0 30px var(--c1); pointer-events:none; z-index:10; }
+.hud-v70{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:50px; display:flex; flex-direction:column; justify-content:space-between; }
+.box{ background:rgba(0,0,0,0.9); border:1px solid var(--p); padding:20px; font-size:10px; letter-spacing:5px; backdrop-filter:blur(var(--blur)); }
+#blockchain-hash{ font-family:monospace; color:var(--s); letter-spacing:2px; }
+.center-mesh{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10; pointer-events:none; }
+.leonardo-fx{ font-size:clamp(2rem, 12vw, 8rem); font-family:Orbitron; letter-spacing:40px; text-shadow: 0 0 50px var(--p); opacity:0.8; }
 </style>
 </head>
 <body>
-<div class='pixel-fill'></div>
-<canvas id='v40-canvas'></canvas>
-
-<div class='arcade-hud'>
-    <div class='hud-top'>
-        <div class='stat-box'>INTEGRITY: <span id='hp'>100</span>%</div>
-        <div class='stat-box'>SCORE: <span id='score'>0</span></div>
+<canvas id='c'></canvas>
+<div class='hud-v70'>
+    <div style='display:flex; justify-content:space-between;'>
+        <div class='box'>INTEGRATION: OMNI_V70<br>INPUT: INTRA_CELLULAR_AI</div>
+        <div class='box'>MINER_HANDSHAKE: ACTIVE<br>LATEST_HASH: <span id='blockchain-hash'>SYNCING...</span></div>
     </div>
+    <div class='center-mesh'><h1 class='leonardo-fx' id='m-text'>SINGULARITY</h1></div>
+    <div class='box' style='width:fit-content; align-self:center;'>PROTOCOL: INFINITE_GROWTH_ACTIVE</div>
 </div>
-
-<div style='position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:10;'>
-    <h1 id='main-title'>CORE</h1>
-</div>
-
-<div class='control-panel'>
-    <button class='btn' onclick='game.init()'>Initialize Singularity</button>
-    <button class='btn' onclick='game.burst()'>Neural Burst</button>
-</div>
-
 <script>
-const canvas = document.getElementById('v40-canvas');
-const ctx = canvas.getContext('2d');
-let w, h, time=0, particles=[], enemies=[], isRunning=false, score=0, hp=100;
-
-function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } resize(); addEventListener('resize',resize);
-for(let i=0;i<300;i++) particles.push({ x:Math.random()*w, y:Math.random()*h, z:Math.random()*w, r:Math.random()*2+1, c:Math.random()*360 });
-
-const game = {
-    init() { isRunning = true; score=0; hp=100; enemies=[]; document.getElementById('main-title').innerText = 'ACTIVE'; },
-    burst() {
-        if(!isRunning) return;
-        enemies = [];
-        score += 50;
-        document.body.style.filter = 'invert(1) contrast(2)';
-        setTimeout(() => document.body.style.filter = 'none', 100);
-    }
-};
-
-function spawnEnemy() {
-    if(!isRunning) return;
-    const angle = Math.random() * Math.PI * 2;
-    enemies.push({ x: w/2 + Math.cos(angle)*w, y: h/2 + Math.sin(angle)*h, s: 2 + (score/500) });
-}
-setInterval(spawnEnemy, 1000);
-
+const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
+let w, h, t=0; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
 function draw(){
-    time += 0.01; ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
-    const cx = w/2, cy = h/2;
-
-    // V40 Adaptive Font Logic
-    document.documentElement.style.setProperty('--f-weight', Math.floor(100 + (Math.sin(time)+1)*400));
-
-    particles.forEach(p => {
-        p.z -= 5; if(p.z <= 0) p.z = w;
-        let sc = 400/p.z; let x = (p.x - cx) * sc + cx; let y = (p.y - cy) * sc + cy;
-        ctx.fillStyle = `hsla(${p.c}, 100%, 70%, ${1 - p.z/w})`;
-        ctx.beginPath(); ctx.arc(x, y, sc * 1.5, 0, Math.PI*2); ctx.fill();
-    });
-
-    if(isRunning) {
-        enemies.forEach((en, i) => {
-            const dx = cx - en.x, dy = cy - en.y; const dist = Math.hypot(dx, dy);
-            en.x += (dx/dist) * en.s; en.y += (dy/dist) * en.s;
-            ctx.fillStyle = '#ff2e88'; ctx.shadowBlur = 15; ctx.shadowColor = '#ff2e88';
-            ctx.fillRect(en.x, en.y, 8, 8);
-            if(dist < 50) { hp -= 10; enemies.splice(i, 1); if(hp <= 0) isRunning = false; }
-        });
-        document.getElementById('hp').innerText = hp; document.getElementById('score').innerText = score++;
+    t+=0.02; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle='var(--p)'; ctx.lineWidth=0.5;
+    for(let i=0; i<15; i++){
+        ctx.beginPath();
+        let r = 100 + i*40 + Math.sin(t+i)*50;
+        ctx.ellipse(w/2, h/2, r, r * Math.abs(Math.cos(t*0.5)), t+i, 0, Math.PI*2);
+        ctx.stroke();
     }
     requestAnimationFrame(draw);
 }
 draw();
-<\/script>
-</body>
-</html>
+setInterval(() => {
+    const newHash = '0x' + Math.random().toString(16).substr(2, 32).toUpperCase();
+    document.getElementById('blockchain-hash').innerText = newHash;
+    document.documentElement.style.setProperty('--p', `hsl(${Math.random()*360}, 100%, 50%)`);
+}, 1000);
+<\/script></body></html>
