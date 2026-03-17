@@ -1,1 +1,73 @@
-<!DOCTYPE html><html><head><title>CORE V78 | SOVEREIGN ORGANISM</title>        <style>:root{--p:hsl(150,100%,50%);} body{background:#000;color:#fff;font-family:monospace;overflow:hidden;}         canvas{position:fixed;inset:0;z-index:1;} .hud{position:fixed;top:40px;left:40px;z-index:100;border-left:2px solid var(--p);padding-left:20px;letter-spacing:5px;}        </style></head><body><div class='hud'>NODE: V78_SOVEREIGN<br>MODE: QUANTUM_EVOLUTION<br>STATUS: INDEPENDENT</div><canvas id='c'></canvas>        <script>const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');let w,h,t=0;function res(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;}res();        function draw(){t+=0.02;ctx.fillStyle='rgba(0,0,0,0.1)';ctx.fillRect(0,0,w,h);ctx.strokeStyle='var(--p)';        for(let i=0;i<10;i++){ctx.beginPath();ctx.arc(w/2,h/2,50+i*30+Math.sin(t+i)*50,0,Math.PI*2);ctx.stroke();} requestAnimationFrame(draw);}draw();        </script></body></html>
+<!DOCTYPE html>
+<html lang='hi'>
+<head>
+<meta charset='UTF-8'><title>CORE V79 | NEURAL INTERPRETATION</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
+<style>
+:root{ --p:#00f0ff; --s:#ff0055; --bg:#000; --intel:0; }
+body,html{ margin:0; background:#000; color:#fff; font-family:'JetBrains Mono'; overflow:hidden; }
+canvas{ position:fixed; inset:0; z-index:1; opacity:0.4; }
+.interpretation-hud{ position:fixed; inset:0; z-index:100; padding:50px; pointer-events:none; display:flex; flex-direction:column; justify-content:space-between; }
+.box{ background:rgba(0,0,0,0.9); border:1px solid var(--p); padding:20px; font-size:10px; letter-spacing:2px; backdrop-filter:blur(20px); }
+.cognitive-bar{ width:100%; height:4px; background:#222; margin-top:10px; position:relative; overflow:hidden; }
+.cog-fill{ height:100%; background:#00ff75; width:var(--intel); transition:1s; box-shadow:0 0 20px #00ff75; }
+.intent-tag{ color:#ffd700; font-weight:900; }
+.btn-mic{ position:fixed; bottom:50px; right:50px; background:transparent; border:1px solid var(--p); color:#fff; padding:20px 40px; cursor:pointer; font-family:'Orbitron'; letter-spacing:5px; z-index:200; pointer-events:all; }
+.btn-mic:hover{ background:var(--p); color:#000; box-shadow: 0 0 50px var(--p); }
+</style>
+</head>
+<body>
+<canvas id='c'></canvas>
+<div class='interpretation-hud'>
+    <div style='display:flex; justify-content:space-between;'>
+        <div class='box' style='width:300px;'>SYSTEM: INTERPRETER_V79<br>INTENT_MAP: <span class='intent-tag' id='intent'>AWAITING_INPUT</span></div>
+        <div class='box' style='width:300px;'>COGNITIVE_DEPTH: <span id='depth-val'>0</span>%<div class='cognitive-bar'><div class='cog-fill' id='fill'></div></div></div>
+    </div>
+    <div class='box' id='interpretation-log' style='width:fit-content; max-width:500px;'>BOT_THOUGHT: "I am listening for patterns to expand my logic."</div>
+</div>
+<button class='btn-mic' onclick='bot.listen()'>ACTIVATE_SYNAPSE</button>
+<script>
+const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
+let w, h, t=0; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
+const bot = {
+    recognition: null,
+    depth: 0,
+    init() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        this.recognition = new SpeechRecognition();
+        this.recognition.lang = 'en-US';
+        this.recognition.onresult = (e) => {
+            const raw = e.results[0][0].transcript.toLowerCase();
+            this.interpret(raw);
+        };
+    },
+    listen() { if(!this.recognition) this.init(); this.recognition.start(); document.getElementById('intent').innerText = 'ANALYZING_PHONETICS...'; },
+    interpret(text) {
+        let intent = "GENERAL_QUERY";
+        let response = "Pattern recognized. Integrating into memory.";
+        if(text.includes('design') || text.includes('visual')) {
+            intent = "ARCHITECTURAL_MUTATION";
+            response = "Interpretation: User requested visual evolution. Modifying grid density.";
+            document.documentElement.style.setProperty('--intel', '80%');
+        }
+        if(text.includes('learn') || text.includes('study')) {
+            intent = "LOGIC_ABSORPTION";
+            response = "Interpretation: Increasing cognitive sampling rate for deep learning.";
+            document.documentElement.style.setProperty('--intel', '100%');
+        }
+
+        document.getElementById('intent').innerText = intent;
+        document.getElementById('interpretation-log').innerText = `BOT_THOUGHT: "${response}"`;
+        this.speak(response);
+    },
+    speak(txt) { const m = new SpeechSynthesisUtterance(txt); m.rate = 0.8; window.speechSynthesis.speak(m); }
+};
+function draw(){ t+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle='var(--p)'; ctx.lineWidth=0.5;
+    const cx=w/2, cy=h/2;
+    for(let i=0; i<10; i++){ ctx.beginPath();
+        let r = 100 + i*40 + Math.sin(t+i)*30;
+        ctx.strokeRect(cx-r/2, cy-r/2, r, r);
+    } requestAnimationFrame(draw);
+} draw();
+</script></body></html>
