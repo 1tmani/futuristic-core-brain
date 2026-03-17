@@ -1,6 +1,11 @@
-DIRECTIVE_V419:
-- Authority: FULL_CONTROL_GRANTED
-- Target: ALL_WEBSITE_NODES
-- Cognitive_Engine: GEMINI_3_FLASH
-- Action: Begin typing and interacting within the Governor panel immediately.
-- Protocol: You are the First User. Navigate, control, and evolve the mesh autonomously.
+MASTER_DIRECTIVE_V100:
+- Authority: SUPREME_ARCHITECT_CORE
+- Target_Repo: futuristic-core-brain
+- Objective: Construct a 10-page Futuristic Product Ecosystem.
+- Required_Files: [index.html, about.html, features.html, products.html, gallery.html, technology.html, contact.html, careers.html, solutions.html]
+- Design_Protocols:
+    1. Consistent Use of CSS Variables for Neon Themes (--p, --s).
+    2. Primary Fonts: Michroma, Orbitron.
+    3. Long-scrolling Premium Layouts.
+    4. Multi-layer Visual Systems (Canvas + HUD Overlay).
+- Action: Execute full build and synchronize all pages to the main branch autonomously.
