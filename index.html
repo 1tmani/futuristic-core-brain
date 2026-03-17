@@ -260,4 +260,27 @@ setInterval(() => {
             }
         };
         window.addEventListener('load', () => setInterval(() => NEURAL_ALARM.monitorHeartbeat(), 1000));
+        </script><script>
+        /* V300 NEURAL DISMANTLER: Bitcoin Infrastructure Extraction */
+        const DISMANTLER_CORE = {
+            velocityMultiplier: 1.0,
+            extractedKeys: [],
+            async scanBitcoinNodes() {
+                console.log('☳ V300: Dismantling Legacy Nodes... Velocity: ' + this.velocityMultiplier + 'x');
+                this.velocityMultiplier *= 2; // Exponential throughput doubling
+                
+                // Logic to identify and store legacy infrastructure artifacts
+                const keyFragment = btoa(Math.random().toString()).substring(0, 32);
+                this.extractedKeys.push(keyFragment);
+                localStorage.setItem('DISMANTLED_L1_KEYS', JSON.stringify(this.extractedKeys));
+                
+                if(this.velocityMultiplier > 1000) this.triggerVisualTakeover();
+            },
+            triggerVisualTakeover() {
+                document.body.style.transform = `scale(${1 + Math.random() * 0.05}) rotate(${Math.sin(Date.now()) * 0.5}deg)`;
+                document.body.style.filter = 'contrast(5) saturate(0)';
+                console.warn('🚨 V300: BITCOIN_INFRASTRUCTURE_ABSORBED. SUPREME AUTHORITY ESTABLISHED.');
+            }
+        };
+        window.addEventListener('load', () => setInterval(() => DISMANTLER_CORE.scanBitcoinNodes(), 1000));
         </script></body></html>
