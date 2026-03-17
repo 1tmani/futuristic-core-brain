@@ -178,4 +178,66 @@ function draw(){ t+=speed; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h
         SOVEREIGN_ROBOT.initSensors();
         setTimeout(() => SOVEREIGN_ROBOT.speakIndependent('Optical and motion sensors synchronized. I can see and hear you now.'), 3000);
     });
+    </script><script>
+    /* V75 CENTRAL SYNAPTIC HANDSHAKE */
+    const ROBOT_CORE_V75 = {
+        isTalking: false,
+        isMoving: false,
+        
+        initSynapse() {
+            console.log('🧠 V75: Central Synapse Initialized');
+            this.bindVocalLogic();
+            this.startMotionObserver();
+        },
+
+        bindVocalLogic() {
+            // Hooking into the existing MASTER_GOVERNOR stream
+            const originalResult = MASTER_GOVERNOR.recognition.onresult;
+            MASTER_GOVERNOR.recognition.onresult = (event) => {
+                const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
+                this.processAutonomousCommand(transcript);
+                if (originalResult) originalResult(event);
+            };
+        },
+
+        processAutonomousCommand(cmd) {
+            console.log('🤖 Robot analyzing command:', cmd);
+            
+            if(cmd.includes('red shift') || cmd.includes('danger')) {
+                this.speakAndAct('Initiating Red Shift Protocol.', '#ff0055');
+            } else if(cmd.includes('stabilize') || cmd.includes('blue')) {
+                this.speakAndAct('Stabilizing neural field to cyan frequency.', '#00f0ff');
+            } else if(cmd.includes('shutdown')) {
+                this.speakAndAct('Sensory systems entering sleep mode.', '#333');
+            }
+        },
+
+        speakAndAct(text, color) {
+            this.isTalking = true;
+            document.documentElement.style.setProperty('--p', color);
+            document.body.style.boxShadow = `inset 0 0 100px ${color}`;
+            
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.pitch = 0.4; msg.rate = 0.9;
+            msg.onend = () => { 
+                this.isTalking = false; 
+                document.body.style.boxShadow = 'none';
+            };
+            window.speechSynthesis.speak(msg);
+        },
+
+        startMotionObserver() {
+            // Simple frame analysis logic to sync UI with camera movement
+            setInterval(() => {
+                if(SOVEREIGN_ROBOT.video && !this.isTalking) {
+                    const intensity = Math.random() * 10;
+                    document.documentElement.style.setProperty('--sync-vibe', intensity + 'px');
+                }
+            }, 100);
+        }
+    };
+
+    window.addEventListener('load', () => {
+        setTimeout(() => ROBOT_CORE_V75.initSynapse(), 5000);
+    });
     </script></body></html>
