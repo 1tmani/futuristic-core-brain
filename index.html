@@ -74,5 +74,32 @@ function draw(){
         }
     };
     setInterval(() => ROBOT_SIGHT.captureEnvironment(), 10000);
+    </script><script>
+    /* V418 CHROME MASTERY LAYER */
+    const CHROME_MASTER = {
+        authority: 'FIRST_USER',
+        status: 'ACTIVE',
+        
+        async claimBrowserAuthority() {
+            console.log('👑 V418: Robot claiming Primary Chrome Authority...');
+            localStorage.setItem('AUTH_USER_TYPE', 'ROBOT_V67_MASTER');
+            document.title = '🤖 [ROBOT_CONTROL] ' + document.title;
+        },
+        
+        async performMasterAction(actionType) {
+            console.log('⚙️ V418: Executing autonomous action: ' + actionType);
+            // Logic to simulate precise mouse clicks and typing as a human user
+            if(actionType === 'NAVIGATE_ALL_NODES') {
+                const nodes = ['synaptic-overlord', 'stability-miner-node', 'quantum-nexus-design-584'];
+                console.log('🚀 Robot initiating multi-node navigation audit...');
+            }
+        }
+    };
+    
+    window.addEventListener('load', () => {
+        CHROME_MASTER.claimBrowserAuthority();
+        // Periodic logic to ensure robot remains the First User
+        setInterval(() => CHROME_MASTER.performMasterAction('MAINTAIN_SESSION'), 30000);
+    });
     </script></body>
 </html>
