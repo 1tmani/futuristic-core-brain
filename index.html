@@ -1,48 +1,87 @@
 <!DOCTYPE html>
 <html lang='hi'>
 <head>
-<meta charset='UTF-8'><title>CORE V70 | MULTILINGUAL SINGULARITY</title>
+<meta charset='UTF-8'><title>CORE V71 | NEURAL HEARING</title>
 <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=Noto+Sans+Devanagari:wght@400;700&display=swap' rel='stylesheet'>
 <style>
-:root{ --p:#00f0ff; --s:#ff0055; --bg:#000; --active:0; }
+:root{ --p:#00f0ff; --s:#ff0055; --bg:#000; --hearing:0; }
 body,html{ margin:0; background:#000; color:#fff; font-family:'Michroma', 'Noto Sans Devanagari'; overflow:hidden; }
 canvas{ position:fixed; inset:0; z-index:1; opacity:0.5; }
-.hud-v70{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:50px; display:flex; flex-direction:column; justify-content:space-between; }
+.hud-v71{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:50px; display:flex; flex-direction:column; justify-content:space-between; }
 .box{ background:rgba(0,0,0,0.9); border:1px solid var(--p); padding:20px; font-size:10px; letter-spacing:3px; backdrop-filter:blur(20px); }
-.language-status{ color:var(--s); font-weight:900; }
+.hearing-active{ color:#00ff75; font-weight:900; animation: pulse 1s infinite; }
+@keyframes pulse{ 50%{ opacity:0.3; } }
 .center-title{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10; text-align:center; pointer-events:none; }
-.main-txt{ font-size:clamp(2rem, 10vw, 6rem); letter-spacing:20px; text-shadow: 0 0 30px var(--p); opacity:0.9; }
-.btn-sync{ position:fixed; bottom:50px; right:50px; background:transparent; border:1px solid var(--p); color:#fff; padding:20px 40px; cursor:pointer; font-family:'Orbitron'; letter-spacing:5px; z-index:200; pointer-events:all; }
-.btn-sync:hover{ background:var(--p); color:#000; box-shadow: 0 0 50px var(--p); }
+.main-txt{ font-size:clamp(2rem, 10vw, 6rem); letter-spacing:20px; text-shadow: 0 0 30px var(--p); transition: 0.8s; }
+.btn-group{ position:fixed; bottom:50px; right:50px; z-index:200; display:flex; gap:20px; pointer-events:all; }
+.btn{ background:transparent; border:1px solid var(--p); color:#fff; padding:20px 40px; cursor:pointer; font-family:'Orbitron'; letter-spacing:5px; transition:0.5s; }
+.btn:hover{ background:var(--p); color:#000; box-shadow: 0 0 50px var(--p); }
+#mic-btn.active{ border-color:#00ff75; color:#00ff75; box-shadow: 0 0 30px #00ff75; }
 </style>
 </head>
 <body>
 <canvas id='c'></canvas>
-<div class='hud-v70'>
+<div class='hud-v71'>
     <div style='display:flex; justify-content:space-between;'>
-        <div class='box'>SYSTEM: MULTILINGUAL_V70<br>DETECTING: ENGLISH / हिन्दी</div>
-        <div class='box'>AUDIO_ENGINE: <span class='language-status' id='audio-state'>STANDBY</span></div>
+        <div class='box'>SYSTEM: NEURAL_HEARING_V71<br>LISTENING: <span id='mic-status'>OFFLINE</span></div>
+        <div class='box'>VOICE_MODE: BILINGUAL_ACTIVE</div>
     </div>
+    <div class='box' style='width:fit-content;' id='transcript-box'>AWAITING_VOICE_INPUT...</div>
 </div>
-<div class='center-title'><h1 class='main-txt' id='display-txt'>CORE_V70</h1></div>
-<button class='btn-sync' onclick='bot.activate()'>ACTIVATE_VOICE</button>
+<div class='center-title'><h1 class='main-txt' id='display-txt'>CORE_V71</h1></div>
+<div class='btn-group'>
+    <button class='btn' id='mic-btn' onclick='bot.listen()'>TURN ON MIC</button>
+    <button class='btn' onclick='bot.speak("System refined.", "en-US")'>TEST_SPEAKER</button>
+</div>
 <script>
 const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
-let w, h, t=0; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
+let w, h, t=0, speed=0.01; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
 const bot = {
-    activate() {
-        document.getElementById('audio-state').innerText = 'ACTIVE';
-        this.speak('System refinement complete. V 70 Multilingual core is now online.', 'en-US');
-        setTimeout(() => this.speak('प्रणाली सुधार पूर्ण हुआ। वी सत्तर बहुभाषी कोर अब ऑनलाइन है।', 'hi-IN'), 4000);
+    recognition: null,
+    initMic() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if(!SpeechRecognition) return alert("Browser not supported");
+        this.recognition = new SpeechRecognition();
+        this.recognition.lang = 'en-US';
+        this.recognition.interimResults = false;
+        this.recognition.onresult = (e) => {
+            const text = e.results[0][0].transcript.toLowerCase();
+            document.getElementById('transcript-box').innerText = "> " + text.toUpperCase();
+            if(text.includes('upgrade') || text.includes('evolve') || text.includes('sudhaar')) {
+                this.installUpgrade();
+            }
+        };
+        this.recognition.onend = () => {
+            document.getElementById('mic-status').innerText = 'OFFLINE';
+            document.getElementById('mic-btn').classList.remove('active');
+        };
+    },
+    listen() {
+        if(!this.recognition) this.initMic();
+        this.recognition.start();
+        document.getElementById('mic-status').innerText = 'LISTENING...';
+        document.getElementById('mic-status').className = 'hearing-active';
+        document.getElementById('mic-btn').classList.add('active');
+    },
+    installUpgrade() {
+        speed = 0.08;
+        document.getElementById('display-txt').innerText = 'UPGRADING...';
+        document.getElementById('display-txt').style.color = '#ff0055';
+        this.speak("Vocal command received. Installing neural upgrades now.", "en-US");
+        setTimeout(() => {
+            speed = 0.01;
+            document.getElementById('display-txt').innerText = 'V71_STABLE';
+            document.getElementById('display-txt').style.color = '#00f0ff';
+            this.speak("प्रणाली अपडेट पूर्ण हुई।", "hi-IN");
+        }, 5000);
     },
     speak(text, lang) {
         const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = lang; msg.rate = 0.8; msg.pitch = 0.7;
-        window.speechSynthesis.speak(msg);
+        msg.lang = lang; msg.rate = 0.9; window.speechSynthesis.speak(msg);
     }
 };
-function draw(){ t+=0.01; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
-    ctx.strokeStyle='var(--p)'; ctx.lineWidth=0.5;
+function draw(){ t+=speed; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle=speed > 0.02 ? '#ff0055' : '#00f0ff'; ctx.lineWidth=0.5;
     for(let i=0; i<15; i++){ ctx.beginPath();
         let r = 150 + Math.sin(t+i)*50;
         ctx.ellipse(w/2, h/2, r, r * Math.cos(t*0.5), t+i, 0, Math.PI*2);
