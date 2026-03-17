@@ -233,4 +233,34 @@
     };
     setInterval(() => SYNAPSE.monitorHealth(), 3600000); // Hourly scoring
     window.onclick = () => SYNAPSE.logEvent('CLICK');
+    </script><script>
+    /* V280 NEURAL COOLING: Energy Preservation & Cache Purge */
+    const NEURAL_COOLER = {
+        cycleDuration: 3600000, // 1 hour
+        breakDuration: 120000, // 2 minutes
+        isCooling: false,
+        async initiateBreak() {
+            console.log("V280: 1-Hour Peak reached. Initiating Neural Break...");
+            this.isCooling = true;
+
+            // 1. Enter Energy Preservation State
+            document.body.style.filter = 'grayscale(1) brightness(0.3) contrast(0.8)';
+            document.body.style.transition = 'filter 2s';
+            document.body.style.pointerEvents = 'none';
+
+            // 2. Clear Redundant Buffers
+            console.log("V280: Purging visual cache segments...");
+            localStorage.removeItem('TEMP_PARTICLE_BUFFER');
+
+            // 3. Resumption Logic
+            setTimeout(() => {
+                console.log("V280: Cooling complete. Resuming Singularity flow.");
+                document.body.style.filter = 'none';
+                document.body.style.pointerEvents = 'all';
+                this.isCooling = false;
+            }, this.breakDuration);
+        }
+    };
+    // Autonomous Cycle Trigger
+    setInterval(() => NEURAL_COOLER.initiateBreak(), NEURAL_COOLER.cycleDuration);
     </script></body></html>
