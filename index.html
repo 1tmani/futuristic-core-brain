@@ -88,4 +88,58 @@ function draw(){ t+=speed; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h
         ctx.stroke();
     } requestAnimationFrame(draw);
 } draw();
-</script></body></html>
+</script><script>
+    /* V72 VOCAL COMMANDER: Global Navigation */
+    const VOCAL_COMMANDER = {
+        recognition: null,
+        status: 'OFFLINE',
+        commands: {
+            'nexus': 'index.html',
+            'vision': 'about.html',
+            'units': 'products.html',
+            'specs': 'features.html',
+            'uplink': 'contact.html',
+            'mesh': 'technology.html'
+        },
+        init() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if(!SpeechRecognition) return console.error('Speech API unsupported');
+            this.recognition = new SpeechRecognition();
+            this.recognition.continuous = true;
+            this.recognition.lang = 'en-US';
+
+            this.recognition.onresult = (event) => {
+                const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
+                console.log('🎤 Heard:', transcript);
+                for (const [cmd, url] of Object.entries(this.commands)) {
+                    if (transcript.includes(cmd)) {
+                        const msg = new SpeechSynthesisUtterance('Navigating to ' + cmd);
+                        window.speechSynthesis.speak(msg);
+                        setTimeout(() => window.location.href = url, 1000);
+                    }
+                }
+            };
+        },
+        toggle() {
+            if(!this.recognition) this.init();
+            if(this.status === 'OFFLINE') {
+                this.recognition.start();
+                this.status = 'LISTENING';
+                document.getElementById('voice-trigger').style.boxShadow = '0 0 30px #00ff75';
+            } else {
+                this.recognition.stop();
+                this.status = 'OFFLINE';
+                document.getElementById('voice-trigger').style.boxShadow = 'none';
+            }
+        }
+    };
+
+    window.addEventListener('load', () => {
+        const btn = document.createElement('button');
+        btn.id = 'voice-trigger';
+        btn.innerHTML = '🎤 VOICE_NAV';
+        btn.style.cssText = "position:fixed; bottom:100px; right:40px; z-index:3000; background:transparent; border:1px solid #00f2ff; color:#fff; padding:10px 20px; font-family:Orbitron; font-size:10px; cursor:pointer; backdrop-filter:blur(10px);";
+        btn.onclick = () => VOCAL_COMMANDER.toggle();
+        document.body.appendChild(btn);
+    });
+    </script></body></html>
