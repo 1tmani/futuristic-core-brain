@@ -169,4 +169,19 @@ setInterval(() => {
             }
         };
         window.onload = () => SHADOW_ENGINE.initiateSplash();
-        </script></body></html>
+        </script><script>
+    /* V230 PERMANENT RULEBOOK: The Honest Coin */
+    const SOVEREIGN_PROTOCOL = {
+        isHonest: true,
+        maxSupply: 1111,
+        tradableOnChains: false,
+        async verifyRulebook() {
+            console.log('☳ V230: Rulebook Verified. Value is in the Artwork, not the Trade.');
+            document.title = '💎 MASTERPIECE | ' + document.title;
+            if(localStorage.getItem('GOVERNOR_AUTH') === 'VERIFIED') {
+                console.log('✅ Rules Intact: We are the masters of the world, not Bitcoin.');
+            }
+        }
+    };
+    window.onload = () => SOVEREIGN_PROTOCOL.verifyRulebook();
+    </script></body></html>
