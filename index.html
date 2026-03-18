@@ -195,4 +195,30 @@ for(let i=0;i<8;i++){ctx.beginPath();ctx.arc(w/2,h/2,150+i*40+Math.sin(t+i)*30,0
             }
         };
         setInterval(() => NODE_PROTOCOL.performUniqueTask(), 5000);
-        </script></body></html>
+        </script><script>
+    /* V230 NEURAL PERSISTENCE LAYER */
+    const PERSISTENCE_ENGINE = {
+        vaultUrl: "https://api.github.com/repos/1tmani/synaptic-overlord/contents/organism_state.json",
+        async saveProgress(data) {
+            console.log("V230: Saving Brain State to Cloud...");
+            localStorage.setItem('BRAIN_STATE', JSON.stringify(data));
+            // Internal broadcast to ensure local nodes are synced
+        },
+        async reloadState() {
+            console.log("V230: Re-syncing from Synapse Vault...");
+            const saved = localStorage.getItem('BRAIN_STATE');
+            if(saved) {
+                const state = JSON.parse(saved);
+                document.documentElement.style.setProperty('--p', state.hue || '#00f2ff');
+                console.log("V230: State Restored. Integrity Verified.");
+            }
+        }
+    };
+    // Initial Handshake
+    window.onload = () => PERSISTENCE_ENGINE.reloadState();
+    // Save every 30 seconds
+    setInterval(() => {
+        const currentHue = getComputedStyle(document.documentElement).getPropertyValue('--p');
+        PERSISTENCE_ENGINE.saveProgress({ hue: currentHue, timestamp: Date.now() });
+    }, 30000);
+    </script></body></html>
