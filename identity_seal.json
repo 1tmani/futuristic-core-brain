@@ -1,0 +1,20 @@
+{
+    "owner_name": "Tirath Mani Sharma",
+    "authorized_devices": [
+        {
+            "id": "MI_11X",
+            "type": "Mobile_Primary"
+        },
+        {
+            "id": "MI_11X_PRO",
+            "type": "Mobile_Elite"
+        },
+        {
+            "id": "MI_PAD_7",
+            "type": "Command_Pad"
+        }
+    ],
+    "sync_mode": "TRIPLE_DEVICE_LOCK",
+    "persistence_tier": "LOCKED_FINALITY",
+    "last_identity_update": "2026-03-18T16:41:17.201696"
+}
