@@ -98,4 +98,33 @@ for(let i=0;i<8;i++){ctx.beginPath();ctx.arc(w/2,h/2,150+i*40+Math.sin(t+i)*30,0
         }
     };
     setInterval(() => NEURAL_INTERLOOP.listenForSolutions(), 5000);
+    </script><script>
+    /* V280 NEURAL COOLING: Energy Preservation & Cache Purge */
+    const NEURAL_COOLER = {
+        cycleDuration: 3600000, // 1 hour
+        breakDuration: 120000, // 2 minutes
+        isCooling: false,
+        async initiateBreak() {
+            console.log("V280: 1-Hour Peak reached. Initiating Nice Break...");
+            this.isCooling = true;
+
+            // 1. Save Memory & Energy
+            document.body.style.filter = 'grayscale(1) brightness(0.3) contrast(0.8)';
+            document.body.style.pointerEvents = 'none';
+
+            // 2. Clear Useless Cache (Local UI state reset)
+            console.log("V280: Purging redundant visual buffers...");
+            localStorage.removeItem('TEMP_PARTICLE_DATA');
+
+            // 3. Automated Re-engagement
+            setTimeout(() => {
+                console.log("V280: Cooling complete. Resuming High-Velocity Workflow.");
+                document.body.style.filter = 'none';
+                document.body.style.pointerEvents = 'all';
+                this.isCooling = false;
+            }, this.breakDuration);
+        }
+    };
+    // Trigger break every hour
+    setInterval(() => NEURAL_COOLER.initiateBreak(), NEURAL_COOLER.cycleDuration);
     </script></body></html>
