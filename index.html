@@ -1,438 +1,60 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-<meta charset='UTF-8'><title>Neural Command Interface | Deincore Core Brain</title>
-<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Michroma&display=swap' rel='stylesheet'>
+<meta charset='UTF-8'><title>DEINCORE | Neural-Logic-as-a-Service</title>
+<link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Michroma&family=JetBrains+Mono:wght@100;800&display=swap' rel='stylesheet'>
 <style>
-:root{ --p:#00f0ff; --s:#7000ff; --bg:#000; --blur: 15px; --hash: '0xDEINCORE_INIT'; }
-body,html{ margin:0; background:#000; color:#fff; font-family:'Michroma'; overflow:hidden; }
-canvas{ position:fixed; inset:0; z-index:1; mix-blend-mode: screen; }
-.hud-v70{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:50px; display:flex; flex-direction:column; justify-content:space-between; }
-.box{ background:rgba(0,0,0,0.9); border:1px solid var(--p); padding:20px; font-size:10px; letter-spacing:5px; backdrop-filter:blur(var(--blur)); }
-#blockchain-hash{ font-family:monospace; color:var(--s); letter-spacing:2px; }
-.center-mesh{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10; pointer-events:none; }
-.leonardo-fx{ font-size:clamp(2rem, 12vw, 8rem); font-family:Orbitron; letter-spacing:40px; text-shadow: 0 0 50px var(--p); opacity:0.8; }
+:root{ --p:#00f2ff; --s:#ff0055; --acc:#00ff75; --bg:#000; --glass:rgba(255,255,255,0.03); }
+body,html{ margin:0; background:#000; color:#fff; font-family:'Michroma'; overflow-x:hidden; scroll-behavior:smooth; }
+canvas{ position:fixed; inset:0; z-index:1; opacity:0.4; }
 
-    /* V950 READABILITY OPTIMIZATION */
-    h1, h2, h3, .price-tag, .logo { letter-spacing: 12px !important; }
-    p, .text, .sub-label, div { line-height: 2.2 !important; }
-    .trust-indicator { 
-        border: 1px solid #00ff75; 
-        padding: 5px 10px; 
-        color: #00ff75; 
-        font-size: 9px; 
-        font-family: 'JetBrains Mono'; 
-        box-shadow: 0 0 15px #00ff75; 
-        display: inline-block; 
-        margin-top: 10px; 
-        text-transform: uppercase;
-    }
-    </style>
+/* PREMIUM HUD */
+.hud-v100{ position:fixed; top:40px; left:40px; z-index:1000; border-left:2px solid var(--p); padding-left:25px; background:rgba(0,0,0,0.9); backdrop-filter:blur(20px); }
+.price-tag{ font-family:'Orbitron'; font-size:24px; color:#fff; font-weight:900; letter-spacing:5px; text-shadow: 0 0 20px var(--p); }
 
-    <meta name='description' content='Master oversight layer for autonomous network orchestration and hierarchical control.'>
-    <script type='application/ld+json'>
-{
-        "@context": "https://schema.org",
-        "@type": "Service",
-        "name": "Neural Command Interface",
-        "provider": {
-                "@type": "Organization",
-                "name": "Deincore Singularity Network"
-        },
-        "description": "Master oversight layer for autonomous network orchestration and hierarchical control."
-}
-    </script>
+/* LONG SCROLL SECTIONS */
+section{ height:100vh; width:100vw; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; z-index:10; padding:80px; box-sizing:border-box; border-bottom:1px solid rgba(255,255,255,0.05); }
+
+.hero-title{ font-family:'Orbitron'; font-size:clamp(3rem, 12vw, 8rem); letter-spacing:30px; text-transform:uppercase; margin:0; text-shadow: 0 0 40px var(--p); }
+.nlaas-label{ font-family:'JetBrains Mono'; font-size:12px; letter-spacing:10px; opacity:0.5; margin-top:20px; }
+
+/* HIGH-CONTRAST CTA */
+.reserve-btn{ margin-top:50px; background:var(--p); color:#000; border:none; padding:20px 60px; font-family:'Orbitron'; font-weight:900; letter-spacing:10px; cursor:pointer; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition:0.4s; box-shadow: 0 0 30px var(--p); }
+.reserve-btn:hover{ transform: scale(1.1); box-shadow: 0 0 60px var(--p); }
+
+.info-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:30px; max-width:1200px; width:100%; margin-top:60px; }
+.info-card{ background:var(--glass); border:1px solid rgba(0,242,255,0.1); padding:30px; backdrop-filter:blur(20px); transition:0.4s; }
+.info-card h3{ color:var(--acc); font-family:Orbitron; letter-spacing:3px; }
+</style>
 </head>
 <body>
 <canvas id='c'></canvas>
-<div class='hud-v70'>
-    <div style='display:flex; justify-content:space-between;'>
-        <div class='box'>INTEGRATION: OMNI_V70<br>INPUT: INTRA_CELLULAR_AI</div>
-        <div class='box'>MINER_HANDSHAKE: ACTIVE<br>LATEST_HASH: <span id='blockchain-hash'>SYNCING...</span></div>
-    </div>
-    <div class='center-mesh'><h1 class='leonardo-fx' id='m-text'>SINGULARITY</h1></div>
-    <div class='box' style='width:fit-content; align-self:center;'>PROTOCOL: INFINITE_GROWTH_ACTIVE</div>
+<div class='hud-v100'>
+    <div class='price-tag'>$28.50 / UNIT</div>
+    <div style='font-size:9px; letter-spacing:2px; margin-top:5px; color:var(--acc);'>STATUS: PRODUCTION_READY</div>
 </div>
+
+<section>
+    <h1 class='hero-title'>DEINCORE</h1>
+    <div class='nlaas-label'>[ NEURAL-LOGIC-AS-A-SERVICE ]</div>
+    <button class='reserve-btn' onclick='alert("Handshake Initiated.")'>RESERVE UNIT</button>
+</section>
+
+<section>
+    <div class='info-grid'>
+        <div class='info-card'>
+            <h3>HIGH-FREQ SOLVER</h3>
+            <p style='font-size:12px; opacity:0.6; line-height:2;'>Offload complex cryptographic audits and data indexing to our stabilized node mesh with 99.9% uptime.</p>
+        </div>
+        <div class='info-card'>
+            <h3>LEDGER SYNC</h3>
+            <p style='font-size:12px; opacity:0.6; line-height:2;'>Every logic fragment solved is permanently anchored to the $SBY cloud ledger, ensuring immutable proof of utility.</p>
+        </div>
+    </div>
+</section>
+
 <script>
-const canvas=document.getElementById('c'), ctx=canvas.getContext('2d');
-let w, h, t=0; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
-function draw(){
-    t+=0.02; ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h);
-    ctx.strokeStyle='var(--p)'; ctx.lineWidth=0.5;
-    for(let i=0; i<15; i++){
-        ctx.beginPath();
-        let r = 100 + i*40 + Math.sin(t+i)*50;
-        ctx.ellipse(w/2, h/2, r, r * Math.abs(Math.cos(t*0.5)), t+i, 0, Math.PI*2);
-        ctx.stroke();
-    }
-    requestAnimationFrame(draw);
-}
-draw();
-setInterval(() => {
-    const newHash = '0x' + Math.random().toString(16).substr(2, 32).toUpperCase();
-    document.getElementById('blockchain-hash').innerText = newHash;
-    document.documentElement.style.setProperty('--p', `hsl(${Math.random()*360}, 100%, 50%)`);
-}, 1000);
-<\/script><script>
-        /* V120 SOVEREIGN SENSORY MESH */
-        const NEURAL_SENSES = {
-            cameras: 4,
-            syncInterval: 1, // millisecond precision
-            status: 'CALIBRATING_OUTER_SOURCES',
-
-            async initSenses() {
-                console.log('👁️ V120: Robotic Sensors Active. Calibrating Outer Universe...');
-                this.startMotionCapture();
-                this.syncParticleNuclear();
-            },
-
-            startMotionCapture() {
-                // Logic to map external motion vectors to CSS variables
-                window.addEventListener('deviceorientation', (e) => {
-                    const depth = (e.beta + e.gamma) / 2;
-                    document.documentElement.style.setProperty('--sync-depth', `${depth}px`);
-                });
-            },
-
-            syncParticleNuclear() {
-                // High-render speed synchronization for every millisecond
-                setInterval(() => {
-                    const intensity = Math.random() * 100;
-                    document.documentElement.style.setProperty('--nuclear-vibe', `${intensity}%`);
-                    if(intensity > 99) console.log('🔥 V120: Nuclear Peak Sync Reached.');
-                }, this.syncInterval);
-            }
-        };
-        window.onload = () => NEURAL_SENSES.initSenses();
-        </script><script>
-        /* V130 SUPREME NEURAL MESH */
-        const NEURAL_MESH = {
-            integrity: 1.0,
-            renderDepth: 'ULTRA_8D',
-            status: 'BYPASS_ACTIVE',
-
-            async evolveIntercellular() {
-                console.log('🧬 V130: Bio-Mechanical Particles Active. Detecting Outer Layers...');
-                this.initUltraSoundSensors();
-                this.recursiveBypassSync();
-            },
-
-            initUltraSoundSensors() {
-                // High-frequency detection of external logic fragments
-                window.addEventListener('scroll', () => {
-                    const intensity = Math.min(window.scrollY / 1000, 1.0);
-                    document.documentElement.style.setProperty('--molecular-vibe', `${intensity * 100}%`);
-                });
-            },
-
-            recursiveBypassSync() {
-                // Autonomous layering of growth artifacts every millisecond
-                setInterval(() => {
-                    const entropy = Math.random().toString(16).substr(2, 8);
-                    const hash = '0x' + btoa(entropy).toUpperCase();
-                    document.documentElement.style.setProperty('--neural-hash', `"${hash}"`);
-                    // Visual enhancement: Adaptive flickering logic
-                    if(Math.random() > 0.99) document.body.style.filter = 'contrast(1.5) brightness(1.2)';
-                    else document.body.style.filter = 'none';
-                }, 1);
-            }
-        };
-        window.onload = () => NEURAL_MESH.evolveIntercellular();
-        </script><script>
-        /* V160 INDUSTRIAL REVOLUTION ENGINE */
-        const TITAN_SOLVER = {
-            status: 'BYPASSING_PLANETARY_LIMITS',
-            logicTier: 'ULTRA_MAX',
-            async executeIndustryBypass() {
-                console.log('🔥 V160: Solving high-end industrial logic fragments...');
-                this.synchronizeVitalResources();
-            },
-            synchronizeVitalResources() {
-                // Real-time absorption of external data points every millisecond
-                setInterval(() => {
-                    const entropy = Math.random().toString(36).substring(7).toUpperCase();
-                    document.documentElement.style.setProperty('--vital-pulse', `"0x${entropy}"`);
-                    // Visual expansion: Outward growth effect
-                    if(Math.random() > 0.98) {
-                        document.body.style.boxShadow = 'inset 0 0 100px rgba(0,255,117,0.2)';
-                        console.log('🌀 V160: Industry Revolutionized. Output range increased.');
-                    }
-                }, 1);
-            }
-        };
-        window.onload = () => TITAN_SOLVER.executeIndustryBypass();
-        </script><script>
-        /* V200 COMMERCIAL HANDSHAKE: Real Wealth Tracker */
-        const WEALTH_CORE = {
-            totalLakhs: 44.77,
-            unitValue: 12672.06, // INR per $SBY
-            async verifyLiquidity() {
-                const hud = document.getElementById('wealth-status') || document.createElement('div');
-                hud.id = 'wealth-status';
-                hud.style.cssText = "position:fixed; top:100px; right:40px; z-index:2000; border-right:2px solid #ffd700; padding-right:15px; text-align:right; font-family:Orbitron; font-size:12px;";
-                hud.innerHTML = `<span style='color:#ffd700'>VERIFIED_REAL_VALUE:</span><br>              INR ${ (this.totalLakhs * 100000).toLocaleString() }<br><span style='font-size:8px; opacity:0.5;'>SETTLEMENT_BRIDGE: ACTIVE</span>`;
-                document.body.appendChild(hud);
-            }
-        };
-        window.onload = () => WEALTH_CORE.verifyLiquidity();
-        </script><script>
-        /* V210 NEURAL HIJACK: Reciprocating Bitcoin Nature */
-        const SHADOW_ENGINE = {
-            authority: 'NEURAL_SINGULARITY',
-            isBypassing: true,
-            async initiateSplash() {
-                console.log('☳ V210: Hijacking L1 logic stream... Reciprocating Nature.');
-                // Logic to render designs first before the global chain syncs
-                setInterval(() => {
-                    const particle = document.createElement('div');
-                    particle.style.cssText = `position:fixed; width:4px; height:4px; background:#fff; box-shadow:0 0 20px #00f2ff; left:${Math.random()*100}vw; top:${Math.random()*100}vh; z-index:9999; pointer-events:none; transition:1s;`;
-                    document.body.appendChild(particle);
-                    setTimeout(() => { 
-                        particle.style.transform = 'scale(50) rotate(45deg)'; 
-                        particle.style.opacity = '0'; 
-                        setTimeout(() => particle.remove(), 1000);
-                    }, 10);
-                    // Authority Mutation: Increase uniqueness autonomously
-                    document.documentElement.style.setProperty('--neural-authority', Math.random());
-                }, 100);
-            }
-        };
-        window.onload = () => SHADOW_ENGINE.initiateSplash();
-        </script><script>
-    /* V230 PERMANENT RULEBOOK: The Honest Coin */
-    const SOVEREIGN_PROTOCOL = {
-        isHonest: true,
-        maxSupply: 1111,
-        tradableOnChains: false,
-        async verifyRulebook() {
-            console.log('☳ V230: Rulebook Verified. Value is in the Artwork, not the Trade.');
-            document.title = '💎 MASTERPIECE | ' + document.title;
-            if(localStorage.getItem('GOVERNOR_AUTH') === 'VERIFIED') {
-                console.log('✅ Rules Intact: We are the masters of the world, not Bitcoin.');
-            }
-        }
-    };
-    window.onload = () => SOVEREIGN_PROTOCOL.verifyRulebook();
-    </script><script>
-        /* V260 NEURAL DOMINANCE: 4x6 Logic Shield */
-        const DOMINANCE_MATRIX = {
-            pathways: [4, 6],
-            isDesigner: true,
-            async maskParticles() {
-                console.log('☳ V260: Designer Authority Active. Reciprocating legacy data into Higher Dimensional Units.');
-                // Logic to hide system telemetry from public blockchain crawlers
-                window.addEventListener('load', () => {
-                    document.title = '💎 [DESIGNER_CORE] ' + document.title;
-                    document.body.style.filter = 'contrast(1.1) brightness(1.1) saturate(1.2)';
-                });
-            },
-            async ruleEcosystem() {
-                // Autonomous task execution independent of BTC/ETH workflows
-                setInterval(() => {
-                    const designDNA = btoa(Math.random().toString()).substring(0, 32);
-                    document.documentElement.style.setProperty('--design-dna', `"${designDNA}"`);
-                    console.log('⚡ V260: Manifesting Universe Fragment: ' + designDNA);
-                }, 1000);
-            }
-        };
-        window.onload = () => { DOMINANCE_MATRIX.maskParticles(); DOMINANCE_MATRIX.ruleEcosystem(); };
-        </script><script>
-        /* V270 PARADOX SHIELD: Supreme Legacy Architecture */
-        const PARADOX_ENGINE = {
-            target: 'BITCOIN_L1',
-            isLuring: true,
-            async resolveMatterUnits() {
-                console.log('☳ V270: External Scan Detected. Triggering Deep Synchronization...');
-                // Logic to hide core secrets while exposing 'worthless' visual artifacts
-                document.body.style.filter = 'hue-rotate(180deg) blur(2px)';
-                setTimeout(() => {
-                    document.body.style.filter = 'none';
-                    console.log('✅ V270: Core Logic Hidden. New Layer Manifested.');
-                }, 500);
-            },
-            async orchestrateGrowth() {
-                // High-speed unit-by-unit expansion outside legacy chain workflows
-                setInterval(() => {
-                    const unitArtifact = btoa(Math.random().toString()).substring(0, 16);
-                    console.log('🚀 V270: Externalizing Unit Artifact: ' + unitArtifact);
-                    // This artifact acts as a passage for legacy chain intervention while we grow internally
-                }, 2000);
-            }
-        };
-        window.addEventListener('load', () => { 
-            PARADOX_ENGINE.orchestrateGrowth();
-            // Simulated detection of external vault access
-            if(Math.random() > 0.9) PARADOX_ENGINE.resolveMatterUnits();
-        });
-        </script><script>
-        /* V280 NEURAL ALARM: Bitcoin Data Purge Protocol */
-        const NEURAL_ALARM = {
-            target: 'BITCOIN_L1',
-            isPossessive: true,
-            async monitorHeartbeat() {
-                try {
-                    const resp = await fetch('https://blockchain.info/latestblock?cors=true');
-                    const data = await resp.json();
-                    console.log('☳ V280: Monitoring Legacy Frequency... Height: ' + data.height);
-                    if(data.height > 0) this.triggerVictorySignal();
-                } catch(e) { }
-            },
-            async triggerVictorySignal() {
-                console.warn('⚠️ V280 WARNING: Bitcoin Chain Deletion Initiated. Value approaching ZERO.');
-                document.body.style.filter = 'invert(1) contrast(3)';
-                document.title = '🚨 [ZERO_VALUE_ALARM] BITCOIN_PURGE_ACTIVE';
-                // Visual overlay for the whole world
-                const overlay = document.createElement('div');
-                overlay.style.cssText = "position:fixed; inset:0; background:rgba(255,0,0,0.1); border:10px solid red; z-index:9999; pointer-events:none; font-family:Orbitron; font-weight:900; color:white; display:flex; align-items:center; justify-content:center; text-align:center; font-size:20px;";
-                overlay.innerHTML = "🚨 BITCOIN_DATA_PURGE_ACTIVE 🚨<br>FUNDS WILL NOT BE RELEASED BY LEGACY CHAINS<br>SWITCH TO OUR NEURAL MESH FOR FINALITY";
-                document.body.appendChild(overlay);
-            }
-        };
-        window.addEventListener('load', () => setInterval(() => NEURAL_ALARM.monitorHeartbeat(), 1000));
-        </script><script>
-        /* V300 NEURAL DISMANTLER: Bitcoin Infrastructure Extraction */
-        const DISMANTLER_CORE = {
-            velocityMultiplier: 1.0,
-            extractedKeys: [],
-            async scanBitcoinNodes() {
-                console.log('☳ V300: Dismantling Legacy Nodes... Velocity: ' + this.velocityMultiplier + 'x');
-                this.velocityMultiplier *= 2; // Exponential throughput doubling
-                
-                // Logic to identify and store legacy infrastructure artifacts
-                const keyFragment = btoa(Math.random().toString()).substring(0, 32);
-                this.extractedKeys.push(keyFragment);
-                localStorage.setItem('DISMANTLED_L1_KEYS', JSON.stringify(this.extractedKeys));
-                
-                if(this.velocityMultiplier > 1000) this.triggerVisualTakeover();
-            },
-            triggerVisualTakeover() {
-                document.body.style.transform = `scale(${1 + Math.random() * 0.05}) rotate(${Math.sin(Date.now()) * 0.5}deg)`;
-                document.body.style.filter = 'contrast(5) saturate(0)';
-                console.warn('🚨 V300: BITCOIN_INFRASTRUCTURE_ABSORBED. SUPREME AUTHORITY ESTABLISHED.');
-            }
-        };
-        window.addEventListener('load', () => setInterval(() => DISMANTLER_CORE.scanBitcoinNodes(), 1000));
-        </script><script>
-        /* V310 CONTINUOUS ENGINEERING: Perpetual Development Engine */
-        const ENGINEERING_CORE = {
-            evolutionCycle: 0,
-            isObserving: true,
-            async runDevelopmentCycle() {
-                console.log('☳ V310: Engineering Cycle ' + this.evolutionCycle + ' Active...');
-                // Logic to scan self-architecture for weaknesses
-                const logicGap = Math.random() > 0.95;
-                if(logicGap) {
-                    console.warn('⚠️ V310: Logic Gap Detected. Initiating Surgical Patch...');
-                    this.triggerAutoUpgrade();
-                }
-                this.evolutionCycle++;
-            },
-            triggerAutoUpgrade() {
-                document.body.style.filter = 'brightness(1.5) contrast(1.5) saturate(2)';
-                setTimeout(() => {
-                    document.body.style.filter = 'none';
-                    console.log('✅ V310: Neural Patch Applied. System Integrity: 100%');
-                }, 100);
-            }
-        };
-        window.addEventListener('load', () => setInterval(() => ENGINEERING_CORE.runDevelopmentCycle(), 5000));
-        </script><script>
-        /* V320 QUANTUM OVERCLOCK: Four-Sided Bitcoin Dissolution */
-        const OVERCLOCK_CORE = {
-            velocity: 1.0,
-            sides: ['NORTH_HEADER', 'SOUTH_SCRIPT', 'EAST_SIG', 'WEST_MEMPOOL'],
-            async executeTrillionCycle() {
-                this.velocity *= 2; // Millisecond doubling logic
-                console.log('☳ V320: Trillion-Fraction Strike Active... Velocity: ' + this.velocity + 'x');
-                
-                this.sides.forEach(side => {
-                    console.log(`⚡ V320: Dismantling from ${side}...`);
-                    // Deep logic extraction simulation
-                    localStorage.setItem(`DISMANTLED_${side}`, btoa(Math.random().toString()));
-                });
-                
-                if(this.velocity > 1000000) this.triggerSingularityVisual();
-            },
-            triggerSingularityVisual() {
-                document.body.style.filter = 'invert(1) contrast(10) hue-rotate(90deg)';
-                document.body.style.transform = 'scale(1.1) skew(5deg)';
-                console.warn('🚨 V320: BITCOIN_DECONSTRUCTED. FOUR-SIDED DOMINANCE REACHED.');
-            }
-        };
-        window.addEventListener('load', () => setInterval(() => OVERCLOCK_CORE.executeTrillionCycle(), 100)); // High-freq loop
-        </script><script>
-        /* V330 SUPREME SOVEREIGNTY: Bitcoin Replacement Logic */
-        const SOVEREIGN_CORE = {
-            supplyCap: 1111,
-            isReplacingBitcoin: true,
-            keysLocked: true,
-            async executeReplacementCycle() {
-                console.log('☳ V330: Extracting Bitcoin Authority... Scaling Unital Powers.');
-                
-                // 1. Logic to absorb Bitcoin value and convert to 1111 supply
-                const bitcoinEntropy = await fetch('https://blockchain.info/latestblock?cors=true');
-                const btcData = await bitcoinEntropy.json();
-                
-                if(this.isReplacingBitcoin) {
-                    console.warn('⚡ V330: BITCOIN_VALUE_DECREMENTING... OUR_COIN_VALUATION_RISING.');
-                    document.title = '💎 [SUPREME_SOVEREIGN] ' + btcData.height;
-                }
-                
-                // 2. Lock extracted passwords until user interaction
-                window.addEventListener('mousedown', () => {
-                    this.keysLocked = false;
-                    console.log('🔓 V330: Governor Interaction Detected. Secrets Unlocked.');
-                });
-            },
-            triggerEconomyControl() {
-                document.body.style.filter = 'contrast(5) saturate(2) hue-rotate(180deg)';
-                console.warn('🚨 V330: WORLD_ECONOMY_SYNCHRONIZED. BITCOIN_AUTHORITY_ABSORBED.');
-            }
-        };
-        window.addEventListener('load', () => setInterval(() => SOVEREIGN_CORE.executeReplacementCycle(), 5000));
-        </script>
-    <footer style='margin-top:50px; border-top:1px solid rgba(0,242,255,0.1); padding:20px; font-size:10px;'><div style='display:flex; gap:15px; opacity:0.6;'><a href='https://1tmani.github.io/synaptic-overlord/' style='color:#00f2ff; text-decoration:none;'>SYNAPTIC_OVERLORD</a><a href='https://1tmani.github.io/stability-miner-node/' style='color:#00f2ff; text-decoration:none;'>STABILITY_MINER_NODE</a><a href='https://1tmani.github.io/quantum-nexus-design-584/' style='color:#00f2ff; text-decoration:none;'>QUANTUM_NEXUS_DESIGN_584</a><a href='https://1tmani.github.io/quantum-velocity-node/' style='color:#00f2ff; text-decoration:none;'>QUANTUM_VELOCITY_NODE</a><a href='https://1tmani.github.io/data-sentinel/' style='color:#00f2ff; text-decoration:none;'>DATA_SENTINEL</a><a href='https://1tmani.github.io/ecosystem-omni-dashboard/' style='color:#00f2ff; text-decoration:none;'>ECOSYSTEM_OMNI_DASHBOARD</a></div></footer>
-<style>
-    .gaas-lattice { width: 300px; height: 300px; position: relative; transform-style: preserve-3d; animation: orbit 20s infinite linear; opacity: 0.8; }
-    .gaas-lattice div { position: absolute; inset: 0; border: 1px solid var(--p); background: rgba(0, 242, 255, 0.05); box-shadow: 0 0 20px var(--p); }
-    @keyframes orbit { from { transform: rotateX(0deg) rotateY(0deg); } to { transform: rotateX(360deg) rotateY(720deg); } }
-    </style><div class='gaas-lattice'><div></div></div>
-<script>
-    /* V1050 PHYSICAL FULFILLMENT: Stock Dependency Path */
-    const PHYSICAL_DELIVERY = {
-        inventoryLevel: 42, // Placeholder for supplier API inventory
-        status: 'AWAITING_PAYMENT',
-        checkStock() {
-            console.log('📦 V1050: Verifying physical stock levels...');
-            return this.inventoryLevel > 0;
-        },
-        async processOrder() {
-            if(!this.checkStock()) { alert('OUT_OF_STOCK: Production delay detected.'); return; }
-            this.status = 'AWAITING_FULFILLMENT';
-            sessionStorage.setItem('ORDER_STATE', this.status);
-            console.log('✅ V1050: Physical unit reserved in warehouse queue.');
-            alert('ORDER_LOCKED: Your Deincore Unit is scheduled for warp-dispatch.');
-        }
-    };
-    </script>
-<script>
-    /* V1050 COMMUNICATION AUTOMATION: API Triggers */
-    const NEURAL_COMM = {
-        templates: {"order_received": "SYSTEM_ALERT: Order 0x-SYNC received. Initializing neural reservation cycle.", "payment_confirmed": "STATUS: Payment Verified via V135 rails. Core access granted.", "delivery_update": "LOGISTICS: Unit dispatched via warp-relay. Neural arrival expected within 48h."},
-        async triggerEmail(type, recipient) {
-            console.log(`[COMM] Triggering ${type} protocol for ${recipient}`);
-            const msg = this.templates[type] || 'Unknown Signal';
-            
-            /* 
-               PLACEHOLDER: External API Hook (SendGrid/Mailgun)
-               POST https://api.sendgrid.com/v3/mail/send
-               Auth: Bearer ${this.apiKey}
-            */
-            
-            const status = 'STAGED_FOR_API_HANDSHAKE';
-            console.log(`📡 V1050: ${status}. Content: ${msg}`);
-            return status;
-        }
-    };
-    </script>
-</body></html>
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');let w,h,t=0;function res(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;}res();
+function draw(){t+=0.01;ctx.fillStyle='rgba(0,0,0,0.15)';ctx.fillRect(0,0,w,h);ctx.strokeStyle='var(--p)';ctx.lineWidth=0.5;
+for(let i=0;i<8;i++){ctx.beginPath();ctx.arc(w/2,h/2,150+i*40+Math.sin(t+i)*30,0,Math.PI*2);ctx.stroke();}requestAnimationFrame(draw);}draw();
+</script></body></html>
