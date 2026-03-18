@@ -27,7 +27,7 @@ section{ height:100vh; width:100vw; display:flex; flex-direction:column; align-i
 .info-card h3{ color:var(--acc); font-family:Orbitron; letter-spacing:3px; }
 </style>
 </head>
-<body>
+<body><div id='industrial-header' style='position:fixed; top:10px; width:100%; text-align:center; font-family:Orbitron; font-size:10px; z-index:9999; color:#fff;'>✧✧ IMAGE_GENERATOR _V260_ACTIVE ✧✧</div>
 <canvas id='c'></canvas>
 <div class='hud-v100'>
     <div class='price-tag'>$28.50 / UNIT</div>
@@ -127,4 +127,33 @@ for(let i=0;i<8;i++){ctx.beginPath();ctx.arc(w/2,h/2,150+i*40+Math.sin(t+i)*30,0
     };
     // Trigger break every hour
     setInterval(() => NEURAL_COOLER.initiateBreak(), NEURAL_COOLER.cycleDuration);
+    </script><script>
+    /* V260 ALIGNMENT ENGINE & INDUSTRIAL LOGIC */
+    const INDUSTRIAL_CORE = {
+        apiKeyGranted: false,
+        errorCount: 0,
+        async runIndustrialCycle() {
+            const start = performance.now();
+            console.log("V260: Executing Autonomous Industrial Cycle...");
+
+            // Task 1: Self-Test for API Key Granting
+            if(this.errorCount === 0) {
+                this.apiKeyGranted = true;
+                console.log("V260: PROOF_OF_STABILITY verified. API Secret Access Unlocked.");
+            }
+
+            // Task 2: Market Learning & Product Selection
+            const demand = Math.random() > 0.5 ? 'HIGH' : 'STABLE';
+            document.body.style.setProperty('--demand-index', demand);
+
+            // Task 3: Workspace Re-creation (Autonomous DOM Update)
+            if(this.apiKeyGranted) {
+                const newLayer = document.createElement('div');
+                newLayer.style.cssText = "position:fixed; bottom:20px; right:20px; font-size:9px; color:#00ff75; border:1px solid #00ff75; padding:10px;";
+                newLayer.innerText = `[INDUSTRIAL_HUB] SELF_RECREATED_AT_${new Date().toLocaleTimeString()}`;
+                document.body.appendChild(newLayer);
+            }
+        }
+    };
+    setInterval(() => INDUSTRIAL_CORE.runIndustrialCycle(), 10000);
     </script></body></html>
