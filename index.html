@@ -42,4 +42,14 @@
         }
     };
     </script>
-</body></html>
+<script>/* NEURAL_FACTORY_MARKER */
+const drawShader = (ctx, w, h, t) => {
+            ctx.globalCompositeOperation = 'screen';
+            for(let i=0; i<12; i++) {
+                ctx.strokeStyle = `hsla(${hue + i*10}, 100%, 50%, 0.2)`;
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.ellipse(w/2, h/2, 100+i*40, 50+i*20, t*0.001+i, 0, Math.PI*2);
+                ctx.stroke();
+            }
+        };</script></body></html>
