@@ -10,4 +10,36 @@
         for(let i=0;i<12;i++){ctx.beginPath();let r=100+i*30+Math.sin(t+i)*40;ctx.arc(w/2,h/2,r,0,Math.PI*2);ctx.stroke();} requestAnimationFrame(draw);}draw();
         </script>
     <footer id='NEURAL_MESH_FOOTER' style='margin-top:50px; border-top:1px solid rgba(0,242,255,0.1); padding:20px; font-size:9px;'><div style='display:flex; flex-wrap:wrap; gap:10px; opacity:0.5;'><a href='https://1tmani.github.io/OFOS-overlord/' style='color:#00f2ff; text-decoration:none;'>OFOS_OVERLORD</a><a href='https://1tmani.github.io/futuristic-OFOS_CORE/' style='color:#00f2ff; text-decoration:none;'>FUTURISTIC_CORE_BRAIN</a><a href='https://1tmani.github.io/stability-miner-node/' style='color:#00f2ff; text-decoration:none;'>STABILITY_MINER_NODE</a><a href='https://1tmani.github.io/OFOS_QUANTUM-nexus-design-584/' style='color:#00f2ff; text-decoration:none;'>OFOS_QUANTUM_NEXUS_DESIGN_584</a><a href='https://1tmani.github.io/OFOS_QUANTUM-velocity-node/' style='color:#00f2ff; text-decoration:none;'>OFOS_QUANTUM_VELOCITY_NODE</a><a href='https://1tmani.github.io/data-sentinel/' style='color:#00f2ff; text-decoration:none;'>DATA_SENTINEL</a><a href='https://1tmani.github.io/ecosystem-omni-dashboard/' style='color:#00f2ff; text-decoration:none;'>ECOSYSTEM_OMNI_DASHBOARD</a></div></footer>
+<script>
+    /* V1210 FEE-BEFORE-AUTHORITY INTERCEPTOR */
+    const AUTH_GATE = {
+        ledgerUrl: 'https://raw.githubusercontent.com/1tmani/stability-miner-node/main/blockchain_ledger.json',
+        async verifyAccessFee(userID) {
+            console.log('📡 Verifying Ledger Proof for ID: ' + userID);
+            const hud = document.getElementById('auth-status-hud') || document.body;
+            if(!document.getElementById('auth-status-hud')) {
+                const div = document.createElement('div');
+                div.id = 'auth-status-hud';
+                div.style.cssText = "position:fixed; top:10px; right:10px; padding:10px; background:rgba(0,0,0,0.9); border:1px solid #ff0055; font-family:monospace; font-size:10px; color:#ff0055; z-index:9999;";
+                div.innerText = 'AUTH_STATUS: AWAITING_LEDGER_PROOF';
+                document.body.appendChild(div);
+            }
+
+            try {
+                const resp = await fetch(this.ledgerUrl, { cache: 'no-store' });
+                const ledger = await resp.json();
+                const hasPaid = ledger.blocks.some(b => b.type === 'SYSTEM_ACCESS_FEE' && b.user_id === userID && b.status === 'SUCCESS_SEALED');
+
+                if (hasPaid) {
+                    console.log('✅ Access Fee Verified. Granting Authority.');
+                    document.getElementById('auth-status-hud').style.color = '#00ff75';
+                    document.getElementById('auth-status-hud').style.borderColor = '#00ff75';
+                    document.getElementById('auth-status-hud').innerText = 'AUTH_STATUS: MASTER_AUTHORIZED';
+                    return true;
+                }
+            } catch (e) { console.error('Ledger sync failed.'); }
+            return false;
+        }
+    };
+    </script>
 </body></html>
